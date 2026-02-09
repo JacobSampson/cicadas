@@ -8,9 +8,20 @@ def show_status():
     registry = load_json(cicadas / "registry.json")
     
     print(f"Project: {root.name}")
-    print(f"Active Brood ({len(registry.get('branches', {}))} branches):")
-    for name, info in registry.get("branches", {}).items():
-        print(f"  - {name}: {info['intent']} (Modules: {', '.join(info['modules'])})")
+    
+    broods = registry.get("broods", {})
+    if broods:
+        print(f"\nActive Broods ({len(broods)}):")
+        for name, info in broods.items():
+            branch_count = len(info.get("branches", []))
+            print(f"  - [Brood] {name}: {info['intent']} ({branch_count} branches active)")
+
+    branches = registry.get("branches", {})
+    if branches:
+        print(f"\nActive Branches ({len(branches)}):")
+        for name, info in branches.items():
+            brood_tag = f" [Brood: {info['brood']}]" if info.get("brood") else ""
+            print(f"  - {name}: {info['intent']}{brood_tag}")
 
 if __name__ == "__main__":
     show_status()

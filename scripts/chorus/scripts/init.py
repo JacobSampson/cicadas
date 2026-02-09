@@ -8,9 +8,15 @@ def init_cicadas(root):
     cicadas.mkdir(exist_ok=True)
     (cicadas / "canon/modules").mkdir(parents=True, exist_ok=True)
     (cicadas / "forward").mkdir(exist_ok=True)
+    (cicadas / "forward/broods").mkdir(parents=True, exist_ok=True)
+    (cicadas / "incubator").mkdir(exist_ok=True)
     (cicadas / "archive").mkdir(exist_ok=True)
     
-    save_json(cicadas / "registry.json", {"schema_version": "1.0", "branches": {}})
+    save_json(cicadas / "registry.json", {
+        "schema_version": "1.1", 
+        "branches": {},
+        "broods": {}
+    })
     save_json(cicadas / "index.json", {"schema_version": "1.0", "entries": []})
     save_json(cicadas / "config.json", {"project_name": root.name})
     

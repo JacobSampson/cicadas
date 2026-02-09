@@ -4,16 +4,22 @@ Chorus orchestrates the Cicadas methodology — sustainable spec-driven developm
 
 ## Operations
 
-### Bootstrap (first-time setup)
-Use when initializing Cicadas on an existing project.
+### Bootstrap (Reverse Engineering)
+Use when initializing Cicadas on an existing (non-Cicadas) project.
 1. Run: `python scripts/chorus/scripts/init.py`
-2. This creates the `.cicadas/` structure and `config.json`.
+2. Follow the [Reverse Engineering Workflow](./REVERSE_ENGINEERING.md) to establish your baseline **Canon**.
+3. Create the `app.md` and key module snapshots from code discovery.
+
+### Hatch a Brood (Initiative Start)
+Use when an idea involves multiple synchronized branches.
+1. Draft shared docs (PRD, UX, Tech) in `.cicadas/incubator/{name}/`.
+2. Tell the Agent: **"Hatch the {name} brood."**
+3. The agent promotes the docs and initializes the initiative context.
 
 ### Start a Branch
 Use when beginning work on a feature, fix, or change.
-1. Author forward docs (PRD, approach, tasks) in `.cicadas/forward/{branch_name}/`.
-2. Run: `python scripts/chorus/scripts/branch.py {branch_name} --intent "description" --modules "mod1,mod2"`
-3. Review conflict warnings from the output.
+1. Tell the Agent: **"Start a new branch called {branch_name} [linked to brood {name}]."**
+2. The agent creates the git branch and associates it with the correct shared context.
 
 ### Check Status
 Run: `python scripts/chorus/scripts/status.py`
@@ -33,10 +39,11 @@ When synthesis is reviewed:
 
 ## Reference Guides
 
-### Guide 1: Bootstrapping a New Project
-When starting Cicadas on an existing codebase:
+### Guide 1: Bootstrapping / Reverse Engineering
+When bringing Cicadas to an existing codebase:
 1. **Initialize**: Run `python scripts/chorus/scripts/init.py`.
-2. **Analyze**: Read the codebase to understand architecture and modules.
+2. **Reverse Engineer**: Follow [REVERSE_ENGINEERING.md](./REVERSE_ENGINEERING.md) for disciplined code discovery.
+3. **Analyze**: Identify core modules and architectural patterns.
 3. **Draft Snapshots**:
     - Create `.cicadas/canon/app.md` using the template.
     - Create module snapshots in `.cicadas/canon/modules/` for key components.
