@@ -9,10 +9,10 @@ Welcome to the Cicadas methodology. This guide explains the core concepts, direc
 | Term | Definition |
 | :--- | :--- |
 | **Incubator** | The "pre-natal" phase. Rough drafts (PRDs, tech designs) live here before work starts. |
-| **Hatch** | The act of promoting incubator docs into a shared **Brood** or a specific **Branch**. |
-| **Brood** | A collection of synchronized branches sharing a "Provisional Canon" (like a shared MVP spec). |
+| **Hatch** | Promoting incubator docs into a shared **Brood** or a specific **Branch**. |
+| **Brood** | A collection of synchronized branches sharing a "**Provisional Canon**" (shared initiative spec). |
 | **Branch** | An individual line of development linked to specific modules and tasks. |
-| **Forward Docs** | Transient requirements (PRDs, Approach, Tasks) that guide development but *expire* after implementation. |
+| **Forward Docs** | Transient requirements (PRDs, Approach, Tasks) that expire after implementation. |
 | **Canon** | The permanent, authoritative documentation reverse-engineered from the code + rationale. |
 | **Synthesis** | The process where the Agent updates the Canon after reading code changes and forward docs. |
 
@@ -40,37 +40,36 @@ You don't run scripts; you talk to the **Chorus Agent** in your TUI. It uses spe
 
 1.  **Emergence Agent**: Helps you clarify requirements and design UX/Tech. Uses the section-by-section drafting protocol.
 2.  **Implementation Agent**: The actual developer. Focuses on `tasks.md` and writing code.
-3.  **Synthesis Agent**: The architect. Reads your code and forward docs to update the permanent Canon.
+3.  **Synthesis Agent**: The architect. Reads code and forward docs to update the permanent Canon.
 
 ---
 
-## 💬 How to Invoke the Agent
+## 🚀 The Three Paths
 
-Simply tell the agent your **intent** in the console.
+### 🟢 1. Greenfield: Initial Launch
+- **Incubate**: Talk to the agent to draft your MVP specs in the incubator.
+- **Hatch**: Tell the agent: *"Hatch the 'mvp' brood."*
+- **Branch**: *"Start an 'api' branch linked to the 'mvp' brood."*
 
-- **To start an idea**: *"Help me clarify the requirements for a new [Feature Name]."*
-- **To start an initiative**: *"Everything looks good. Hatch the [Initiative Name] brood from the incubator."*
-- **To start a feature**: *"Start a branch for [Member-Feature] and link it to the [Initiative Name] brood."*
-- **To merge work**: *"I'm done with these changes. Synthesize the docs and archive the branch."*
+### 🟠 2. Brownfield: New Release / Large Feature
+- **Context**: The agent reads the existing **Canon** to understand the baseline.
+- **Cycle**: Follow the same Incubate -> Hatch -> Branch flow for the new release delta.
+
+### 🔵 3. Bootstrap: Migrating a Legacy Project
+- **Initialize**: `python scripts/chorus/scripts/init.py`.
+- **Lexical Discovery**: *"Scan this legacy project and tell me what the architecture looks like."*
+- **Canonize**: *"Synthesize a baseline Canon from these files."*
+- **Reference**: See [REVERSE_ENGINEERING.md](./scripts/chorus/REVERSE_ENGINEERING.md) for deeper details.
 
 ---
 
 ## 🚀 Sample Flow: Building a "Social Feed"
 
-1.  **Drafting**: 
-    - You: *"Clarify the requirements for a Social Feed."*
-    - Agent: Drafts a PRD in `incubator/social-feed/` one section at a time, asking you for feedback.
-2.  **Hatching**: 
-    - You: *"Hatch this as the 'v1-feed' brood."*
-    - Agent: Moves docs to `forward/broods/v1-feed/`.
-3.  **Branching**: 
-    - You: *"Start a branch called 'feed-db' linked to 'v1-feed'."*
-    - Agent: Creates git branch and a local `forward/feed-db/tasks.md`.
-4.  **Coding**: 
-    - Agent: Implements the database schema based on the brood's Tech Design.
-5.  **Synthesizing**:
-    - You: *"Done. Update the canon."*
-    - Agent: Reads the code, updates `canon/modules/feed.md`, and archives the `feed-db` folder.
+1.  **Drafting**: *"Clarify the requirements for a Social Feed."* (Agent drafts in `incubator/` section-by-section).
+2.  **Hatching**: *"Hatch this as the 'v1-feed' brood."* (Docs move to `forward/broods/v1-feed/`).
+3.  **Branching**: *"Start a branch called 'feed-db' linked to 'v1-feed'."* (Agent creates branch + local task list).
+4.  **Coding**: Agent implements the schema based on the brood's Tech Design.
+5.  **Synthesizing**: *"Done. Update the canon."* (Agent updates `canon/modules/feed.md` and archives the branch).
 
 > [!IMPORTANT]
 > Always initialize a new project with `python scripts/chorus/scripts/init.py` before starting your first interaction.
