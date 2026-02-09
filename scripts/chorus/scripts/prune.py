@@ -45,11 +45,7 @@ def prune(name, item_type, no_restore=False, force=False):
         # 5. Remove from Registry
         del registry["branches"][name]
         
-        # Also remove from brood's branch list if applicable
-        for brood_name, brood_data in registry.get("broods", {}).items():
-            if name in brood_data.get("branches", []):
-                brood_data["branches"].remove(name)
-        
+
         print(f"✅ Pruned branch '{name}'. Registry updated.")
 
     elif item_type == "brood":
@@ -59,7 +55,12 @@ def prune(name, item_type, no_restore=False, force=False):
             return
         
         brood_data = registry["broods"][name]
-        active_branches = brood_data.get("branches", [])
+        
+        # Calculate active branches dynamically
+        active_branches = [
+            b_name for b_name, b_info in registry.get("branches", {}).items()
+            if b_info.get("brood") == name
+        ]
         
         if active_branches and not force:
             print(f"Error: Brood '{name}' has active branches: {', '.join(active_branches)}")

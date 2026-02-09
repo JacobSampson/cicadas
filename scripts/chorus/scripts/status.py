@@ -13,7 +13,7 @@ def show_status():
     if broods:
         print(f"\nActive Broods ({len(broods)}):")
         for name, info in broods.items():
-            branch_count = len(info.get("branches", []))
+            branch_count = sum(1 for b in registry.get("branches", {}).values() if b.get("brood") == name)
             print(f"  - [Brood] {name}: {info['intent']} ({branch_count} branches active)")
 
     branches = registry.get("branches", {})

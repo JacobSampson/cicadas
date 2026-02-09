@@ -36,8 +36,7 @@ def hatch_brood(name, intent, owner="unknown"):
     registry.setdefault("broods", {})[name] = {
         "intent": intent,
         "owner": owner,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "branches": []
+        "created_at": datetime.now(timezone.utc).isoformat()
     }
     save_json(cicadas / "registry.json", registry)
     print(f"Hatched brood: {name}")

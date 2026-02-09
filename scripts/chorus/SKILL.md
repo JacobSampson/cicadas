@@ -88,8 +88,17 @@ This is LLM work. Inputs:
 - Artifact index from `.cicadas/index.json`
 
 Output:
-- Updated app-level snapshot (if scope warrants)
+Output:
+- Updated `canon/product-overview.md` (Goals, Personas, Metrics)
+- Updated `canon/ux-overview.md` (Design Principles, Patterns, Flows)
+- Updated `canon/tech-overview.md` (Architecture, Components, API, Schema)
 - Updated module-level snapshot(s)
+
+Use the prompt in `scripts/chorus/templates/synthesis-prompt.md` to guide this process.
+
+**Agent Action**:
+1.  Generate the plan and content using the prompt.
+2.  **Execute**: Write the file contents to the `canon/` directory using your file writing tools.
 
 ### Merge
 
@@ -98,7 +107,11 @@ Use when synthesis is complete and reviewed.
 1. Ensure snapshot is synthesized and reviewed
 2. Run: `python scripts/chorus/scripts/archive.py {branch_name}`
 3. Run: `python scripts/chorus/scripts/update_index.py --branch {branch} --summary "..."`
-4. Execute git merge
+1. Ensure snapshot is synthesized and reviewed
+2. Run: `python scripts/chorus/scripts/archive.py {branch_name}`
+3. Run: `python scripts/chorus/scripts/update_index.py --branch {branch} --summary "..."`
+4. Execute `git merge {branch_name}` (Manual or Agent action required)
+5. Push to remote
 
 ### Query System State
 
@@ -113,6 +126,7 @@ For questions about in-flight work: consult `.cicadas/registry.json`
 1. **No Unplanned Work**: Never start writing code until you have a reviewed `tasks.md`.
 2. **Branch Only**: Only implement code on a registered git branch (not `main`).
 3. **Hard Stop**: After drafting `tasks.md` in the incubator, you MUST STOP and wait for the user to "Hatch" or "Branch".
+4. **Tool Mandate**: NEVER manually edit `registry.json`. ALWAYS use `scripts/chorus/scripts/branch.py` (and friends) to manage state.
 
 ## Agent Procedures
 
@@ -135,7 +149,8 @@ When asked to complete/finalize a phase:
 ## Templates
 
 Use templates in `scripts/chorus/templates/` directory:
-- `app-snapshot.md`: Structure for app-level Cicadas snapshot
+- `product-overview.md`, `ux-overview.md`, `tech-overview.md`: Rich Canon templates
+- `synthesis-prompt.md`: System prompt for synthesis agent
 - `module-snapshot.md`: Structure for module-level Cicadas snapshots
 - `forward-docs/`: Templates for PRD, approach, tasks
 

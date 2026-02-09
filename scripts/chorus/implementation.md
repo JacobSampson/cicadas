@@ -21,3 +21,7 @@ When working on a branch:
 When work is complete:
 - **Rule**: Do not merge.
 - **Rule**: You must run the synthesis process (updating `canon/` docs) before the branch can be archived.
+
+## 5. Registry Integrity
+- **Rule**: NEVER manually edit `registry.json`.
+- **Constraint**: ALWAYS use the provided CLI scripts (e.g., `branch.py`, `brood.py`, `status.py`) to manage system state. Manual edits corrupt the registry and are strictly forbidden.

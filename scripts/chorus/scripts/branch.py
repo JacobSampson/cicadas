@@ -39,7 +39,6 @@ def create_branch(name, intent, modules, brood=None, owner="unknown"):
             print(f"Warning: Brood {brood} not found. Branch registered without brood association.")
         else:
             branch_info["brood"] = brood
-            registry["broods"][brood].setdefault("branches", []).append(name)
 
     registry.setdefault("branches", {})[name] = branch_info
     save_json(cicadas / "registry.json", registry)
