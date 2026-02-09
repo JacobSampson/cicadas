@@ -7,14 +7,17 @@
 ## Process
 
 1.  **Ingest**: Read all previous docs in `../incubator/{feature}/`.
-2.  **Decompose**: Break the work into **atomic, file-level or method-level tasks**.
-    -   *Bad*: "Implement backend."
-    -   *Good*: "Create `models/user.py`: Define `User` class with `id`, `name` fields."
-3.  **Order**: Group tasks into **Phases** based on dependency layers.
-    -   **Phase 1**: Core Data Models & Types (Blocking - nothing else can start without this).
-    -   **Phase N**: Functional Layers (e.g., Services, then Controllers, then Views).
-    -   **Parallelism**: Tasks *within* a phase must be independent and parallelizable.
-4.  **Draft**: Create `../incubator/{feature}/tasks.md`.
+2.  **Select Mode**:
+    -   **Foundation Mode** (New Project/Module):
+        -   **Decompose**: Atomic, file-level tasks.
+        -   **Order**: Strict dependency phases (Models -> Engine -> UI).
+        -   **Parallelism**: Independent *Work Groups* within a phase.
+    -   **Feature Mode** (Vertical Slice):
+        -   **Decompose**: Functional deliverables (e.g., "Add Inventory").
+        -   **Order**: Group by feature or user story.
+        -   **Parallelism**: Features are parallel; tasks within a feature are sequential.
+
+3.  **Draft**: Create `../incubator/{feature}/tasks.md`.
     -   Use the format `- [ ] Task Description <!-- id: N -->`
 5.  **Refine**: Human review.
 

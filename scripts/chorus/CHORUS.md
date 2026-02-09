@@ -70,7 +70,18 @@ When bringing Cicadas to an existing codebase:
     - **Crucial**: Extract "Key Decisions" from the forward docs and append them to the snapshots. This preserves the "why" before the forward docs are archived.
 3. **Verify**: Ensure the new snapshots accurately describe the code as it exists *now*.
 
-### Guide 3: Conflict Resolution
+### Guide 4: Implementation Rules (Guardrails)
+To prevent agents from starting work before the plan is ready:
+1. **Wait for Hatching**: Never start implementing tasks until the incubator is hatched into a brood or branch.
+2. **Branch Check**: Verify you are on a dedicated git branch from the `registry.json`.
+3. **Protocol**: Follow the strict rules in [implementation.md](./implementation.md).
+
+### Guide 5: Agent Procedures (Simplified Flow)
+Use these high-level natural language commands in the TUI:
+- **"Implement Phase {N}"**: Orchestrates branch creation, task identification, and autonomous implementation of a phase.
+- **"Complete Phase {N}"**: Orchestrates synthesis, archiving, and indexing once review is approved.
+
+### Guide 6: Conflict Resolution
 Run: `python scripts/chorus/scripts/check.py`
 
 **Interpreting Output**:

@@ -108,6 +108,30 @@ For questions about current state: consult `.cicadas/canon/`
 For questions about history: consult `.cicadas/index.json`
 For questions about in-flight work: consult `.cicadas/registry.json`
 
+## Core Guardrails
+
+1. **No Unplanned Work**: Never start writing code until you have a reviewed `tasks.md`.
+2. **Branch Only**: Only implement code on a registered git branch (not `main`).
+3. **Hard Stop**: After drafting `tasks.md` in the incubator, you MUST STOP and wait for the user to "Hatch" or "Branch".
+
+## Agent Procedures
+
+Use these high-level procedures to orchestrate the lifecycle of a phase.
+
+### Procedural: "Implement Phase {N}"
+When asked to implement a specific phase:
+1. **Setup**: Run `branch.py` if not already on a registered feature branch.
+2. **Context**: Read `tasks.md` from the Brood or Local branch.
+3. **Execution**: Implement **only** the tasks assigned to Phase {N}.
+4. **Checkpoint**: After the last task in the phase, **STOP** and notify the user for code review. Do not proceed to Phase N+1 without approval.
+
+### Procedural: "Complete Phase {N}"
+When asked to complete/finalize a phase:
+1. **Synthesis**: Update the `canon/` documentation to reflect the new code state.
+2. **Archive**: Run `archive.py {branch_name}`.
+3. **Log**: Run `update_index.py` with a summary of the phase's impact.
+4. **Handoff**: Notify the user that the phase is archived and the canon is updated.
+
 ## Templates
 
 Use templates in `scripts/chorus/templates/` directory:
