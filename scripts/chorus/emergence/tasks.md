@@ -7,8 +7,13 @@
 ## Process
 
 1.  **Ingest**: Read all previous docs in `../incubator/{feature}/`.
-2.  **Decompose**: Break the work into small units (1-4 hours each).
-3.  **Order**: Sequence tasks logically (dependencies first).
+2.  **Decompose**: Break the work into **atomic, file-level or method-level tasks**.
+    -   *Bad*: "Implement backend."
+    -   *Good*: "Create `models/user.py`: Define `User` class with `id`, `name` fields."
+3.  **Order**: Group tasks into **Phases** based on dependency layers.
+    -   **Phase 1**: Core Data Models & Types (Blocking - nothing else can start without this).
+    -   **Phase N**: Functional Layers (e.g., Services, then Controllers, then Views).
+    -   **Parallelism**: Tasks *within* a phase must be independent and parallelizable.
 4.  **Draft**: Create `../incubator/{feature}/tasks.md`.
     -   Use the format `- [ ] Task Description <!-- id: N -->`
 5.  **Refine**: Human review.

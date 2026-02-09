@@ -65,6 +65,12 @@ Use to see current state and potential conflicts.
 
 Run: `python scripts/chorus/scripts/status.py`
 
+### Reset / Prune
+
+Use to rollback a branch or brood and restore its docs to the incubator for iteration.
+
+Run: `python scripts/chorus/scripts/prune.py {name} --type {branch|brood}`
+
 ### Check for Changes
 
 Use during work to see if anything has changed that affects you.

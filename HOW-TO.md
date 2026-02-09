@@ -1,4 +1,5 @@
-# Chorus & Cicadas: The Definitive Guide
+# Chorus & Cicadas: The Definitive Guide (MIGRATION TEST)
+
 
 Welcome to the Cicadas methodology. This guide explains the core concepts, directory structure, and conversational workflows managed by the **Chorus Agent**.
 
@@ -67,8 +68,11 @@ You don't run scripts; you talk to the **Chorus Agent** in your TUI. It uses spe
 
 1.  **Drafting**: *"Clarify the requirements for a Social Feed."* (Agent drafts in `incubator/` section-by-section).
 2.  **Hatching**: *"Hatch this as the 'v1-feed' brood."* (Docs move to `forward/broods/v1-feed/`).
-3.  **Branching**: *"Start a branch called 'feed-db' linked to 'v1-feed'."* (Agent creates branch + local task list).
+3.  **Branching**: *"Start a branch called 'feed-db' linked to 'v1-feed'."* (Agent creates branch).
+    - **Phasing**: The agent reads the **Phased Tasks** in the Brood and implements only Phase 1 (e.g., Models) first.
+    - **Parallelism**: Later, you start a 'feed-ui' branch and tell it to implement Phase 2 (UI) in parallel.
 4.  **Coding**: Agent implements the schema based on the brood's Tech Design.
+    - **Mistake?**: Run `python scripts/chorus/scripts/prune.py feed-db --type branch` to rollback and try again.
 5.  **Synthesizing**: *"Done. Update the canon."* (Agent updates `canon/modules/feed.md` and archives the branch).
 
 > [!IMPORTANT]

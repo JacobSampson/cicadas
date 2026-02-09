@@ -25,6 +25,11 @@ Use when beginning work on a feature, fix, or change.
 Run: `python scripts/chorus/scripts/status.py`
 Shows active branches, potential overlaps, and snapshot state.
 
+### Prune / Rollback
+Use when you want to **undo** a branch or brood (e.g., during experimentation).
+Run: `python scripts/chorus/scripts/prune.py {name} --type {branch|brood}`
+Effect: Deletes the git branch (if applicable), removes from registry, and restores forward docs to `incubator/` so you can try again.
+
 ### Synthesize Snapshot
 This is LLM work. Before merging:
 1. Read current code + forward docs + previous snapshots.
@@ -82,5 +87,6 @@ Run: `python scripts/chorus/scripts/check.py`
 | **Start** | `python scripts/chorus/scripts/branch.py {name} --intent "..." --modules "..."` | Join the brood |
 | **Check** | `python scripts/chorus/scripts/status.py` | See global state |
 | **Verify**| `python scripts/chorus/scripts/check.py` | Check for conflicts |
+| **Prune** | `python scripts/chorus/scripts/prune.py {name} --type {branch|brood}` | Rollback & restore docs |
 | **Finish**| `python scripts/chorus/scripts/archive.py {name}` | Husk forward docs |
 | **Log** | `python scripts/chorus/scripts/update_index.py --branch {name} --summary "..."` | Record history |
