@@ -943,3 +943,68 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - Orchestrator: `scripts/chorus/`
 - Artifacts: `.cicadas/`
 - Agent Manual: `scripts/chorus/SKILL.md`
+
+---
+
+## Part 8: Known Issues & Future Directions
+
+Issues identified through dry-run exercises (greenfield, brownfield, and parallel multi-developer scenarios). These are documented limitations of the current method — not blockers, but areas to improve as real-world usage reveals patterns.
+
+### 8.1 Synthesis
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| S1 | **Greenfield bootstrap mode**: First synthesis creates canon from scratch — different from update synthesis. The synthesis prompt needs to handle both modes. | Medium | Detect empty `canon/` and switch to creation mode automatically. |
+| S2 | **Update synthesis fidelity**: On brownfield, the LLM must distinguish "preserve this" from "update this." Risk of accidentally dropping existing canon content. | High | Synthesis should output a change plan (sections added/modified/untouched) before writing. Builder reviews the plan. |
+| S3 | **Context window pressure**: Synthesis reads the entire codebase + active specs + existing canon + change ledger. On mature projects, this exceeds context limits. | High | Prioritize by module. Synthesize module-by-module rather than holistically. Use code summaries rather than full source. |
+| S4 | **Unchanged module verification**: Synthesis should verify that modules declared "unchanged" truly are — by diffing source code against existing module snapshots. | Medium | Add a verification pass to the synthesis prompt. |
+| S5 | **Canon diff review**: Builders review synthesis output as full files. A diff view (old canon → new canon) would be dramatically faster. | Low | Tooling improvement — generate a git diff of `canon/` after synthesis, before commit. |
+
+### 8.2 Canon Lifecycle
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| C1 | **Canon accumulation**: Canon grows each initiative but never shrinks. Key Decisions span all historical initiatives. Over time, canon drifts toward exhaustive reference docs. | Medium | Tag Key Decisions with the initiative that produced them. Add a "prune" pass to synthesis — remove obsolete sections. |
+| C2 | **Intermediate spec snapshots lost**: Active specs mutate via Reflect across all feature branches. By initiative completion, they reflect only the final state. | Low | Git history of `.cicadas/active/` provides intermediate states if needed. Acceptable trade-off. |
+
+### 8.3 Coordination & Signals
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| X1 | **Signals are intra-initiative only**: No formal mechanism for cross-initiative notifications. Builder A's Recipe changes can't directly signal Builder B's separate initiative. | Medium | Add a global signal board in `registry.json`, or allow signals to target specific initiatives. |
+| X2 | **Stale canon at Emergence for concurrent initiatives**: Builder B drafts specs against current `main` canon, but another initiative may be modifying the same modules. Specs are drafted against outdated context. | Medium | During Emergence, the Agent should read not just canon but also the active specs of in-flight initiatives — surfacing planned changes to shared modules. |
+| X3 | **Active specs are initiative-scoped**: At synthesis time, the LLM reads only its own initiative's specs. If Initiative B merges before Initiative A, B's synthesis won't have A's key decisions (since A hasn't synthesized yet). | Low | Synthesis prompt should read active specs from *all* in-flight initiatives, not just its own. |
+
+### 8.4 Branching & Merging
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| B1 | **Rebase timing is undefined**: The method doesn't prescribe when initiative branches should rebase against `main`. | Low | Recommend: rebase before starting each new feature branch within the initiative. Document as a best practice. |
+| B2 | **Initiative merge ordering**: When two initiatives finish simultaneously, merge order affects which synthesis sees which canon. | Low | Rule of thumb: merge in completion order. If truly simultaneous, coordinate between builders. |
+| B3 | **Migration ordering across initiatives**: Parallel initiatives adding database migrations create migration sequence conflicts at rebase/merge. | Medium | Use timestamp-based migration naming, or add a central sequence counter to `registry.json`. |
+| B4 | **Shared `tasks.md` conflict risk**: `tasks.md` at the initiative level. Two parallel branches Reflecting simultaneously could create merge conflicts. | Low | Split tasks into per-partition sections with clear markers, or per-branch task files. |
+
+### 8.5 Scripts & Tooling
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| T1 | **`archive.py` needs initiative-level support**: Currently archives branches only (removes from `registry.json["branches"]`). Initiative completion needs `--type initiative` to archive initiative specs and deregister from `["initiatives"]`. | Medium | Add `--type` flag to `archive.py`. |
+| T2 | **`brood.py` should create the initiative branch**: Currently the Agent must manually run `git checkout -b initiative/{name}` after kickoff. | Low | Add git branch creation to `brood.py`. |
+| T3 | **`branch.py` should enforce parent branch**: Forks from current HEAD. A `--from` flag (defaulting to the linked initiative branch) would prevent mistakes. | Low | Add `--from` flag to `branch.py`. |
+
+### 8.6 Process & Ergonomics
+
+| # | Issue | Severity | Mitigation |
+|---|-------|----------|------------|
+| P1 | **Overhead for solo builders**: Full ceremony (registrations, intent checks, Reflect, PRs) is significant for one person. | Low | Document a "light mode": fewer partitions, combined steps, optional PRs for solo. |
+| P2 | **No explicit test phase**: The method doesn't prescribe where testing fits in the lifecycle. | Low | Tasks should include acceptance criteria. Task branches aren't merge-ready until tests pass. Document as convention. |
+| P3 | **Module boundary crossings on brownfield**: Existing code has implicit ownership. Modifications to shared components outside a feature's declared modules need special attention. | Low | Reflect already flags these. Formalize as a "boundary crossing" annotation in PRs. |
+
+### Future Direction: Full WIP Awareness
+
+> [!IMPORTANT]
+> The most significant gap across all scenarios is that Chorus operates within a single initiative's context. In future versions, the Agent should be aware of **all work in progress across all initiatives** — reading other initiatives' active specs during Emergence, signaling across initiative boundaries, and incorporating cross-initiative context during synthesis.
+>
+> This would address issues X1, X2, X3, and S2 simultaneously. The registry already contains the required information; the Agent simply needs to be instructed to use it holistically.
+>
+> For now, the method works — Reflect catches post-rebase drift, the registry surfaces overlap at branch registration, and serial synthesis on `main` prevents canon merge conflicts. The coordination gaps are manageable with developer communication.
