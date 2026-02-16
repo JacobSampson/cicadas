@@ -1,6 +1,6 @@
 ---
 name: chorus
-description: Orchestrates Cicadas methodology for sustainable spec-driven development. Use this skill when performing project lifecycle operations.
+description: Orchestrates Cicadas methodology for spec-driven development. Use this skill when performing project lifecycle operations.
 ---
 
 # Overview
@@ -46,6 +46,33 @@ for managing the lifecycle of a project, including:
 
 ```
 
+## Process
+A typical Cicadas workflow looks like this:
+
+### "Outer Loop" (Brood Initiation)
+- Draft a PRD, UX, and Tech Design in the incubator
+- Tell the Agent: **"Hatch the {name} brood."**
+- The agent promotes the docs and initializes the initiative context.
+- Ask Chorus to **"Create an approach"**
+- Ask Chorus to **"Create tasks"**
+
+### "Inner Loop"
+- Ask Chorus to **"Implement task X"**
+- Write the code and tests in the branch (AI or human)
+- Ask Chorus to **"Check for brood changes"** to see if anything has changed that affects you
+- When complete, ask Chorus to **"PR"** to create a pull request
+- When PR is approved, ask Chorus to **"Merge"** to:
+  - Merge the branch into main 
+  - Update the registry
+  - Update the brood specs (if needed)
+
+### "Outer Loop" (Brood Completion)
+Once all tasks are complete...
+- Ask Chorus to **"Retire the brood"** to:
+  - Update the registry
+  - Archive the brood docs
+  - Re-generate the canon docs
+
 
 
 # Operations
@@ -59,31 +86,44 @@ python scripts/chorus/scripts/init.py
 
 ### Hatch a Brood (Initiative Start)
 Use when an idea involves multiple synchronized branches.
-1. Draft shared docs (PRD, UX, Tech) in `.cicadas/incubator/{name}/`.
+1. Draft shared docs (PRD, UX, Tech, Approach) in `.cicadas/incubator/{name}/`.
+  - **Critical**: `approach.md` must define sequencing, dependencies, and logical partitions (which become Feature Branches).
   - The docs can be created manually or with ./emergence/
 2. Tell the Agent: **"Hatch the {name} brood."**
 3. The agent promotes the docs and initializes the initiative context.
 
 
-### Start a Branch
+### Start a Feature Branch (Registered)
+Use when starting a major partition of work defined in the Brood's `approach.md`.
+1. Ensure forward docs exist in `.cicadas/forward/broods/{brood_name}/`.
+2. **Semantic Check**: Agent must check `registry.json` to ensure the new *intent* does not logically conflict with active work (LLM check).
+3. **Run**: `python scripts/chorus/scripts/branch.py {branch_name} --intent "description" --modules "mod1,mod2" --brood {brood_name}`
+4. Review any conflict warnings from Chorus (Modules) and the Agent (Intent).
 
-Use when beginning work on a feature, fix, or change.
+### Start a Task Branch (Unregistered)
+Use for the daily inner loop of coding. These are ephemeral and **do not** touch the registry.
+1. Checkout from the Feature Branch: `git checkout -b task/{feature}/{task-name}`
+2. Implement code.
+3. **Reflect**: Keep the Feature Branch specs updated (see below).
+4. Merge back to Feature Branch when done.
 
-1. Ensure forward docs exist (PRD, approach, tasks) — author them or use BMAD
-2. Run: `python scripts/chorus/scripts/branch.py {branch_name} --intent "description" --modules "mod1,mod2"`
-3. Review any conflict warnings from Chorus
+### Check Status & Signals
+Use to see current state, potential conflicts, and broadcasts from other branches.
+1. Run: `python scripts/chorus/scripts/status.py`
+2. **Signal Check**: The Agent must check `registry.json` for any new `signal` messages from other branches in the Brood.
+3. **Semantic Check**: The Agent must analyze the returned list of active intents for any logical conflicts or overlaps (using LLM reasoning).
 
-The script will:
-- Check registry for overlapping work
-- Create git branch
-- Register intent in registry.json
-- Create `.cicadas/forward/{branch_name}/` directory
+### Inner Loop: Reflect
+Use to keep specs in sync with code *during* development.
+1. **Trigger**: After significant code changes or before merging a Task Branch.
+2. **Action**: Agent analyzes the `git diff` and updates the local `forward/` docs (e.g., `tech-design.md`, `approach.md`) to match the reality of the code.
+3. **Command**: (Agent Action) "Update the forward docs to reflect the code changes."
 
-### Check Status
-
-Use to see current state and potential conflicts.
-
-Run: `python scripts/chorus/scripts/status.py`
+### Broadcast: Signal
+Use to notify other branches of significant changes (e.g., API shift).
+1. **Trigger**: You made a change that affects other Feature Branches in the Brood.
+2. **Command**: `python scripts/chorus/scripts/signal.py "{message}"`
+3. **Effect**: Appends a timestamped signal to the **Brood** entry in `registry.json`.
 
 ### Reset / Prune
 
@@ -108,7 +148,6 @@ This is LLM work. Inputs:
 - Artifact index from `.cicadas/index.json`
 
 Output:
-Output:
 - Updated `canon/product-overview.md` (Goals, Personas, Metrics)
 - Updated `canon/ux-overview.md` (Design Principles, Patterns, Flows)
 - Updated `canon/tech-overview.md` (Architecture, Components, API, Schema)
@@ -124,9 +163,6 @@ Use the prompt in `scripts/chorus/templates/synthesis-prompt.md` to guide this p
 
 Use when synthesis is complete and reviewed.
 
-1. Ensure snapshot is synthesized and reviewed
-2. Run: `python scripts/chorus/scripts/archive.py {branch_name}`
-3. Run: `python scripts/chorus/scripts/update_index.py --branch {branch} --summary "..."`
 1. Ensure snapshot is synthesized and reviewed
 2. Run: `python scripts/chorus/scripts/archive.py {branch_name}`
 3. Run: `python scripts/chorus/scripts/update_index.py --branch {branch} --summary "..."`
