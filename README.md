@@ -1,48 +1,97 @@
-# Cicadas
+# Cicadas (v2)
 
-A methodology and toolset for sustainable, skill-agnostic Spec-Driven Development (SDD).
+**Sustainable, Spec-Driven Development (SDD) for human-AI teams.**
 
 Cicadas reverses the traditional relationship between code and documentation. Instead of fighting to keep specifications in sync with code, **Cicadas treats forward-looking docs (PRDs, plans) as disposable inputs** that drive implementation and then expire. Authoritative system documentation is then **reverse-engineered from the code itself** into canonical snapshots.
 
-## The Methodology
+---
 
-1.  **Forward Docs**: You write a PRD and Implementation Plan to drive a specific change.
-2.  **Implementation**: You (and your AI agents) write the code.
-3.  **Synthesis**: Before merging, you synthesize a new "Cicadas Snapshot" from the code and the intent in your forward docs.
-4.  **Husking**: The forward docs are archived ("husked") and never maintained again.
-5.  **Canonical Truth**: The `canon/` directory always reflects the current reality of the code.
+## The Core Concept
 
-For a full explanation, see [Cicadas Method (General)](docs/cicadas-method-general.md).
+1.  **Active Specs are Disposable**: PRDs, designs, and task lists drive implementation but expire when the initiative completes.
+2.  **Code is Truth**: The codebase is the only source of truth.
+3.  **Canon is Synthesized**: Authoritative documentation (`canon/`) is generated from the code + the intent of expired specs. It is never manually maintained.
+4.  **Reflect & Signal**: During development, we keep specs honest via **Reflect** (updating active specs to match code reality) and coordinate via **Signal** (broadcasting breaking changes to peer branches).
+
+### See It In Action
+
+For a complete end-to-end walkthrough of the method (Greenfield creation + Brownfield update), see:
+
+👉 **[Cicadas Method — Dry Run](docs/dry-run.md)**
+
+For the full methodology specification, see:
+
+📘 **[Cicadas Method (v2) Specification](docs/cicadas-method-general-02.md)**
+
+---
+
+## The Workflow
+
+### Phase 1: Emergence (Drafting)
+We draft specifications in `.cicadas/drafts/` using specialized subagents (Clarify, UX, Tech, Approach, Tasks).
+*   **Key Artifact**: `approach.md` defines the partitions (feature branches).
+
+### Phase 2: Kickoff
+We promote drafts to **Active Specs** and register the initiative.
+*   **Command**: `python scripts/chorus/scripts/brood.py {name} --intent "..."`
+*   **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
+
+### Phase 3: Execution (The Dual Loop)
+Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
+
+*   **Start Feature**: `python scripts/chorus/scripts/branch.py {feature} --intent "..."`
+*   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately*.
+*   **Signal**: If a change affects other branches, we broadcast it: `python scripts/chorus/scripts/signal.py "..."`
+
+### Phase 4: Completion (Synthesis)
+When all features are merged into the initiative branch, we merge to `main` and then:
+1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/`.
+2.  **Archive**: Active specs are moved to `.cicadas/archive/`.
+
+---
 
 ## Project Structure
 
-This repository contains both the definition of the methodology and the **Chorus** reference implementation (CLI tools).
+The **Chorus** toolset manages the `.cicadas/` directory:
 
 ```text
 .
-├── docs/                       # Methodology documentation
-│   ├── cicadas-method.md       # Original concept
-│   └── cicadas-method-general.md # Skill-agnostic manual
 ├── scripts/
-│   └── chorus/                 # The Chorus orchestration toolset
-│       ├── scripts/            # Python CLI tools (branch, check, archive, etc.)
-│       ├── templates/          # Markdown templates for snapshots and docs
-│       └── CHORUS.md           # The Agent Manual (Entry point for AI)
-└── .cicadas/                   # This project's own Cicadas artifacts
-    ├── canon/                  # Canonical snapshots of this repo
-    ├── index.json              # Artifact ledger
-    └── registry.json           # Active branch registry
+│   └── chorus/                 # The Chorus orchestrator (scripts & agents)
+└── .cicadas/
+    ├── canon/                  # Authoritative, generated checks
+    │   ├── product-overview.md
+    │   ├── tech-overview.md
+    │   └── modules/            # Module-level snapshots
+    ├── active/                 # Live specs for in-flight initiatives
+    ├── drafts/                 # Staging area for new initiatives
+    ├── archive/                # Expired specs (historical record)
+    └── registry.json           # Active initiatives & branch registry
 ```
+
+---
 
 ## Getting Started
 
-To use the Cicadas method on this project (or to bootstrap it on another), see the **[Chorus Agent Manual](scripts/chorus/CHORUS.md)**.
+### Installation
+Copy the `scripts/chorus/` directory into your project root.
+
+### Initialization
+Run the bootstrap script to create the `.cicadas/` structure:
+
+```bash
+python scripts/chorus/scripts/init.py
+```
 
 ### Quick Command Reference
+All scripts are in `scripts/chorus/scripts/`.
 
-All tools are located in `scripts/chorus/scripts/`.
-
-- **Start a task**: `python scripts/chorus/scripts/branch.py my-feature --intent "..."`
-- **Check status**: `python scripts/chorus/scripts/status.py`
-- **Verify work**: `python scripts/chorus/scripts/check.py`
-- **Finish task**: `python scripts/chorus/scripts/archive.py my-feature`
+| Action | Command |
+| :--- | :--- |
+| **Kickoff Initiative** | `python scripts/chorus/scripts/kickoff.py {name} --intent "..."` |
+| **Start Feature** | `python scripts/chorus/scripts/branch.py {name} --intent "..."` |
+| **Check Status** | `python scripts/chorus/scripts/status.py` |
+| **Check Conflicts** | `python scripts/chorus/scripts/check.py` |
+| **Send Signal** | `python scripts/chorus/scripts/signal.py "Message..."` |
+| **Log Work** | `python scripts/chorus/scripts/update_index.py --branch {name} ...` |
+| **Archive** | `python scripts/chorus/scripts/archive.py {name}` |
