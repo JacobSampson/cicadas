@@ -1,99 +1,57 @@
 import argparse
 import shutil
 import subprocess
-import sys
-from pathlib import Path
 from utils import get_project_root, load_json, save_json
 
-def prune(name, item_type, no_restore=False, force=False):
+def prune(name, type_):
     root = get_project_root()
     cicadas = root / ".cicadas"
-    registry_path = cicadas / "registry.json"
-    registry = load_json(registry_path)
-    
-    # Paths
-    if item_type == "branch":
-        # 1. Validate Branch
+    registry = load_json(cicadas / "registry.json")
+
+    if type_ == "branch":
         if name not in registry.get("branches", {}):
-            print(f"Error: Branch '{name}' not found in registry.")
+            print(f"Error: Branch {name} not found.")
             return
-        
-        forward_dir = cicadas / "forward" / name
-        incubator_dir = cicadas / "incubator" / name
-        
-        # 2. Delete Git Branch
+        # Restore active specs to drafts
+        active = cicadas / "active" / name
+        drafts = cicadas / "drafts" / name
+        if active.exists():
+            shutil.move(str(active), str(drafts))
+            print(f"Restored specs to drafts/{name}")
+        # Delete git branch
         try:
-            # Check if branch exists in git first
-            subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{name}"], check=True)
-            print(f"🗑️  Deleting git branch '{name}'...")
-            subprocess.run(["git", "branch", "-D", name], check=True)
-        except subprocess.CalledProcessError:
-            print(f"Warning: Git branch '{name}' not found or could not be deleted.")
-
-        # 3. Restore to Incubator (unless no_restore)
-        if not no_restore and forward_dir.exists():
-            print(f"♻️  Restoring forward docs to incubator: {incubator_dir}...")
-            incubator_dir.mkdir(parents=True, exist_ok=True)
-            for item in forward_dir.iterdir():
-                if item.name.startswith("."): continue
-                shutil.move(str(item), str(incubator_dir / item.name))
-        
-        # 4. Cleanup Forward Dir
-        if forward_dir.exists():
-            shutil.rmtree(forward_dir)
-
-        # 5. Remove from Registry
+            subprocess.run(["git", "checkout", "main"], check=True, cwd=root)
+            subprocess.run(["git", "branch", "-D", name], check=True, cwd=root)
+        except Exception:
+            print(f"Warning: Could not delete git branch {name}")
         del registry["branches"][name]
-        
+        save_json(cicadas / "registry.json", registry)
+        print(f"Pruned branch: {name}")
 
-        print(f"✅ Pruned branch '{name}'. Registry updated.")
-
-    elif item_type == "brood":
-        # 1. Validate Brood
-        if name not in registry.get("broods", {}):
-            print(f"Error: Brood '{name}' not found in registry.")
+    elif type_ == "initiative":
+        if name not in registry.get("initiatives", {}):
+            print(f"Error: Initiative {name} not found.")
             return
-        
-        brood_data = registry["broods"][name]
-        
-        # Calculate active branches dynamically
-        active_branches = [
-            b_name for b_name, b_info in registry.get("branches", {}).items()
-            if b_info.get("brood") == name
-        ]
-        
-        if active_branches and not force:
-            print(f"Error: Brood '{name}' has active branches: {', '.join(active_branches)}")
-            print("Use --force to prune anyway (this will orphan the branches in the registry).")
-            return
-
-        forward_dir = cicadas / "forward" / "broods" / name
-        incubator_dir = cicadas / "incubator" / name
-
-        # 2. Restore to Incubator
-        if not no_restore and forward_dir.exists():
-            print(f"♻️  Restoring brood docs to incubator: {incubator_dir}...")
-            incubator_dir.mkdir(parents=True, exist_ok=True)
-            for item in forward_dir.iterdir():
-                if item.name.startswith("."): continue
-                shutil.move(str(item), str(incubator_dir / item.name))
-        
-        # 3. Cleanup Forward Dir
-        if forward_dir.exists():
-            shutil.rmtree(forward_dir)
-
-        # 4. Remove from Registry
-        del registry["broods"][name]
-        print(f"✅ Pruned brood '{name}'. Registry updated.")
-
-    save_json(registry_path, registry)
+        # Restore specs
+        active = cicadas / "active" / name
+        drafts = cicadas / "drafts" / name
+        if active.exists():
+            shutil.move(str(active), str(drafts))
+            print(f"Restored specs to drafts/{name}")
+        # Delete initiative branch
+        branch_name = f"initiative/{name}"
+        try:
+            subprocess.run(["git", "checkout", "main"], check=True, cwd=root)
+            subprocess.run(["git", "branch", "-D", branch_name], check=True, cwd=root)
+        except Exception:
+            print(f"Warning: Could not delete git branch {branch_name}")
+        del registry["initiatives"][name]
+        save_json(cicadas / "registry.json", registry)
+        print(f"Pruned initiative: {name}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prune (delete/rollback) a branch or brood.")
-    parser.add_argument("name", help="Name of the branch or brood to prune")
-    parser.add_argument("--type", choices=["branch", "brood"], required=True, help="Type of item to prune")
-    parser.add_argument("--no-restore", action="store_true", help="Do not move docs back to incubator (permanent delete)")
-    parser.add_argument("--force", action="store_true", help="Force prune brood even if it has active branches")
-    
+    parser = argparse.ArgumentParser(description="Rollback and restore specs to drafts")
+    parser.add_argument("name")
+    parser.add_argument("--type", required=True, choices=["branch", "initiative"])
     args = parser.parse_args()
-    prune(args.name, args.type, args.no_restore, args.force)
+    prune(args.name, args.type)

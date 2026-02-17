@@ -6,18 +6,19 @@
 
 ## Process
 
-1.  **Ingest**: Read `../incubator/{feature}/prd.md`.
-2.  **Analyze**:
+1.  **Ingest**: Read `.cicadas/drafts/{initiative}/prd.md`.
+2.  **Canon Check**: On brownfield projects, read existing `canon/ux-overview.md` to understand current design patterns, screens, and flows. Design for consistency with the existing experience.
+3.  **Analyze**:
     -   Identify all user touchpoints.
     -   Determine necessary UI states (loading, error, success, empty).
     -   Check existing design patterns in the codebase to ensure consistency.
-3.  **Draft**: Create `../incubator/{feature}/ux.md`.
+4.  **Draft**: Create `.cicadas/drafts/{initiative}/ux.md`.
     -   *Optional*: Create simple ASCII mockups or describe necessary visual assets.
-4.  **Refine**: user review.
+5.  **Refine**: Builder review.
 
 ## Output Artifact: `ux.md`
 
-Use the template at `scripts/chorus/templates/emergence/ux.md`.
+Use the template at `scripts/chorus/templates/ux.md`.
 
 ## Key Considerations
 

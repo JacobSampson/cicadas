@@ -21,31 +21,30 @@ The agent will:
 - Map authoritative data state.
 
 ### Phase 3: Canonization
-Tell the agent: **"Synthesize the baseline Canon. Create an app snapshot and module snapshots for the critical areas you found."**
+Tell the agent: **"Synthesize the baseline Canon. Create a product overview and module snapshots for the critical areas you found."**
 The agent will:
-- Draft `.cicadas/canon/app.md`.
-- Create module-specific baseline docs.
+- Draft `.cicadas/canon/product-overview.md`.
+- Create module-specific baseline docs in `.cicadas/canon/modules/`.
 - Mark implicit decisions and open questions in the docs.
 
 ### Phase 4: Genesis
 Tell the agent: **"Set the Genesis point. Update the history index to record this bootstrap."**
 The agent will:
 - Execute `update_index.py` with the "bootstrap" summary.
-- Registry state is now authoritative for future forward work.
+- Registry state is now authoritative for future work.
 
-## Guidelines for the Agent
+## Guidelines for the Bootstrap Agent
+
 - **Mental Models Over Lines of Code**: Describe what a human needs to understand to work safely.
 - **Mark Uncertainties**: If the "Why" is missing (as it often is in legacy), label it as an `Open Question`.
 - **Target Stability**: Baseline the stable core first. The volatility will be captured in future branches.
-
-## Guidelines for the Bootstrap Agent
 
 > [!IMPORTANT]
 > **Be Descriptive, Not Exhaustive**: Don't try to document every line. Focus on the "Mental Model" a developer needs to work in the code safely.
 
 - **Look for Patterns**: Identify naming conventions, error handling styles, and testing patterns.
-- **Admit Uncertainty**: If the "Why" behind a piece of code is unclear, mark it in `Open Questions` within the snapshots.
-- **Prioritize Stability**: Document the stable parts of the system first. Volatile parts are better addressed during subsequent branch-based forward work.
+- **Admit Uncertainty**: If the "Why" behind a piece of code is unclear, mark it in `Open Questions` within the canon.
+- **Prioritize Stability**: Document the stable parts of the system first. Volatile parts are better addressed during subsequent initiative-based work.
 
 ## Next Steps
 Once the Canon is established, all future work follows the standard **Emergence** path, building on top of the newly created authoritative documentation.

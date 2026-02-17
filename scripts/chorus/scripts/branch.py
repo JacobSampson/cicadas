@@ -1,21 +1,20 @@
 import argparse
-import json
 import subprocess
 import shutil
 from pathlib import Path
 from datetime import datetime, timezone
 from utils import get_project_root, load_json, save_json
 
-def create_branch(name, intent, modules, brood=None, owner="unknown"):
+def create_branch(name, intent, modules, initiative=None, from_branch=None, owner="unknown"):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
-    
+
     if name in registry.get("branches", {}):
         print(f"Error: Branch {name} already registered.")
         return
 
-    # Check for overlaps
+    # Check for module overlaps
     my_mods = set(m.strip() for m in modules.split(",") if m.strip())
     conflicts = []
     for b_name, b_info in registry.get("branches", {}).items():
@@ -23,8 +22,23 @@ def create_branch(name, intent, modules, brood=None, owner="unknown"):
         if overlap:
             conflicts.append(f"{b_name} (Overlaps: {', '.join(overlap)})")
 
+    # Determine parent branch
+    if from_branch:
+        parent = from_branch
+    elif initiative:
+        parent = f"initiative/{initiative}"
+    else:
+        parent = None
+
+    # Checkout parent branch first if specified
+    if parent:
+        try:
+            subprocess.run(["git", "checkout", parent], check=True, cwd=root)
+        except subprocess.CalledProcessError:
+            print(f"Warning: Could not checkout parent branch {parent}")
+
     # Git branch creation
-    subprocess.run(["git", "checkout", "-b", name], check=True)
+    subprocess.run(["git", "checkout", "-b", name], check=True, cwd=root)
 
     # Register
     branch_info = {
@@ -33,48 +47,27 @@ def create_branch(name, intent, modules, brood=None, owner="unknown"):
         "owner": owner,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
-    
-    if brood:
-        if brood not in registry.get("broods", {}):
-            print(f"Warning: Brood {brood} not found. Branch registered without brood association.")
+    if initiative:
+        if initiative not in registry.get("initiatives", {}):
+            print(f"Warning: Initiative {initiative} not found.")
         else:
-            branch_info["brood"] = brood
+            branch_info["initiative"] = initiative
 
     registry.setdefault("branches", {})[name] = branch_info
     save_json(cicadas / "registry.json", registry)
-    
-    forward_dir = cicadas / "forward" / name
-    forward_dir.mkdir(parents=True, exist_ok=True)
 
-    # Check for incubator content and promote it
-    incubator_dir = cicadas / "incubator" / name
-    if incubator_dir.exists():
-        print(f"🐣 Promoting incubator content from {incubator_dir} to {forward_dir}...")
-        for item in incubator_dir.iterdir():
-            if item.name.startswith("."): continue
-            
-            # If part of a brood, only promote branch-specific docs
-            if brood and item.name in ["prd.md", "tech-design.md", "ux.md"]:
-                print(f"  - Keeping shared doc {item.name} in incubator (Brood path handles it)")
-                continue
+    (cicadas / "active" / name).mkdir(parents=True, exist_ok=True)
 
-            shutil.move(str(item), str(forward_dir / item.name))
-        
-        # Clean up incubator if empty
-        try:
-            incubator_dir.rmdir()
-        except OSError:
-            pass
-    
-    print(f"Registered branch {name}.")
+    print(f"Registered feature branch: {name}")
     if conflicts:
-        print(f"WARNING: Potential overlaps detected: {'; '.join(conflicts)}")
+        print(f"WARNING: Module overlaps detected: {'; '.join(conflicts)}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Register a feature branch with conflict detection")
     parser.add_argument("name")
     parser.add_argument("--intent", required=True)
     parser.add_argument("--modules", default="")
-    parser.add_argument("--brood", help="Associate branch with an active brood")
+    parser.add_argument("--initiative", help="Link to an active initiative")
+    parser.add_argument("--from", dest="from_branch", help="Parent branch to fork from (defaults to initiative branch)")
     args = parser.parse_args()
-    create_branch(args.name, args.intent, args.modules, brood=args.brood)
+    create_branch(args.name, args.intent, args.modules, initiative=args.initiative, from_branch=args.from_branch)

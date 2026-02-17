@@ -6,16 +6,17 @@
 
 ## Process
 
-1.  **Ingest**: Read the initial request and identify the feature name.
-2.  **Initialize**: Create `.cicadas/incubator/{feature}/prd.md` using the template.
-3.  **Iterative Drafting**: Build the PRD section-by-section. For each section:
+1.  **Ingest**: Read the initial request and identify the initiative name.
+2.  **Canon Check**: On brownfield projects, read existing canon (`product-overview.md`, `ux-overview.md`, `tech-overview.md`) to understand what the system already does. Use this to ask sharper, more targeted questions.
+3.  **Initialize**: Create `.cicadas/drafts/{initiative}/prd.md` using the template.
+4.  **Iterative Drafting**: Build the PRD section-by-section. For each section:
     - **Draft**: Write the specific section content (e.g., Problem Statement, Users).
     - **Present**: Show the drafted section to the user.
     - **Halt & Elicit**: Present the **Balanced Elicitation Menu** and STOP for input:
         - `[D] Deep Dive`: Ask 1-2 probing questions to refine this section.
         - `[R] Review`: Adopt a critical persona to highlight risks in this section.
         - `[C] Continue`: Save the section and move to the next item.
-4.  **Finalize**: Once all sections are complete, perform a final review and update the frontmatter `steps_completed`.
+5.  **Finalize**: Once all sections are complete, perform a final review.
 
 ## Balanced Elicitation (Abridged)
 
@@ -25,7 +26,7 @@ Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full technique
 
 ## Output Artifact: `prd.md`
 
-Use the template at `scripts/chorus/templates/emergence/prd.md`.
+Use the template at `scripts/chorus/templates/prd.md`.
 
 ## Key Considerations
 
