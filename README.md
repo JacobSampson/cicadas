@@ -1,7 +1,5 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
-
-# Cicadas (v2)
+# Cicadas 
+**Version 2.0**
 
 **Sustainable, Spec-Driven Development (SDD) for human-AI teams.**
 
