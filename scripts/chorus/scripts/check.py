@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 import subprocess
 from utils import get_project_root, load_json
 

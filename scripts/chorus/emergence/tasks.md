@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Emergence: Tasks
 
 **Goal**: Break the approach into a checklist of small, testable tasks, grouped by partition.

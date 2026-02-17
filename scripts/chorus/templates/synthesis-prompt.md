@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 You are an expert technical writer and software architect. Your task is to update the Canonical Documentation (Canon) for the project based on the latest changes.
 
 **Inputs:**

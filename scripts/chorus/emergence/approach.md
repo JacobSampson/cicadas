@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Emergence: Approach
 
 **Goal**: Define the implementation strategy, including logical partitions that become feature branches.

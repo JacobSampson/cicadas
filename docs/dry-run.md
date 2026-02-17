@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Cicadas Method — Dry Run
 
 Pressure-testing the v2 methodology by walking through a fictional project end-to-end.

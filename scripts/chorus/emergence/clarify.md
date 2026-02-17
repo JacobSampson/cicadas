@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Emergence: Clarify
 
 **Goal**: Transform a vague idea into a structured Product Requirement Document (PRD).

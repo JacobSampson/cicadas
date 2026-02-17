@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 import argparse
 from pathlib import Path
 from utils import save_json, get_project_root

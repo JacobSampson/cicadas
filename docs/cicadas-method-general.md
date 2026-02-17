@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Cicadas (General/Skill-Agnostic Version)
 
 ## A Methodology for Sustainable Spec-Driven Development

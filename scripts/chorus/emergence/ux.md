@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Emergence: UX Design
 
 **Goal**: Define the user interaction, flow, and experience.

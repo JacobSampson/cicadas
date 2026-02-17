@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 ---
 name: chorus
 description: Orchestrates Cicadas methodology for spec-driven development. Use this skill when performing project lifecycle operations.

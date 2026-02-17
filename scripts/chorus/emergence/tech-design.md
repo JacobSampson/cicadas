@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Emergence: Technical Design
 
 **Goal**: Define the system architecture and data models.

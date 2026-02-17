@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Balanced Elicitation Options
 
 These options are designed to provide a "middle ground" between a single-pass draft and an overly heavy process. Use them to refine individual PRD sections during the **Clarify** phase.

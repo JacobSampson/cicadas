@@ -1,3 +1,6 @@
+# Copyright 2026 Cicadas Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 # Cicadas (v2)
 
 **Sustainable, Spec-Driven Development (SDD) for human-AI teams.**
@@ -95,3 +98,16 @@ All scripts are in `scripts/chorus/scripts/`.
 | **Send Signal** | `python scripts/chorus/scripts/signal.py "Message..."` |
 | **Log Work** | `python scripts/chorus/scripts/update_index.py --branch {name} ...` |
 | **Archive** | `python scripts/chorus/scripts/archive.py {name}` |
+
+
+## License
+
+Cicadas is licensed under the [Apache License 2.0](LICENSE).
+```
+
+**Optional: Add a NOTICE file** (recommended for Apache 2.0 projects):
+```
+Cicadas
+Copyright 2026 Cicadas Contributors
+
+This product includes software developed by Dan and contributors.
