@@ -1,24 +1,48 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
+# Cicadas: The Definitive Guide (v2.1)
 
-# Chorus & Cicadas: The Definitive Guide (MIGRATION TEST)
-
-
-Welcome to the Cicadas methodology. This guide explains the core concepts, directory structure, and conversational workflows managed by the **Chorus Agent**.
+Welcome to the Cicadas methodology. This guide explains how to install Chorus, initialize your project, and follow the Cicadas workflow for both new and existing codebases.
 
 ---
 
-## 🧠 Core Concepts
+## 🚀 Installation & Setup
+
+### 1. Install Chorus
+Chorus is a portable set of scripts. To add it to your project, copy the `scripts/chorus` directory from the Cicadas repository into your project's `scripts/` folder:
+
+```bash
+cp -r /path/to/cicadas/scripts/chorus ./scripts/chorus
+```
+
+### 2. Initialize Cicadas
+Initialize the `.cicadas/` directory structure where all metadata and specs will live.
+
+**Prompt**: *"Initialize cicadas for this project."*
+
+**Agent Action**: `python scripts/chorus/scripts/init.py`
+
+---
+
+## 🧠 Core Concepts & Hierarchy
+
+### Branching Model
+
+Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensure documentation integrity:
+
+1.  **Initiative Branch (`initiative/{name}`)**: A long-lived branch created at **Kickoff**. It serves as the integration point for all code in a release. No documentation is synthesized here.
+2.  **Feature Branch (`feat/{name}`)**: A registered branch for a specific **Partition** (defined in the Approach). It forks from the Initiative branch and merges back when the partition is complete.
+3.  **Task Branch (`task/{feat}/{name}`)**: (Optional) Ephemeral, unregistered branches for individual PRs into a feature branch.
+
+### Terminology
 
 | Term | Definition |
 | :--- | :--- |
-| **Incubator** | The "pre-natal" phase. Rough drafts (PRDs, tech designs) live here before work starts. |
-| **Hatch** | Promoting incubator docs into a shared **Brood** or a specific **Branch**. |
-| **Brood** | A collection of synchronized branches sharing a "**Provisional Canon**" (shared initiative spec). |
-| **Branch** | An individual line of development linked to specific modules and tasks. |
-| **Forward Docs** | Transient requirements (PRDs, Approach, Tasks) that expire after implementation. |
-| **Canon** | The permanent, authoritative documentation reverse-engineered from the code + rationale. |
-| **Synthesis** | The process where the Agent updates the Canon after reading code changes and forward docs. |
+| **Canon** | Authoritative documentation reverse-engineered from code + rationale. Lives in `.cicadas/canon/`. |
+| **Drafts** | Staging area for new requirements before work starts (`.cicadas/drafts/`). |
+| **Active Specs** | The living requirements driving current work (`.cicadas/active/`). |
+| **Approach** | The strategy doc where you define the **Initiative** and its **Partitions**. |
+| **Reflect** | Keeping active specs in sync with code *during* development. |
+| **Signal** | Broadcasting breaking changes to other peer branches. |
+| **Synthesis** | Overwriting Canon on `main` at the end of an initiative. |
 
 ---
 
@@ -26,58 +50,65 @@ Welcome to the Cicadas methodology. This guide explains the core concepts, direc
 
 ```text
 .cicadas/
-├── registry.json      # Global state of branches, broods, and module owners.
-├── index.json         # Historical log of every merge and synthesis.
-├── incubator/         # [PHASE 0] Unrefined specs and ideas.
-├── forward/           # [PHASE 1] Active requirements guiding branches.
-│   └── broods/        # Shared "provisional canon" for initiatives.
-├── canon/             # [PHASE 2] Permanent architectural snapshots.
-│   └── modules/       # Per-module deep dives.
-└── archive/           # [CLOSED] The "husks" of completed work.
+├── registry.json      # Global state of active initiatives and feature branches.
+├── index.json         # Append-only history of all completed feature branches.
+├── canon/             # Authoritative snapshots of the system.
+├── drafts/            # Staging area for upcoming initiatives.
+├── active/            # Living specs for in-flight work.
+└── archive/           # Expired specs from completed initiatives.
 ```
+
+---
+
+## 🟢 Greenfield: Starting a New Project
+
+1.  **Initialize**: *"Initialize cicadas for this project."*
+2.  **Clarify**: *"I want to build [Product Name]. Help me clarify the requirements."*
+3.  **Draft Appearance**: Use prompts like *"Draft the UX"* and *"Draft the tech design"*.
+4.  **Define Strategy (Approach)**: *"Draft the approach."*
+    - **Note**: This is where you define the **Partitions** (future Feature Branches).
+5.  **Draft Tasks**: *"Draft the tasks."*
+6.  **Kickoff**: *"Kickoff [initiative-name]."*
+    - Agent promotes drafts to active and creates the **Initiative Branch**.
+7.  **Implementation Loop**:
+    - **Start Feature**: *"Start feature [partition-name]."* (Forks from Initiative Branch).
+    - **Reflect**: The Agent keeps specs current as you build.
+    - **Complete Feature**: Merges back to the Initiative Branch.
+8.  **Complete Initiative**: *"Complete initiative [initiative-name]."*
+    - Merges Initiative Branch to `main`, **Synthesizes** the Canon on `main`, and **Archives** the specs.
+
+---
+
+## 🔵 Bootstrap: Migrating a Legacy Project
+
+If you are starting with an existing codebase that lacks Cicadas documentation, use the Bootstrap workflow to bring it into the methodology.
+
+1.  **Initialize**: *"Initialize cicadas for this project."*
+2.  **Bootstrap**: *"Bootstrap the baseline Canon."*
+    - The Agent autonomously performs code discovery, synthesizes a full suite of docs (PRD, UX, Tech, Modules) using templates, and validates them against the code.
+3.  **Reference**: See the **Bootstrap Subagent** instructions in `scripts/chorus/emergence/bootstrap.md` for a deep-dive on legacy migration.
+
+---
+
+## 🟠 Brownfield: New Features (Canon-Aware)
+
+1.  **Read Canon**: The Agent uses existing `.cicadas/canon/` as context automatically.
+2.  **Draft Delta**: *"I want to add [Feature X]."* (Agent authors specs aware of the existing system).
+3.  **Standard Cycle**: Follow the Approach -> Kickoff -> Feature loop.
+4.  **Update Canon**: Synthesis on `main` **updates** the existing Canon with the new reality.
 
 ---
 
 ## 🤖 Agents & Skills
 
-You don't run scripts; you talk to the **Chorus Agent** in your TUI. It uses specialized skills:
-
-1.  **Emergence Agent**: Helps you clarify requirements and design UX/Tech. Uses the section-by-section drafting protocol.
-2.  **Implementation Agent**: The actual developer. Focuses on `tasks.md` and writing code.
-3.  **Synthesis Agent**: The architect. Reads code and forward docs to update the permanent Canon.
-
----
-
-## 🚀 The Three Paths
-
-### 🟢 1. Greenfield: Initial Launch
-- **Incubate**: Talk to the agent to draft your MVP specs in the incubator.
-- **Hatch**: Tell the agent: *"Hatch the 'mvp' brood."*
-- **Branch**: *"Start an 'api' branch linked to the 'mvp' brood."*
-
-### 🟠 2. Brownfield: New Release / Large Feature
-- **Context**: The agent reads the existing **Canon** to understand the baseline.
-- **Cycle**: Follow the same Incubate -> Hatch -> Branch flow for the new release delta.
-
-### 🔵 3. Bootstrap: Migrating a Legacy Project
-- **Initialize**: `python scripts/chorus/scripts/init.py`.
-- **Lexical Discovery**: *"Scan this legacy project and tell me what the architecture looks like."*
-- **Canonize**: *"Synthesize a baseline Canon from these files."*
-- **Reference**: See [REVERSE_ENGINEERING.md](./scripts/chorus/REVERSE_ENGINEERING.md) for deeper details.
-
----
-
-## 🚀 Sample Flow: Building a "Social Feed"
-
-1.  **Drafting**: *"Clarify the requirements for a Social Feed."* (Agent drafts in `incubator/` section-by-section).
-2.  **Hatching**: *"Hatch this as the 'v1-feed' brood."* (Docs move to `forward/broods/v1-feed/`).
-3.  **Branching**: *"Start a branch called 'feed-db' linked to 'v1-feed'."* (Agent creates branch).
-4.  **Implementing**: *"Implement Phase 1."*
-    - The agent reads the **Phased Tasks** in the Brood and implements Phase 1 (e.g., Models) one-by-one.
-    - It then **STOPS** and asks for code review.
-5.  **Completing**: *"Complete Phase 1."*
-    - The agent automatically **Synthesizes** the Canon, **Archives** the branch, and updates the **Index**.
-
+- **Emergence Agent**: Authors specs (PRD, UX, Tech, Approach, Tasks).
+- **Implementation Agent**: Focuses on `tasks.md` and writing code.
+- **Synthesis Agent**: Operates on `main` to update the authoritative Canon.
 
 > [!IMPORTANT]
-> Always initialize a new project with `python scripts/chorus/scripts/init.py` before starting your first interaction.
+> The **Code is the single source of truth**. Specs are active inputs that expire once implemented, while Canon is the permanent record synthesized from reality.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

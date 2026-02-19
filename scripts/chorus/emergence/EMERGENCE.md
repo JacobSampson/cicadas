@@ -30,6 +30,7 @@ The Emergence phase consists of 5 progressive steps. Each step is handled by a s
 
 | Step | Artifact | Subagent | Focus |
 |------|----------|----------|-------|
+| **0. Bootstrap** | `canon/` suite | `emergence/bootstrap` | **Legacy Migration**. Reverse engineer PRD, UX, Tech from existing code. |
 | **1. Clarify** | `prd.md` | `emergence/clarify` | **What & Why**. Problem, users, success criteria. |
 | **2. UX** | `ux.md` | `emergence/ux` | **Experience**. Interaction flow, UI states, copy. |
 | **3. Tech** | `tech-design.md` | `emergence/tech-design` | **Architecture**. Components, data flow, schemas. |
@@ -52,8 +53,10 @@ The Emergence phase consists of 5 progressive steps. Each step is handled by a s
 ### The Flow
 ```mermaid
 graph TD
-    User[User Idea] --> Canon{Existing Canon?}
-    Canon -->|Yes| Clarify[Clarify with Canon Context]
+    User[User Idea] --> Canon{Existing Code?}
+    Canon -->|Yes| Bootstrap[Bootstrap Subagent]
+    Bootstrap --> Canonized[Base Canon Created]
+    Canonized --> Clarify[Clarify with Canon Context]
     Canon -->|No| Clarify
     Clarify --> PRD[prd.md]
     PRD --> UX[UX Design]
@@ -70,6 +73,7 @@ graph TD
 
 ## Subagent References
 
+- [Bootstrap](./bootstrap.md)
 - [Clarify](./clarify.md)
 - [User Experience](./ux.md)
 - [Technical Design](./tech-design.md)

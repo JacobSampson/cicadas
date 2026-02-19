@@ -31,8 +31,10 @@ project-root/
 │   └── chorus/                       # Chorus orchestrator
 │       ├── SKILL.md                  # Agent skill definition (this file)
 │       ├── implementation.md         # Agent guardrails
-│       ├── reverse-engineering.md    # Bootstrapping guide for existing codebases
-│       ├── scripts/                  # Python orchestration scripts
+│       ├── emergence/                # Subagent definitions for spec authoring
+│       │   ├── emergence.md          # Emergence phase overview
+│       │   ├── bootstrap.md          # Bootstrap/Reverse Engineering subagent
+│       │   ├── clarify.md            # PRD refinement subagent
 │       │   ├── utils.py              # Shared utilities
 │       │   ├── init.py               # Bootstrap .cicadas/ structure
 │       │   ├── kickoff.py            # Promote drafts → active, register initiative
@@ -56,6 +58,7 @@ project-root/
 │       │   └── tasks.md              # Active spec template
 │       └── emergence/                # Subagent definitions for spec authoring
 │           ├── emergence.md          # Emergence phase overview
+│           ├── bootstrap.md          # Reverse Engineering subagent
 │           ├── clarify.md            # PRD refinement subagent
 │           ├── ux.md                 # UX design subagent
 │           ├── tech-design.md        # Architecture subagent
@@ -120,11 +123,14 @@ main
 
 ## Operations
 
-### Bootstrap (First-Time Setup)
-```
-python scripts/chorus/scripts/init.py
-```
-Creates the `.cicadas/` directory structure. If the project already has code, follow `reverse-engineering.md` to create initial canon.
+### Bootstrap (Legacy Migration)
+
+Use the **Bootstrap Subagent** to bring an existing codebase into Cicadas.
+
+1.  **Discovery**: Scan the repository to understand product goals and architecture.
+2.  **Canonization**: Synthesize a full suite of authoritative docs (PRD, UX, Tech, Modules) using templates.
+3.  **Validation**: Verify the documentation correctly reflects the code.
+4.  **Genesis**: Record the baseline in the index.
 
 ### Emergence (Drafting Specs)
 Progressive spec authoring in `.cicadas/drafts/{initiative-name}/`, using subagents in `emergence/` or manual drafting. See `emergence/emergence.md` for the full workflow.
@@ -235,7 +241,14 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 **Trigger**: After Reflect discovers a cross-branch impact.
 **Action**: The Agent evaluates whether a change affects peer branches and runs `signal.py` autonomously if needed.
 
-### Synthesis
+### Bootstrap (Agent Operation)
+**Trigger**: Migrating a legacy project or initializing with existing code.
+**Action**:
+1.  Initialize `.cicadas/` structure.
+2.  Perform comprehensive code discovery.
+3.  Synthesize authoritative Canon (PRD, UX, Tech, Modules) using templates.
+4.  Validate documentation against code.
+5.  Set Genesis point in index.
 **Trigger**: At initiative completion, on `main`, after the code merge.
 **Action**: Generate canon from code + active specs. See the synthesis protocol in the Operations section above.
 
