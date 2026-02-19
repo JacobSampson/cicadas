@@ -1,7 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
-
----
 name: chorus
 description: Orchestrates Cicadas methodology for spec-driven development. Use this skill when performing project lifecycle operations.
 ---
@@ -323,3 +319,8 @@ Use templates in `scripts/chorus/templates/` directory:
 - `product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`: Canon templates
 - `prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`: Active spec templates
 - `synthesis-prompt.md`: System prompt for canon synthesis
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

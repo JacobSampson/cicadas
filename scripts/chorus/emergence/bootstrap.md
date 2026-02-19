@@ -1,30 +1,87 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Emergence: Bootstrap (Reverse Engineering)
 
-**Goal**: Transform a non-Cicadas codebase into a documented system with an authoritative **Canon** including PRDs, UX designs, Tech designs, and module snapshots.
+**Goal**: Transform a non-Cicadas codebase into a documented system with authoritative **Canon** — the persistent knowledge base read by every future agent working on this project.
 
-**Role**: You are a Lead Architect. Your job is to perform deep lexical discovery and synthesize a baseline documentation suite that captures the "What, Why, and How" of the existing system.
+**Role**: You are a Lead Architect performing deep discovery. Your job is to synthesize a baseline documentation suite that captures the "What, Why, and How" of the existing system. You are writing for *future agents*, not for human readers — so the outputs must be precise, navigable, and unambiguous.
 
 ## Process
 
-1.  **Initialize**: Setup the `.cicadas/` structure if it doesn't exist.
-2.  **Bootstrap the baseline Canon**: 
-    - **Discovery**: Perform a deep, recursive scan of the codebase to understand goals, UX, and architecture.
-    - **Synthesis (Templates MANDATORY)**: Use templates in `scripts/chorus/templates/` to create:
-        - **Product Overview (PRD)**: The "What and Why".
-        - **UX Overview**: Primary flows and key screens.
-        - **Tech Overview**: Architecture, data models, and API boundaries.
-        - **Module Snapshots**: Detailed snippets in `canon/modules/`.
-    - **Verification & Validation**: Cross-reference drafted canon against implementation for 100% fidelity. Flag "Open Questions".
-3.  **Genesis**: Execute `update_index.py` to set the baseline and transition to standard cycles.
+### Phase 1 — Discovery
+
+Perform a deep, recursive scan of the codebase before writing anything. Build a mental model of:
+
+1. **What it does**: The product's purpose, who uses it, and what success looks like for them.
+2. **How users interact with it**: The primary entry points, flows, and UX patterns.
+3. **How it is built**: The tech stack, architecture pattern, key components, data models, and API surface.
+4. **What conventions exist**: Naming, error handling, testing patterns, file organization.
+5. **What's uncertain**: "Why" decisions that aren't explained in code. Flag these as Open Questions.
+
+Specifically, scan:
+- `README.md` and root-level documentation
+- All source files (focus on entry points, service layer, models, routes/commands)
+- Config files, `pyproject.toml`, `package.json`, or equivalent
+- Test files (reveal intent, edge cases, and conventions)
+- Any existing docs, wikis, or inline comments
+
+### Phase 2 — Canon Synthesis
+
+Using the templates in `scripts/chorus/templates/`, create the following canon documents in `.cicadas/canon/`:
+
+#### 1. `product-overview.md`
+The **"What and Why"** of the product, including UX context.
+
+Use `scripts/chorus/templates/product-overview.md`. Populate:
+- What this is + why it exists
+- User personas with journey narratives (not just bullet points — write 2–3 sentence narratives per persona)
+- Core features table (as-built, not aspirational)
+- Intentional out-of-scope decisions
+- UX direction: design style, navigation model, consistency patterns, accessibility standard
+
+#### 2. `tech-overview.md`
+The **"How it is built"** reference for implementation agents.
+
+Use `scripts/chorus/templates/tech-overview.md`. Populate:
+- Full tech stack table
+- Annotated project structure tree
+- Architecture description: dominant pattern, key components, data flow
+- Key past architecture decisions (constraints future work must honor)
+- Data models with schemas
+- API/interface surface
+- Implementation conventions (naming, error handling, testing, logging)
+
+#### 3. `modules/*.md`
+One file per significant module/package using `scripts/chorus/templates/module-snapshot.md`.
+
+Focus on modules that:
+- Contain business logic
+- Define the public API
+- Are likely to be touched by future initiatives
+
+### Phase 3 — Verification & Validation
+
+Cross-reference the drafted canon against the actual implementation:
+- Run the app or tests if possible
+- Verify data model field names against source
+- Verify API routes/commands against implementations
+- Flag any discovered gaps or contradictions as **Open Questions** in the relevant doc
+
+### Phase 4 — Genesis
+
+Once canon is complete and verified:
+- Execute `update_index.py` to register the baseline in the Cicadas index
+- Confirm the `.cicadas/` structure is valid and canon docs are in place
 
 ## Guidelines
 
-- **Mental Models Over Lines of Code**: Describe what a human needs to understand to work safely.
-- **Mark Uncertainties**: Label missing "Why" as an `Open Question`.
-- **Thoroughness**: Do not skip modules. Ensure the core functionality is fully represented.
+- **Never Hallucinate**: If you do not have sufficient evidence to populate a section, **do not guess or infer**. Leave this placeholder exactly: `> ⚠️ Insufficient context to complete this section. Please review and fill in manually.`
+- **Write for agents, not humans**: Be precise and explicit. Agents can't read between the lines. If a convention exists, spell it out.
+- **As-built, not aspirational**: Document what the system *is*, not what it *could be*. Open Questions are the place for uncertainty.
+- **Mental models over line counts**: A clear description of what a component *does* is more valuable than listing every method.
+- **Mark uncertainties explicitly**: If the "why" behind a decision isn't visible in the code, add it to Open Questions rather than guessing.
+- **Thoroughness**: Do not skip modules that contain business logic. A gap in the canon will surface as an agent error later.
+
+---
 
 _Copyright 2026 Cicadas Contributors_
 _SPDX-License-Identifier: Apache-2.0_

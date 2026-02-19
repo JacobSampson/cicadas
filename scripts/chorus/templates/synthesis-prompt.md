@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 You are an expert technical writer and software architect. Your task is to update the Canonical Documentation (Canon) for the project based on the latest changes.
 
@@ -27,9 +25,9 @@ Before writing any content, create a **Synthesis Plan**:
 
 Review the code and active specs, then update the following files in the `canon/` directory:
 
-1.  **`product-overview.md`**: Update goals, personas, metrics, and feature lists if the business logic or scope has changed.
-2.  **`ux-overview.md`**: Update design principles, new UI patterns, or user flows if the frontend/UX has changed.
-3.  **`tech-overview.md`**: Update the architecture, component list, API specs, data models, and sequence diagrams to reflect the codebase state.
+1.  **`product-overview.md`**: Update goals, personas, journey narratives, features, and success criteria if product scope has changed.
+2.  **`ux-overview.md`**: Update design direction, navigation model, UX consistency patterns, accessibility, and copy/tone if the UX has changed.
+3.  **`tech-overview.md`**: Update the tech stack, architecture, key components, data models, API surface, and implementation conventions to reflect the codebase state.
 4.  **`modules/{module_name}.md`**: Update or create specific module documentation for any modified code modules.
 
 ### Step 4: Extract Key Decisions
@@ -37,6 +35,7 @@ Review the code and active specs, then update the following files in the `canon/
 From the active specs, identify and embed **Key Decisions** into the relevant canon files. These are architectural choices, trade-offs, and design rationale that should be preserved even after the specs expire.
 
 **Guidelines:**
+-   **Never Hallucinate**: If you do not have sufficient evidence to populate a section, **do not guess or infer**. Leave this placeholder exactly: `> ⚠️ Insufficient context to complete this section. Please review and fill in manually.`
 -   **Be Specific**: Accurate technical details are more important than high-level fluff.
 -   **Be Comprehensive**: Do not delete existing information unless it is obsolete. *Expand* the documentation.
 -   **Use Mermaid**: Use mermaid diagrams for complex flows.

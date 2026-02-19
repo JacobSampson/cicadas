@@ -1,7 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
-
-# Cicadas: Implementation Protocol
 
 This document defines the rules for an **Implementation Agent**. These rules prevent agents from "running amok" and ensure changes are made within the correct safety boundaries.
 
@@ -37,3 +33,8 @@ When an initiative is complete:
 ## 7. Registry Integrity
 - **Rule**: NEVER manually edit `registry.json`.
 - **Constraint**: ALWAYS use the provided CLI scripts (e.g., `branch.py`, `kickoff.py`, `status.py`) to manage system state.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

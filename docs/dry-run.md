@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Cicadas Method — Dry Run
 
@@ -1125,3 +1123,8 @@ While Builder B is implementing the nutrition model, Builder A finishes `feat/me
 6. **Migration coordination across initiatives**: Builder B's rebase resolved migration conflicts manually. On a larger team, multiple initiatives adding database migrations creates a combinatorial conflict surface. The initiative branch isolates this somewhat (conflicts appear at rebase, not at merge), but it's still a pain point. **Possible fix**: Use a central migration sequence counter in `registry.json`, or adopt timestamp-based migration naming.
 
 7. **Canon accumulation over many initiatives**: After 3 initiatives, the Key Decisions section spans v1, v1.1, and calorie-counter. After 10 initiatives, this becomes a chapter. The canon is getting *bigger* each cycle, but never *smaller*. Synthesis is additive — it doesn't cull obsolete documentation. Over time, canon drifts toward comprehensive reference docs rather than concise snapshots. **Possible fix**: Add a "prune" pass to synthesis — asking the LLM to identify and remove canon sections that are no longer accurate or relevant. Or, version the Key Decisions (each tagged with its initiative) so they can be archived when they become historical.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Emergence: Approach
 
@@ -34,3 +32,8 @@ Use the template at `scripts/chorus/templates/approach.md`.
 -   **Testability**: How will we test this?
 -   **Incremental Delivery**: Can we ship this in pieces?
 -   **Risks**: What could go wrong?
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

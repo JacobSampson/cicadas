@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Cicadas (General/Skill-Agnostic Version)
 
@@ -519,3 +517,8 @@ Run: `python scripts/chorus/scripts/check.py`
 - Core logic: `scripts/chorus/scripts/`
 - Artifacts: `.cicadas/`
 - Manual: `scripts/chorus/CHORUS.md` (This file's deployed location)
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

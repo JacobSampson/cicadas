@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Emergence: Tasks
 
@@ -35,3 +33,8 @@ Use the template at `scripts/chorus/templates/tasks.md`.
 -   **Verify-ability**: Each task should have a clear "done" state.
 -   **Dependencies**: Identify blockers.
 -   **Acceptance Criteria**: Each task should include criteria for what "done" looks like.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

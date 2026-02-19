@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Cicadas Method (v2)
 
@@ -1011,3 +1009,8 @@ Issues identified through dry-run exercises (greenfield, brownfield, and paralle
 > This would address issues X1, X2, X3, and S2 simultaneously. The registry already contains the required information; the Agent simply needs to be instructed to use it holistically.
 >
 > For now, the method works — Reflect catches post-rebase drift, the registry surfaces overlap at branch registration, and serial synthesis on `main` prevents canon merge conflicts. The coordination gaps are manageable with developer communication.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

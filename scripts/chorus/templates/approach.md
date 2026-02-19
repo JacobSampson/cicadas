@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Approach: {Initiative Name}
 
@@ -45,3 +43,8 @@ graph LR
 
 ## Alternatives Considered
 {Why we didn't do something else}
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

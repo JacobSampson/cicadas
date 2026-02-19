@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Balanced Elicitation Options
 
@@ -22,3 +20,8 @@ Adopt a specialized perspective to stress-test the section from a specific angle
 
 ## [C] Continue
 If the user is satisfied with the section as drafted, proceed to the next section in the PRD template.
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

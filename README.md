@@ -109,3 +109,7 @@ Cicadas
 Copyright 2026 Cicadas Contributors
 
 This product includes software developed by Dan and contributors.
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

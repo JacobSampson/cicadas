@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Emergence: The Cicadas Drafting Phase
 
@@ -79,3 +77,8 @@ graph TD
 - [Technical Design](./tech-design.md)
 - [Approach](./approach.md)
 - [Tasks](./tasks.md)
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

@@ -1,5 +1,3 @@
-# Copyright 2026 Cicadas Contributors
-# SPDX-License-Identifier: Apache-2.0
 
 # Tasks: {Feature Name}
 
@@ -26,3 +24,8 @@
 ### Feature: Crafting System (Parallel to Inventory)
 - [ ] Update `models/item.py`: Add recipes <!-- id: 20 -->
 
+
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_
