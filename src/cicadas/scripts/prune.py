@@ -23,7 +23,7 @@ def prune(name, type_):
             print(f"Restored specs to drafts/{name}")
         # Delete git branch
         try:
-            subprocess.run(["git", "checkout", "main"], check=True, cwd=root)
+            subprocess.run(["git", "checkout", "master"], check=True, cwd=root)
             subprocess.run(["git", "branch", "-D", name], check=True, cwd=root)
         except Exception:
             print(f"Warning: Could not delete git branch {name}")
@@ -44,7 +44,7 @@ def prune(name, type_):
         # Delete initiative branch
         branch_name = f"initiative/{name}"
         try:
-            subprocess.run(["git", "checkout", "main"], check=True, cwd=root)
+            subprocess.run(["git", "checkout", "master"], check=True, cwd=root)
             subprocess.run(["git", "branch", "-D", branch_name], check=True, cwd=root)
         except Exception:
             print(f"Warning: Could not delete git branch {branch_name}")

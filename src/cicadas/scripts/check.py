@@ -41,14 +41,14 @@ def check_conflicts():
     else:
         print(f"ℹ️  Current branch '{curr}' is not registered.")
 
-    # Check for main updates
+    # Check for master updates
     try:
         log = subprocess.check_output(
-            ["git", "log", f"{curr}..main", "--oneline"], cwd=root
+            ["git", "log", f"{curr}..master", "--oneline"], cwd=root
         ).decode()
         if log:
             count = len(log.strip().split('\n'))
-            print(f"\n📥 {count} new commits on main since you branched.")
+            print(f"\n📥 {count} new commits on master since you branched.")
     except Exception:
         pass
 

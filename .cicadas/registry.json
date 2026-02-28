@@ -1,5 +1,30 @@
 {
   "schema_version": "2.0",
   "initiatives": {},
-  "branches": {}
+  "branches": {
+    "definitions": {
+      "intent": "Formally define the lightweight paths in the agent manual and create the supporting templates and sub-skills.",
+      "modules": [
+        "src/cicadas/emergence/",
+        "src/cicadas/skill.md",
+        "src/cicadas/templates/"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-02-28T04:04:33.357256+00:00",
+      "initiative": "bugs-and-tweaks"
+    },
+    "orchestration": {
+      "intent": "Modify the project lifecycle scripts to handle single-branch workflows and relaxed document validation.",
+      "modules": [
+        "src/cicadas/scripts/update_index.py",
+        "src/cicadas/scripts/archive.py",
+        "src/cicadas/scripts/branch.py",
+        "src/cicadas/scripts/kickoff.py",
+        "src/cicadas/scripts/status.py"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-02-28T04:05:22.120285+00:00",
+      "initiative": "bugs-and-tweaks"
+    }
+  }
 }

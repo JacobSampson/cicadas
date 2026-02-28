@@ -36,7 +36,7 @@ project-root/
 │       │   ├── kickoff.py            # Promote drafts → active, register initiative
 │       │   ├── branch.py             # Register a feature branch
 │       │   ├── status.py             # Show initiatives, branches, signals
-│       │   ├── check.py              # Check for conflicts & main updates
+│       │   ├── check.py              # Check for conflicts & master updates
 │       │   ├── signal.py             # Broadcast a change to peer branches
 │       │   ├── archive.py            # Move active specs → archive, deregister
 │       │   ├── update_index.py       # Append to change ledger
@@ -51,7 +51,9 @@ project-root/
 │       │   ├── ux.md                 # Active spec template
 │       │   ├── tech-design.md        # Active spec template
 │       │   ├── approach.md           # Active spec template
-│       │   └── tasks.md              # Active spec template
+│       │   ├── tasks.md              # Active spec template
+│       │   ├── buglet.md             # [NEW] Lightweight bug spec template
+│       │   └── tweaklet.md           # [NEW] Lightweight tweak spec template
 │       └── emergence/                # Subagent definitions for spec authoring
 │           ├── emergence.md          # Emergence phase overview
 │           ├── bootstrap.md          # Reverse Engineering subagent
@@ -59,7 +61,9 @@ project-root/
 │           ├── ux.md                 # UX design subagent
 │           ├── tech-design.md        # Architecture subagent
 │           ├── approach.md           # Partitioning & sequencing subagent
-│           └── tasks.md              # Task breakdown subagent
+│           ├── tasks.md              # Task breakdown subagent
+│           ├── bug-fix.md            # [NEW] Bug clarified drafting subagent
+│           └── tweak.md              # [NEW] Minor tweak drafting subagent
 └── .cicadas/                         # Cicadas artifacts (managed by scripts)
     ├── config.json                   # Local configuration
     ├── registry.json                 # Global registry (initiatives + feature branches)
@@ -92,7 +96,7 @@ project-root/
 3. **Feature Branches**: For each partition defined in `approach.md`, start a registered feature branch.
 4. **Task Branches**: For each task, create ephemeral unregistered task branches off the feature branch.
 5. **Complete Feature**: Merge feature branch into initiative branch. No synthesis yet.
-6. **Complete Initiative**: Merge initiative branch to `main`, synthesize canon on `main`, archive specs.
+6. **Complete Initiative**: Merge initiative branch to `master`, synthesize canon on `master`, archive specs.
 
 ### Inner Loop — Daily Coding
 
@@ -106,13 +110,15 @@ project-root/
 ### Branch Hierarchy
 
 ```
-main
-└── initiative/{name}              ← created at kickoff, merges to main once
-    ├── feat/{partition-1}         ← registered, forks from initiative
-    │   ├── task/.../task-a        ← ephemeral, unregistered
-    │   └── task/.../task-b        ← ephemeral, unregistered
-    ├── feat/{partition-2}         ← registered, forks from initiative
-    └── feat/{partition-3}         ← registered, forks from initiative
+master
+├── initiative/{name}              ← created at kickoff, merges to master once
+│   ├── feat/{partition-1}         ← registered, forks from initiative
+│   │   ├── task/.../task-a        ← ephemeral, unregistered
+│   │   └── task/.../task-b        ← ephemeral, unregistered
+│   ├── feat/{partition-2}         ← registered, forks from initiative
+│   └── feat/{partition-3}         ← registered, forks from initiative
+├── fix/{name}                     ← [NEW] lightweight, forks from master
+└── tweak/{name}                   ← [NEW] lightweight, forks from master
 ```
 
 ---
@@ -177,16 +183,16 @@ python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"
 ### Complete an Initiative
 **When**: All feature branches merged into the initiative branch.
 
-**Step 1 — Merge to main**:
+**Step 1 — Merge to master**:
 ```
-git checkout main && git merge initiative/{name}
-git push origin main
+git checkout master && git merge initiative/{name}
+git push origin master
 git branch -d initiative/{name}
 git push origin --delete initiative/{name}
 ```
 
-**Step 2 — Synthesize canon on main** (Agent Operation):
-- Read: codebase on `main`, active specs, existing canon, change ledger
+**Step 2 — Synthesize canon on master** (Agent Operation):
+- Read: codebase on `master`, active specs, existing canon, change ledger
 - Synthesize: create (greenfield) or update (brownfield) canon files
 - **Extract Key Decisions** from active specs and embed in canon
 - Present to Builder for review
@@ -198,7 +204,7 @@ Use the prompt in `{cicadas-dir}/templates/synthesis-prompt.md` to guide synthes
 python {cicadas-dir}/scripts/archive.py {initiative-name} --type initiative
 python {cicadas-dir}/scripts/update_index.py --branch {initiative-name} --summary "..."
 git commit -m "chore(cicadas): synthesize canon and archive {initiative-name}"
-git push origin main
+git push origin master
 ```
 
 ### Check Status & Signals
@@ -220,6 +226,28 @@ Appends a timestamped signal to the initiative's signal board in `registry.json`
 python {cicadas-dir}/scripts/prune.py {name} --type {branch|initiative}
 ```
 Deletes the git branch, removes from registry, and restores specs to `drafts/`.
+
+### Lightweight Paths (Bug Fixes & Tweaks)
+
+For trivial changes, Cicadas supports a "fast path" that reduces documentation overhead and simplifies the branch hierarchy.
+
+**Thresholds**:
+- **Fix**: An isolated defect with no architectural impact.
+- **Tweak**: A small enhancement (e.g., UI polish, new utility function) requiring < 100 lines of code and no new dependencies.
+
+**The Workflow**:
+1. **Emergence**: Draft a single `buglet.md` or `tweaklet.md` in `.cicadas/drafts/{name}/`.
+2. **Kickoff**: `python {cicadas-dir}/scripts/kickoff.py {name}`. Promotes the single spec to `active/`.
+3. **Branch**: `python {cicadas-dir}/scripts/branch.py {fix|tweak}/{name} --initiative {name}`. Forks directly from `master`.
+4. **Implement**: Work directly on the fix/tweak branch.
+5. **Significance Check**: Before completion, the Agent evaluates if the change warrants a Canon update.
+6. **Complete**: Merge to `master`, optionally Reflect/Synthesize to Canon, and Archive.
+
+**Escalation Criteria**:
+If a lightweight path discovers new complexity (e.g., "this fix requires a database migration"), the Agent MUST:
+1. Halt execution.
+2. Upgrade to a full initiative: Draft `tech-design.md`, `approach.md`, and `tasks.md`.
+3. Move the work to an `initiative/` and `feat/` branch hierarchy.
 
 ---
 
@@ -251,7 +279,7 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 3.  Synthesize authoritative Canon (PRD, UX, Tech, Modules) using templates.
 4.  Validate documentation against code.
 5.  Set Genesis point in index.
-**Trigger**: At initiative completion, on `main`, after the code merge.
+**Trigger**: At initiative completion, on `master`, after the code merge.
 **Action**: Generate canon from code + active specs. See the synthesis protocol in the Operations section above.
 
 ---
@@ -259,11 +287,11 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 ## Guardrails
 
 1. **No Unplanned Work**: Never start writing code until you have a reviewed `tasks.md`.
-2. **Branch Only**: Only implement code on a registered feature branch or a task branch off of one. Never on `main` or the initiative branch.
+2. **Branch Only**: Only implement code on a registered feature branch or a task branch off of one. Never on `master` or the initiative branch.
 3. **Hard Stop**: After drafting specs, STOP and wait for the Builder to approve. After synthesis, STOP and wait for review.
 4. **Tool Mandate**: NEVER manually edit `registry.json`. ALWAYS use the scripts.
 5. **Reflect Before PR**: Always run the Reflect operation before opening a PR for a task branch.
-6. **No Canon on Branches**: Never write to `.cicadas/canon/` on any branch. Canon is only synthesized on `main` at initiative completion.
+6. **No Canon on Branches**: Never write to `.cicadas/canon/` on any branch. Canon is only synthesized on `master` at initiative completion.
 
 ## Agent Autonomy Boundaries
 
@@ -288,7 +316,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - **"Implement task {X}"** → Creates task branch, implements, Reflects, opens PR with findings.
 - **"Signal {message}"** → Runs `signal.py`. Broadcasts change to initiative.
 - **"Complete feature {name}"** → Runs `update_index.py`. Merges feature branch into initiative branch.
-- **"Complete initiative {name}"** → Merges initiative to `main`, synthesizes canon, archives specs, commits.
+- **"Complete initiative {name}"** → Merges initiative to `master`, synthesizes canon, archives specs, commits.
 - **"Check status"** → Runs `status.py` and `check.py`. Surfaces state, conflicts, signals.
 - **"Prune {name}"** → Runs `prune.py`. Rollback and restore to drafts.
 
