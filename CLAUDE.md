@@ -40,6 +40,7 @@ python src/cicadas/scripts/signal.py "message"
 python src/cicadas/scripts/archive.py {name} --type {branch|initiative}
 python src/cicadas/scripts/update_index.py --branch {name} --summary "..."
 python src/cicadas/scripts/prune.py {name} --type {branch|initiative}
+python src/cicadas/scripts/history.py [--output path]
 ```
 
 ## Architecture

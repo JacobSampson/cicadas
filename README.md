@@ -108,6 +108,7 @@ All scripts are in `src/cicadas/scripts/`.
 | **Send Signal** | `python src/cicadas/scripts/signal.py "Message..."` |
 | **Log Work** | `python src/cicadas/scripts/update_index.py --branch {name} ...` |
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
+| **Project History** | `python src/cicadas/scripts/history.py` |
 
 
 ## License

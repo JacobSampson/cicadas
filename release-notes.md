@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 0.3.2
+- **New Script**: Added `src/cicadas/scripts/history.py` — generates a self-contained HTML timeline (`.cicadas/canon/history.html`) from archived specs and the index ledger.
+- **Skill Update**: Added `"Project history"` / `"Generate history"` builder command and `history.py` entry to the CLI quick reference in `SKILL.md`.
+
 ## Version 0.3.1
 - **Claude Code Integration**: Added `CLAUDE.md` with build/test/lint commands and codebase architecture overview.
 - **Skill Registration**: Created `.claude/skills/` directory with a symlink to `src/cicadas/`, registering Cicadas as a native Claude Code skill.

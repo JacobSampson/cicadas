@@ -81,6 +81,7 @@ Merge back to `main`. The agent then **synthesizes** new Canon docs from the cod
 | **Broadcast** | "Signal: {your message}" |
 | **Finish Feature** | "Complete feature {name}" |
 | **Finish Initiative** | "Complete initiative {name}" |
+| **Project History** | "Project history" or "Generate history" |
 
 ---
 

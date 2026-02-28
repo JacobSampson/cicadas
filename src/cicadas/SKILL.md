@@ -40,7 +40,8 @@ project-root/
 │   │   ├── signalboard.py            # Broadcast a change to peer branches
 │   │   ├── archive.py                # Move active specs → archive, deregister
 │   │   ├── update_index.py           # Append to change ledger
-│   │   └── prune.py                  # Rollback branch or initiative → restore to drafts
+│   │   ├── prune.py                  # Rollback branch or initiative → restore to drafts
+│   │   └── history.py                # Generate HTML timeline from archive + index
 │   ├── templates/                    # Markdown templates
 │   │   ├── synthesis-prompt.md       # LLM prompt for canon synthesis
 │   │   ├── product-overview.md       # Canon template
@@ -317,6 +318,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - **"Complete initiative {name}"** → Merges initiative to `master`, synthesizes canon, archives specs, commits.
 - **"Check status"** → Runs `status.py` and `check.py`. Surfaces state, conflicts, signals.
 - **"Prune {name}"** → Runs `prune.py`. Rollback and restore to drafts.
+- **"Project history"** or **"Generate history"** → Runs `history.py`. Generates `.cicadas/canon/history.html` timeline from archive and index.
 
 ---
 
@@ -335,6 +337,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | **Archive** | `python {cicadas-dir}/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |
 | **Log** | `python {cicadas-dir}/scripts/update_index.py --branch {name} --summary "..."` | Record history |
 | **Prune** | `python {cicadas-dir}/scripts/prune.py {name} --type {branch\|initiative}` | Rollback & restore to drafts |
+| **History** | `python {cicadas-dir}/scripts/history.py [--output path]` | Generate HTML timeline to `.cicadas/canon/history.html` |
 
 ### Agent Operations (LLM)
 
