@@ -103,4 +103,4 @@ Tests live in `tests/` and inherit from `CicadasTest` in `tests/base.py`. The ba
 - Provides `init_git()` for tests that need a real git repo.
 - Cleans up in `tearDown`.
 
-Scripts are imported directly by inserting `src/cicadas/scripts/` into `sys.path` at the top of `base.py`.
+`tests/conftest.py` inserts both `src/cicadas/scripts/` and `tests/` into `sys.path` before collection, so scripts are importable in all test modules. `base.py` also inserts the scripts path for backwards compatibility.
