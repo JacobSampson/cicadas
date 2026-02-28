@@ -76,13 +76,24 @@ The **Cicadas** toolset manages the `.cicadas/` directory:
 ## Getting Started
 
 ### Installation
-Copy the `src/cicadas/` directory into your project root.
+Copy the `src/cicadas/` directory into your project:
+
+```bash
+cp -r /path/to/cicadas/src/cicadas ./{your-skill-dir}/cicadas
+```
+
+**Optional — Register as a Claude Code skill** (enables auto-invocation and the `/cicadas` slash command):
+
+```bash
+mkdir -p .claude/skills
+ln -s ../../{your-skill-dir}/cicadas .claude/skills/cicadas
+```
 
 ### Initialization
 Run the bootstrap script to create the `.cicadas/` structure:
 
 ```bash
-python src/cicadas/scripts/init.py
+python {your-skill-dir}/cicadas/scripts/init.py
 ```
 
 ### Quick Command Reference
