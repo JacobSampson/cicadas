@@ -55,6 +55,37 @@ class TestBranch(CicadasTest):
         default_hash = subprocess.check_output(["git", "rev-parse", self.default_branch], cwd=self.root).decode().strip()
         self.assertEqual(branch_hash, default_hash)
 
+    def test_tweak_branch_active_dir_uses_initiative_name(self):
+        """Active dir for a tweak branch should be active/{initiative}, not active/tweak/{name}."""
+        init_name = "my-tweak"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test tweak"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        branch.create_branch("tweak/my-tweak", "tweak intent", "", initiative=init_name)
+
+        # Active dir must be active/my-tweak, NOT active/tweak/my-tweak
+        self.assertTrue((self.cicadas_dir / "active" / init_name).exists())
+        self.assertFalse((self.cicadas_dir / "active" / "tweak").exists())
+
+    def test_fix_branch_active_dir_uses_initiative_name(self):
+        """Active dir for a fix branch should be active/{initiative}, not active/fix/{name}."""
+        init_name = "my-fix"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test fix"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        branch.create_branch("fix/my-fix", "fix intent", "", initiative=init_name)
+
+        self.assertTrue((self.cicadas_dir / "active" / init_name).exists())
+        self.assertFalse((self.cicadas_dir / "active" / "fix").exists())
+
     def test_conflict_detection(self):
         # Register existing branch with same module
         with open(self.cicadas_dir / "registry.json", "r+") as f:

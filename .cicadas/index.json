@@ -14,6 +14,20 @@
       "summary": "Tweak complete: history.py generates self-contained HTML project timeline from archive specs and index ledger; skill.md updated with history builder command",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-02-28T05:24:51.319852+00:00",
+      "branch": "fix/branch-active-dir",
+      "summary": "Fixed branch.py to use initiative name for active dir path; added conftest.py to fix test collection; added 2 tests covering tweak/fix active dir convention; cleaned up orphaned active dirs",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-02-28T05:24:56.777482+00:00",
+      "branch": "branch-active-dir",
+      "summary": "Bug fix complete: active dir convention unified to initiative name across all branch types",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

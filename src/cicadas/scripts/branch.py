@@ -62,7 +62,16 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     registry.setdefault("branches", {})[name] = branch_info
     save_json(cicadas / "registry.json", registry)
 
-    (cicadas / "active" / name).mkdir(parents=True, exist_ok=True)
+    # Active dir is keyed by initiative name, not branch name.
+    # For fix/tweak branches the initiative name is passed explicitly;
+    # fall back to stripping the type prefix if not provided.
+    if initiative:
+        active_name = initiative
+    elif "/" in name:
+        active_name = name.split("/", 1)[1]
+    else:
+        active_name = name
+    (cicadas / "active" / active_name).mkdir(parents=True, exist_ok=True)
 
     print(f"Registered feature branch: {name}")
     if conflicts:
