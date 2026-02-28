@@ -121,6 +121,27 @@ For trivial changes, Cicadas supports a "fast path" that reduces documentation o
 - **Implementation Agent**: Focuses on `tasks.md` and writing code.
 - **Synthesis Agent**: Operates on `main` to update the authoritative Canon.
 
+### Registering Cicadas as a Claude Code Skill
+
+To use Cicadas as a native Claude Code skill (enabling auto-invocation and the `/cicadas` slash command), register it by symlinking the skill directory into `.claude/skills/`:
+
+```bash
+mkdir -p .claude/skills
+ln -s ../../{cicadas-dir} .claude/skills/cicadas
+```
+
+Where `{cicadas-dir}` is the relative path from `.claude/skills/` to wherever you installed the Cicadas scripts (e.g., `../../src/cicadas`).
+
+Alternatively, copy or symlink the directory directly:
+
+```bash
+# If installed at src/cicadas (this repo's layout):
+mkdir -p .claude/skills
+ln -s ../../src/cicadas .claude/skills/cicadas
+```
+
+Once registered, Claude Code will automatically load the skill and recognize Cicadas lifecycle commands like "kickoff", "start feature", and "check status".
+
 > [!IMPORTANT]
 > The **Code is the single source of truth**. Specs are active inputs that expire once implemented, while Canon is the permanent record synthesized from reality.
 
