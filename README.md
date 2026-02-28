@@ -35,15 +35,15 @@ We draft specifications in `.cicadas/drafts/` using specialized subagents (Clari
 
 ### Phase 2: Kickoff
 We promote drafts to **Active Specs** and register the initiative.
-*   **Command**: `python scripts/chorus/scripts/brood.py {name} --intent "..."`
+*   **Command**: `python src/cicadas/scripts/brood.py {name} --intent "..."`
 *   **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
 
 ### Phase 3: Execution (The Dual Loop)
 Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
 
-*   **Start Feature**: `python scripts/chorus/scripts/branch.py {feature} --intent "..."`
+*   **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
 *   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately*.
-*   **Signal**: If a change affects other branches, we broadcast it: `python scripts/chorus/scripts/signal.py "..."`
+*   **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
 
 ### Phase 4: Completion (Synthesis)
 When all features are merged into the initiative branch, we merge to `main` and then:
@@ -54,12 +54,12 @@ When all features are merged into the initiative branch, we merge to `main` and 
 
 ## Project Structure
 
-The **Chorus** toolset manages the `.cicadas/` directory:
+The **Cicadas** toolset manages the `.cicadas/` directory:
 
 ```text
 .
-├── scripts/
-│   └── chorus/                 # The Chorus orchestrator (scripts & agents)
+├── src/
+│   └── cicadas/                # The Cicadas orchestrator (scripts & agents)
 └── .cicadas/
     ├── canon/                  # Authoritative, generated checks
     │   ├── product-overview.md
@@ -76,27 +76,27 @@ The **Chorus** toolset manages the `.cicadas/` directory:
 ## Getting Started
 
 ### Installation
-Copy the `scripts/chorus/` directory into your project root.
+Copy the `src/cicadas/` directory into your project root.
 
 ### Initialization
 Run the bootstrap script to create the `.cicadas/` structure:
 
 ```bash
-python scripts/chorus/scripts/init.py
+python src/cicadas/scripts/init.py
 ```
 
 ### Quick Command Reference
-All scripts are in `scripts/chorus/scripts/`.
+All scripts are in `src/cicadas/scripts/`.
 
 | Action | Command |
 | :--- | :--- |
-| **Kickoff Initiative** | `python scripts/chorus/scripts/kickoff.py {name} --intent "..."` |
-| **Start Feature** | `python scripts/chorus/scripts/branch.py {name} --intent "..."` |
-| **Check Status** | `python scripts/chorus/scripts/status.py` |
-| **Check Conflicts** | `python scripts/chorus/scripts/check.py` |
-| **Send Signal** | `python scripts/chorus/scripts/signal.py "Message..."` |
-| **Log Work** | `python scripts/chorus/scripts/update_index.py --branch {name} ...` |
-| **Archive** | `python scripts/chorus/scripts/archive.py {name}` |
+| **Kickoff Initiative** | `python src/cicadas/scripts/kickoff.py {name} --intent "..."` |
+| **Start Feature** | `python src/cicadas/scripts/branch.py {name} --intent "..."` |
+| **Check Status** | `python src/cicadas/scripts/status.py` |
+| **Check Conflicts** | `python src/cicadas/scripts/check.py` |
+| **Send Signal** | `python src/cicadas/scripts/signal.py "Message..."` |
+| **Log Work** | `python src/cicadas/scripts/update_index.py --branch {name} ...` |
+| **Archive** | `python src/cicadas/scripts/archive.py {name}` |
 
 
 ## License
