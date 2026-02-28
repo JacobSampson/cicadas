@@ -40,8 +40,13 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
         except subprocess.CalledProcessError:
             print(f"Warning: Could not checkout parent branch {parent}")
 
-    # Git branch creation
+    # Git branch creation and push to remote
     subprocess.run(["git", "checkout", "-b", name], check=True, cwd=root)
+    try:
+        subprocess.run(["git", "push", "-u", "origin", name], check=True, cwd=root)
+        print(f"Pushed {name} to remote.")
+    except subprocess.CalledProcessError:
+        print(f"Warning: Could not push {name} to remote. Push manually: git push -u origin {name}")
 
     # Register
     branch_info = {

@@ -152,6 +152,7 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 1. Promotes docs from `.cicadas/drafts/{name}/` to `.cicadas/active/{name}/`.
 2. Registers the initiative in `registry.json` under `initiatives`.
 3. Creates the initiative branch: `git checkout -b initiative/{name}`.
+4. Pushes the initiative branch to remote: `git push -u origin initiative/{name}` (done by script).
 
 ### Start a Feature Branch (Registered)
 **When**: Starting a partition of work defined in `approach.md`.
@@ -161,6 +162,7 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 2. **Checkout initiative branch**: `git checkout initiative/{name}`
 3. **Script**: `python scripts/chorus/scripts/branch.py {branch-name} --intent "description" --modules "mod1,mod2" --initiative {initiative-name}`
 4. Review warnings from both the Agent (intent conflicts) and the Script (module overlaps).
+5. Branch is automatically pushed to remote by the script (`git push -u origin {branch-name}`), making it visible to collaborators.
 
 ### Complete a Feature Branch
 **When**: All task branches merged into the feature branch.
@@ -168,6 +170,7 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 **Steps**:
 1. **Update index**: `python scripts/chorus/scripts/update_index.py --branch {name} --summary "..."`
 2. **Merge to initiative**: `git checkout initiative/{name} && git merge {branch-name}`
+3. **Push initiative branch**: `git push origin initiative/{name}`
 
 **Key**: No synthesis, no archiving at this step. Active specs stay active — they are the living document for the rest of the initiative, continuously updated by Reflect.
 
@@ -177,7 +180,9 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 **Step 1 — Merge to main**:
 ```
 git checkout main && git merge initiative/{name}
+git push origin main
 git branch -d initiative/{name}
+git push origin --delete initiative/{name}
 ```
 
 **Step 2 — Synthesize canon on main** (Agent Operation):
@@ -193,6 +198,7 @@ Use the prompt in `scripts/chorus/templates/synthesis-prompt.md` to guide synthe
 python scripts/chorus/scripts/archive.py {initiative-name} --type initiative
 python scripts/chorus/scripts/update_index.py --branch {initiative-name} --summary "..."
 git commit -m "chore(cicadas): synthesize canon and archive {initiative-name}"
+git push origin main
 ```
 
 ### Check Status & Signals

@@ -34,6 +34,14 @@ When an initiative is complete:
 - **Rule**: NEVER manually edit `registry.json`.
 - **Constraint**: ALWAYS use the provided CLI scripts (e.g., `branch.py`, `kickoff.py`, `status.py`) to manage system state.
 
+## 8. Always Push to Remote
+- **Rule**: Every branch creation and every merge to a long-lived branch MUST be followed by a `git push`.
+  - New initiative branch (via `kickoff.py`): script handles `git push -u origin initiative/{name}`.
+  - New feature branch (via `branch.py`): script handles `git push -u origin {name}`.
+  - After merging a feature branch into the initiative branch: `git push origin initiative/{name}`.
+  - After merging the initiative branch into `main` and after the final canon commit: `git push origin main`.
+- **Why**: Collaborators and CI/CD systems depend on the remote. Local-only branches and merges are invisible to the team.
+
 ---
 
 _Copyright 2026 Cicadas Contributors_

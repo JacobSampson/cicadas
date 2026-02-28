@@ -43,13 +43,19 @@ def kickoff(name, intent, owner="unknown"):
     }
     save_json(cicadas / "registry.json", registry)
 
-    # Create initiative branch
+    # Create initiative branch and push to remote
     branch_name = f"initiative/{name}"
     try:
         subprocess.run(["git", "checkout", "-b", branch_name], check=True, cwd=root)
         print(f"Created initiative branch: {branch_name}")
     except subprocess.CalledProcessError:
         print(f"Warning: Could not create git branch {branch_name}")
+
+    try:
+        subprocess.run(["git", "push", "-u", "origin", branch_name], check=True, cwd=root)
+        print(f"Pushed {branch_name} to remote.")
+    except subprocess.CalledProcessError:
+        print(f"Warning: Could not push {branch_name} to remote. Push manually: git push -u origin {branch_name}")
 
     print(f"Initiative kicked off: {name}")
 
