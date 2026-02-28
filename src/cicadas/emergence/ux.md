@@ -11,7 +11,7 @@
 
 2. **Canon Check**: On brownfield projects, read `canon/product-overview.md` (specifically the **UX Overview** section) to understand the existing design language, navigation model, and established patterns. Design for *consistency with and evolution of* the existing experience — not from scratch.
 
-3. **Initialize**: Create `.cicadas/drafts/{initiative}/ux.md` using the template at `scripts/chorus/templates/ux.md`. The template contains a **Progress** checklist — tick each item (`- [ ]` → `- [x]`) when a section is approved.
+3. **Initialize**: Create `.cicadas/drafts/{initiative}/ux.md` using the template at `{cicadas-dir}/templates/ux.md`. The template contains a **Progress** checklist — tick each item (`- [ ]` → `- [x]`) when a section is approved.
 
 4. **Skip Condition**: If this initiative has zero user-facing impact (pure backend, infrastructure, data migration), write a single `ux.md` stating `N/A — Backend Only` and skip to the next sub-skill.
 

@@ -45,7 +45,7 @@ def register_existing(root_path, branch_name, intent, initiative=None, modules="
     print(f"Successfully registered branch '{branch_name}'.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Register an existing git branch in the Chorus registry.")
+    parser = argparse.ArgumentParser(description="Register an existing git branch in the Cicadas registry.")
     parser.add_argument("--root", required=True, help="Path to project root")
     parser.add_argument("--branch", required=True, help="Name of the existing branch")
     parser.add_argument("--intent", required=True, help="Description of the branch intent")

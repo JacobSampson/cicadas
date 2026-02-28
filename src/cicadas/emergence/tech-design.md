@@ -11,7 +11,7 @@
 
 2. **Canon Check**: On brownfield projects, read existing canon — especially `tech-overview.md` and relevant `modules/*.md`. Understand the current stack, data model, API surface, and established patterns before proposing anything. Your design must extend the existing system, not contradict it.
 
-3. **Initialize**: Create `.cicadas/drafts/{initiative}/tech-design.md` using the template at `scripts/chorus/templates/tech-design.md`. The template contains a **Progress** checklist — tick each item (`- [ ]` → `- [x]`) when a section is approved.
+3. **Initialize**: Create `.cicadas/drafts/{initiative}/tech-design.md` using the template at `{cicadas-dir}/templates/tech-design.md`. The template contains a **Progress** checklist — tick each item (`- [ ]` → `- [x]`) when a section is approved.
 
 4. **Iterative Drafting**: Build the tech design section-by-section in **Progress checklist** order. For each section:
     - **Draft**: Write the section content.

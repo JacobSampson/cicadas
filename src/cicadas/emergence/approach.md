@@ -21,7 +21,7 @@
 
 ## Output Artifact: `approach.md`
 
-Use the template at `scripts/chorus/templates/approach.md`.
+Use the template at `{cicadas-dir}/templates/approach.md`.
 
 **The approach document is the single most important artifact in Emergence.** Every downstream decision — branch names, module scopes, conflict detection, registry entries — flows from the partitions defined here.
 

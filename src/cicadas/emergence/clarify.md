@@ -11,7 +11,7 @@
 
 2. **Canon Check**: On brownfield projects, read existing canon (`product-overview.md`, `ux-overview.md`, `tech-overview.md`) to understand what the system already does. Use this to ask sharper, more targeted questions and to avoid re-specifying existing behavior.
 
-3. **Initialize**: Create `.cicadas/drafts/{initiative}/prd.md` using the template at `scripts/chorus/templates/prd.md`. The template contains a **Progress** checklist — use this as your working checklist, ticking each item (`- [ ]` → `- [x]`) when a section is approved.
+3. **Initialize**: Create `.cicadas/drafts/{initiative}/prd.md` using the template at `{cicadas-dir}/templates/prd.md`. The template contains a **Progress** checklist — use this as your working checklist, ticking each item (`- [ ]` → `- [x]`) when a section is approved.
 
 4. **Iterative Drafting**: Build the PRD section-by-section in **Progress checklist** order. For each section:
     - **Draft**: Write the section content.
@@ -65,7 +65,7 @@ Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full technique
 
 ## Output Artifact: `prd.md`
 
-Use the template at `scripts/chorus/templates/prd.md`. Update `steps_completed` in the frontmatter as each section is approved.
+Use the template at `{cicadas-dir}/templates/prd.md`. Update `steps_completed` in the frontmatter as each section is approved.
 
 ## Key Considerations
 

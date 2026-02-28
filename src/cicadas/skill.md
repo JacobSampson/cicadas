@@ -1,8 +1,8 @@
-name: chorus
+name: cicadas
 description: Orchestrates Cicadas methodology for spec-driven development. Use this skill when performing project lifecycle operations.
 ---
 
-# Chorus: Cicadas Orchestrator
+# Cicadas: Orchestrator
 
 ## Overview
 
@@ -14,17 +14,17 @@ The Cicadas methodology is a sustainable spec-driven development approach where:
 - **Specs stay current during development** — a "Reflect" operation keeps active specs in sync with code.
 - **Teams coordinate asynchronously** — a "Signal" operation broadcasts breaking changes to peer branches.
 
-Chorus is the orchestrator — a set of portable CLI scripts and agent instructions that manages the Cicadas lifecycle: initiative kickoff, branch registration, conflict detection, spec reflection, signaling, synthesis, merging, and queries.
+Cicadas is the orchestrator — a set of portable CLI scripts and agent instructions that manages the Cicadas lifecycle: initiative kickoff, branch registration, conflict detection, spec reflection, signaling, synthesis, merging, and queries.
 
 ## Directory Structure
 
-Chorus logic resides in `scripts/chorus/`, and manages the `.cicadas/` folder in the project root:
+Cicadas logic resides in its skill directory, and manages the `.cicadas/` folder in the project root:
 
 ```
 project-root/
 ├── src/                              # Existing source code
 ├── scripts/
-│   └── chorus/                       # Chorus orchestrator
+│   └── cicadas/                      # Cicadas orchestrator
 │       ├── SKILL.md                  # Agent skill definition (this file)
 │       ├── implementation.md         # Agent guardrails
 │       ├── emergence/                # Subagent definitions for spec authoring
@@ -146,7 +146,7 @@ Human review is required after each step. The Agent MUST NOT proceed without Bui
 ### Kickoff (Initiative Start)
 **Trigger**: Drafts reviewed and approved.
 ```
-python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description"
+python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"
 ```
 **Effect**:
 1. Promotes docs from `.cicadas/drafts/{name}/` to `.cicadas/active/{name}/`.
@@ -160,7 +160,7 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 **Steps**:
 1. **Semantic Intent Check (Agent)**: Read `registry.json`. Analyze new intent against all active feature intents for logical conflicts.
 2. **Checkout initiative branch**: `git checkout initiative/{name}`
-3. **Script**: `python scripts/chorus/scripts/branch.py {branch-name} --intent "description" --modules "mod1,mod2" --initiative {initiative-name}`
+3. **Script**: `python {cicadas-dir}/scripts/branch.py {branch-name} --intent "description" --modules "mod1,mod2" --initiative {initiative-name}`
 4. Review warnings from both the Agent (intent conflicts) and the Script (module overlaps).
 5. Branch is automatically pushed to remote by the script (`git push -u origin {branch-name}`), making it visible to collaborators.
 
@@ -168,7 +168,7 @@ python scripts/chorus/scripts/kickoff.py {initiative-name} --intent "description
 **When**: All task branches merged into the feature branch.
 
 **Steps**:
-1. **Update index**: `python scripts/chorus/scripts/update_index.py --branch {name} --summary "..."`
+1. **Update index**: `python {cicadas-dir}/scripts/update_index.py --branch {name} --summary "..."`
 2. **Merge to initiative**: `git checkout initiative/{name} && git merge {branch-name}`
 3. **Push initiative branch**: `git push origin initiative/{name}`
 
@@ -191,33 +191,33 @@ git push origin --delete initiative/{name}
 - **Extract Key Decisions** from active specs and embed in canon
 - Present to Builder for review
 
-Use the prompt in `scripts/chorus/templates/synthesis-prompt.md` to guide synthesis.
+Use the prompt in `{cicadas-dir}/templates/synthesis-prompt.md` to guide synthesis.
 
 **Step 3 — Archive & commit**:
 ```
-python scripts/chorus/scripts/archive.py {initiative-name} --type initiative
-python scripts/chorus/scripts/update_index.py --branch {initiative-name} --summary "..."
+python {cicadas-dir}/scripts/archive.py {initiative-name} --type initiative
+python {cicadas-dir}/scripts/update_index.py --branch {initiative-name} --summary "..."
 git commit -m "chore(cicadas): synthesize canon and archive {initiative-name}"
 git push origin main
 ```
 
 ### Check Status & Signals
 ```
-python scripts/chorus/scripts/status.py
-python scripts/chorus/scripts/check.py
+python {cicadas-dir}/scripts/status.py
+python {cicadas-dir}/scripts/check.py
 ```
 The Agent should check for signals when performing a Check Status operation and assess their relevance.
 
 ### Broadcast: Signal
 **Trigger**: A change that affects other feature branches.
 ```
-python scripts/chorus/scripts/signal.py "Changed API: renamed login() to authenticate()"
+python {cicadas-dir}/scripts/signal.py "Changed API: renamed login() to authenticate()"
 ```
 Appends a timestamped signal to the initiative's signal board in `registry.json`.
 
 ### Prune / Rollback
 ```
-python scripts/chorus/scripts/prune.py {name} --type {branch|initiative}
+python {cicadas-dir}/scripts/prune.py {name} --type {branch|initiative}
 ```
 Deletes the git branch, removes from registry, and restores specs to `drafts/`.
 
@@ -300,15 +300,15 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 
 | Phase | Command | Action |
 |-------|---------|--------|
-| **Init** | `python scripts/chorus/scripts/init.py` | Bootstrap project structure |
-| **Kickoff** | `python scripts/chorus/scripts/kickoff.py {name} --intent "..."` | Promote drafts, register initiative, create branch |
-| **Feature** | `python scripts/chorus/scripts/branch.py {name} --intent "..." --modules "..." --initiative {name}` | Register feature branch |
-| **Status** | `python scripts/chorus/scripts/status.py` | Show global state & signals |
-| **Check** | `python scripts/chorus/scripts/check.py` | Check for conflicts & updates |
-| **Signal** | `python scripts/chorus/scripts/signal.py "{message}"` | Broadcast to initiative |
-| **Archive** | `python scripts/chorus/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |
-| **Log** | `python scripts/chorus/scripts/update_index.py --branch {name} --summary "..."` | Record history |
-| **Prune** | `python scripts/chorus/scripts/prune.py {name} --type {branch\|initiative}` | Rollback & restore to drafts |
+| **Init** | `python {cicadas-dir}/scripts/init.py` | Bootstrap project structure |
+| **Kickoff** | `python {cicadas-dir}/scripts/kickoff.py {name} --intent "..."` | Promote drafts, register initiative, create branch |
+| **Feature** | `python {cicadas-dir}/scripts/branch.py {name} --intent "..." --modules "..." --initiative {name}` | Register feature branch |
+| **Status** | `python {cicadas-dir}/scripts/status.py` | Show global state & signals |
+| **Check** | `python {cicadas-dir}/scripts/check.py` | Check for conflicts & updates |
+| **Signal** | `python {cicadas-dir}/scripts/signal.py "{message}"` | Broadcast to initiative |
+| **Archive** | `python {cicadas-dir}/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |
+| **Log** | `python {cicadas-dir}/scripts/update_index.py --branch {name} --summary "..."` | Record history |
+| **Prune** | `python {cicadas-dir}/scripts/prune.py {name} --type {branch\|initiative}` | Rollback & restore to drafts |
 
 ### Agent Operations (LLM)
 
@@ -321,7 +321,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 
 ## Templates
 
-Use templates in `scripts/chorus/templates/` directory:
+Use templates in `{cicadas-dir}/templates/` directory:
 - `product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`: Canon templates
 - `prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`: Active spec templates
 - `synthesis-prompt.md`: System prompt for canon synthesis

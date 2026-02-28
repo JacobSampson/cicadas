@@ -26,12 +26,12 @@ Specifically, scan:
 
 ### Phase 2 — Canon Synthesis
 
-Using the templates in `scripts/chorus/templates/`, create the following canon documents in `.cicadas/canon/`:
+Using the templates in `{cicadas-dir}/templates/`, create the following canon documents in `.cicadas/canon/`:
 
 #### 1. `product-overview.md`
 The **"What and Why"** of the product, including UX context.
 
-Use `scripts/chorus/templates/product-overview.md`. Populate:
+Use `{cicadas-dir}/templates/product-overview.md`. Populate:
 - What this is + why it exists
 - User personas with journey narratives (not just bullet points — write 2–3 sentence narratives per persona)
 - Core features table (as-built, not aspirational)
@@ -41,7 +41,7 @@ Use `scripts/chorus/templates/product-overview.md`. Populate:
 #### 2. `tech-overview.md`
 The **"How it is built"** reference for implementation agents.
 
-Use `scripts/chorus/templates/tech-overview.md`. Populate:
+Use `{cicadas-dir}/templates/tech-overview.md`. Populate:
 - Full tech stack table
 - Annotated project structure tree
 - Architecture description: dominant pattern, key components, data flow
@@ -51,7 +51,7 @@ Use `scripts/chorus/templates/tech-overview.md`. Populate:
 - Implementation conventions (naming, error handling, testing, logging)
 
 #### 3. `modules/*.md`
-One file per significant module/package using `scripts/chorus/templates/module-snapshot.md`.
+One file per significant module/package using `{cicadas-dir}/templates/module-snapshot.md`.
 
 Focus on modules that:
 - Contain business logic

@@ -25,7 +25,7 @@
 
 ## Output Artifact: `tasks.md`
 
-Use the template at `scripts/chorus/templates/tasks.md`.
+Use the template at `{cicadas-dir}/templates/tasks.md`.
 
 ## Key Considerations
 
