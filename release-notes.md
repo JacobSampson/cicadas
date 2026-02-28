@@ -1,5 +1,12 @@
 # Release Notes
 
+## Version 0.3.1
+- **Claude Code Integration**: Added `CLAUDE.md` with build/test/lint commands and codebase architecture overview.
+- **Skill Registration**: Created `.claude/skills/` directory with a symlink to `src/cicadas/`, registering Cicadas as a native Claude Code skill.
+- **SKILL.md Compliance**: Renamed `skill.md` to `SKILL.md` per Anthropic convention; fixed missing opening `---` frontmatter fence.
+- **SKILL.md Improvements**: Added `allowed-tools`, `argument-hint`, and trigger-keyword-style `description` for reliable auto-invocation.
+- **SKILL.md Bug Fixes**: Corrected duplicate `emergence/` directory tree (scripts were misplaced), removed orphaned Bootstrap/Synthesis block, and added `{cicadas-dir}` definition note.
+
 ## Version 0.3.0
 - **Test Coverage**: Achieved >75% code coverage (83% overall) for all core scripts.
 - **Mock-Free Testing**: Refactored the test suite to use real file system operations and Git scaffolding instead of mocks.

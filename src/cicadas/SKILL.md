@@ -1,5 +1,8 @@
+---
 name: cicadas
-description: Orchestrates Cicadas methodology for spec-driven development. Use this skill when performing project lifecycle operations.
+description: Use when the user says "kickoff", "start feature", "complete initiative", "check status", "signal", "prune", "bootstrap", "reflect", or any other Cicadas lifecycle command. Orchestrates the Cicadas spec-driven development methodology.
+argument-hint: "[command] [name]"
+allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
 # Cicadas: Orchestrator
@@ -20,50 +23,47 @@ Cicadas is the orchestrator — a set of portable CLI scripts and agent instruct
 
 Cicadas logic resides in its skill directory, and manages the `.cicadas/` folder in the project root:
 
+> **Note**: `{cicadas-dir}` refers to the directory containing this skill file (e.g., `src/cicadas/` or wherever Cicadas is installed in the target project).
+
 ```
 project-root/
-├── src/                              # Existing source code
-├── scripts/
-│   └── cicadas/                      # Cicadas orchestrator
-│       ├── SKILL.md                  # Agent skill definition (this file)
-│       ├── implementation.md         # Agent guardrails
-│       ├── emergence/                # Subagent definitions for spec authoring
-│       │   ├── emergence.md          # Emergence phase overview
-│       │   ├── bootstrap.md          # Bootstrap/Reverse Engineering subagent
-│       │   ├── clarify.md            # PRD refinement subagent
-│       │   ├── utils.py              # Shared utilities
-│       │   ├── init.py               # Bootstrap .cicadas/ structure
-│       │   ├── kickoff.py            # Promote drafts → active, register initiative
-│       │   ├── branch.py             # Register a feature branch
-│       │   ├── status.py             # Show initiatives, branches, signals
-│       │   ├── check.py              # Check for conflicts & master updates
-│       │   ├── signal.py             # Broadcast a change to peer branches
-│       │   ├── archive.py            # Move active specs → archive, deregister
-│       │   ├── update_index.py       # Append to change ledger
-│       │   └── prune.py              # Rollback branch or initiative → restore to drafts
-│       ├── templates/                # Markdown templates
-│       │   ├── synthesis-prompt.md   # LLM prompt for canon synthesis
-│       │   ├── product-overview.md   # Canon template
-│       │   ├── ux-overview.md        # Canon template
-│       │   ├── tech-overview.md      # Canon template
-│       │   ├── module-snapshot.md    # Canon template (per module)
-│       │   ├── prd.md                # Active spec template
-│       │   ├── ux.md                 # Active spec template
-│       │   ├── tech-design.md        # Active spec template
-│       │   ├── approach.md           # Active spec template
-│       │   ├── tasks.md              # Active spec template
-│       │   ├── buglet.md             # [NEW] Lightweight bug spec template
-│       │   └── tweaklet.md           # [NEW] Lightweight tweak spec template
-│       └── emergence/                # Subagent definitions for spec authoring
-│           ├── emergence.md          # Emergence phase overview
-│           ├── bootstrap.md          # Reverse Engineering subagent
-│           ├── clarify.md            # PRD refinement subagent
-│           ├── ux.md                 # UX design subagent
-│           ├── tech-design.md        # Architecture subagent
-│           ├── approach.md           # Partitioning & sequencing subagent
-│           ├── tasks.md              # Task breakdown subagent
-│           ├── bug-fix.md            # [NEW] Bug clarified drafting subagent
-│           └── tweak.md              # [NEW] Minor tweak drafting subagent
+├── {cicadas-dir}/                    # Cicadas orchestrator (wherever installed)
+│   ├── SKILL.md                      # Agent skill definition (this file)
+│   ├── implementation.md             # Agent guardrails
+│   ├── scripts/                      # CLI tools
+│   │   ├── utils.py                  # Shared utilities (root detection, JSON I/O)
+│   │   ├── init.py                   # Bootstrap .cicadas/ structure
+│   │   ├── kickoff.py                # Promote drafts → active, register initiative
+│   │   ├── branch.py                 # Register a feature branch
+│   │   ├── status.py                 # Show initiatives, branches, signals
+│   │   ├── check.py                  # Check for conflicts & master updates
+│   │   ├── signalboard.py            # Broadcast a change to peer branches
+│   │   ├── archive.py                # Move active specs → archive, deregister
+│   │   ├── update_index.py           # Append to change ledger
+│   │   └── prune.py                  # Rollback branch or initiative → restore to drafts
+│   ├── templates/                    # Markdown templates
+│   │   ├── synthesis-prompt.md       # LLM prompt for canon synthesis
+│   │   ├── product-overview.md       # Canon template
+│   │   ├── ux-overview.md            # Canon template
+│   │   ├── tech-overview.md          # Canon template
+│   │   ├── module-snapshot.md        # Canon template (per module)
+│   │   ├── prd.md                    # Active spec template
+│   │   ├── ux.md                     # Active spec template
+│   │   ├── tech-design.md            # Active spec template
+│   │   ├── approach.md               # Active spec template
+│   │   ├── tasks.md                  # Active spec template
+│   │   ├── buglet.md                 # Lightweight bug spec template
+│   │   └── tweaklet.md               # Lightweight tweak spec template
+│   └── emergence/                    # Subagent instructions for spec authoring
+│       ├── EMERGENCE.md              # Emergence phase overview
+│       ├── bootstrap.md              # Reverse Engineering subagent
+│       ├── clarify.md                # PRD refinement subagent
+│       ├── ux.md                     # UX design subagent
+│       ├── tech-design.md            # Architecture subagent
+│       ├── approach.md               # Partitioning & sequencing subagent
+│       ├── tasks.md                  # Task breakdown subagent
+│       ├── bug-fix.md                # Bug clarification drafting subagent
+│       └── tweak.md                  # Minor tweak drafting subagent
 └── .cicadas/                         # Cicadas artifacts (managed by scripts)
     ├── config.json                   # Local configuration
     ├── registry.json                 # Global registry (initiatives + feature branches)
@@ -279,8 +279,6 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 3.  Synthesize authoritative Canon (PRD, UX, Tech, Modules) using templates.
 4.  Validate documentation against code.
 5.  Set Genesis point in index.
-**Trigger**: At initiative completion, on `main (default branch)`, after the code merge.
-**Action**: Generate canon from code + active specs. See the synthesis protocol in the Operations section above.
 
 ---
 
