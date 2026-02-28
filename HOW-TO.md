@@ -1,16 +1,16 @@
 # Cicadas: The Definitive Guide (v2.1)
 
-Welcome to the Cicadas methodology. This guide explains how to install Chorus, initialize your project, and follow the Cicadas workflow for both new and existing codebases.
+Welcome to the Cicadas methodology. This guide explains how to install Cicadas, initialize your project, and follow the Cicadas workflow for both new and existing codebases.
 
 ---
 
 ## 🚀 Installation & Setup
 
-### 1. Install Chorus
-Chorus is a portable set of scripts. To add it to your project, copy the `scripts/chorus` directory from the Cicadas repository into your project's `scripts/` folder:
+### 1. Install Cicadas
+Cicadas is a portable set of scripts. To add it to your project, copy the `src/cicadas` directory from the Cicadas repository into your project's `{skill root}/cicadas` folder:
 
 ```bash
-cp -r /path/to/cicadas/scripts/chorus ./scripts/chorus
+cp -r /path/to/cicadas/src/cicadas ./{skill root}/cicadas
 ```
 
 ### 2. Initialize Cicadas
@@ -18,7 +18,7 @@ Initialize the `.cicadas/` directory structure where all metadata and specs will
 
 **Prompt**: *"Initialize cicadas for this project."*
 
-**Agent Action**: `python scripts/chorus/scripts/init.py`
+**Agent Action**: `python {cicadas root}/scripts/init.py`
 
 ---
 
@@ -50,6 +50,7 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 
 ```text
 .cicadas/
+├── config.json        # Local configuration.
 ├── registry.json      # Global state of active initiatives and feature branches.
 ├── index.json         # Append-only history of all completed feature branches.
 ├── canon/             # Authoritative snapshots of the system.
@@ -86,7 +87,7 @@ If you are starting with an existing codebase that lacks Cicadas documentation, 
 1.  **Initialize**: *"Initialize cicadas for this project."*
 2.  **Bootstrap**: *"Bootstrap the baseline Canon."*
     - The Agent autonomously performs code discovery, synthesizes a full suite of docs (PRD, UX, Tech, Modules) using templates, and validates them against the code.
-3.  **Reference**: See the **Bootstrap Subagent** instructions in `scripts/chorus/emergence/bootstrap.md` for a deep-dive on legacy migration.
+3.  **Reference**: See the **Bootstrap Subagent** instructions in `{cicadas root}/emergence/bootstrap.md` for a deep-dive on legacy migration.
 
 ---
 
@@ -96,6 +97,21 @@ If you are starting with an existing codebase that lacks Cicadas documentation, 
 2.  **Draft Delta**: *"I want to add [Feature X]."* (Agent authors specs aware of the existing system).
 3.  **Standard Cycle**: Follow the Approach -> Kickoff -> Feature loop.
 4.  **Update Canon**: Synthesis on `main` **updates** the existing Canon with the new reality.
+
+---
+
+## 🟡 Lightweight Paths (Fixes & Tweaks)
+
+For trivial changes, Cicadas supports a "fast path" that reduces documentation overhead.
+
+-   **Fix**: An isolated defect with no architectural impact.
+-   **Tweak**: A small enhancement requiring < 100 lines of code.
+
+**Workflow**:
+1.  **Draft**: *"Draft the buglet"* or *"Draft the tweaklet"*.
+2.  **Kickoff**: Promotes the single spec to active.
+3.  **Branch**: Forks directly from `main`.
+4.  **Complete**: Merge to `main`, optionally update Canon, and Archive.
 
 ---
 

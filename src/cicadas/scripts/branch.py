@@ -3,22 +3,23 @@
 
 import argparse
 import subprocess
-import shutil
-from pathlib import Path
-from datetime import datetime, timezone
-from utils import get_project_root, load_json, save_json
+from datetime import UTC, datetime
+
+from utils import get_default_branch, get_project_root, load_json, save_json
+
 
 def create_branch(name, intent, modules, initiative=None, from_branch=None, owner="unknown"):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
+    default_branch = get_default_branch()
 
     if name in registry.get("branches", {}):
         print(f"Error: Branch {name} already registered.")
         return
 
     # Check for module overlaps
-    my_mods = set(m.strip() for m in modules.split(",") if m.strip())
+    my_mods = {m.strip() for m in modules.split(",") if m.strip()}
     conflicts = []
     for b_name, b_info in registry.get("branches", {}).items():
         overlap = my_mods.intersection(set(b_info.get("modules", [])))
@@ -29,7 +30,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     if from_branch:
         parent = from_branch
     elif name.startswith("fix/") or name.startswith("tweak/"):
-        parent = "master"
+        parent = default_branch
     elif initiative:
         parent = f"initiative/{initiative}"
     else:
@@ -51,12 +52,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
         print(f"Warning: Could not push {name} to remote. Push manually: git push -u origin {name}")
 
     # Register
-    branch_info = {
-        "intent": intent,
-        "modules": list(my_mods),
-        "owner": owner,
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
+    branch_info = {"intent": intent, "modules": list(my_mods), "owner": owner, "created_at": datetime.now(UTC).isoformat()}
     if initiative:
         if initiative not in registry.get("initiatives", {}):
             print(f"Warning: Initiative {initiative} not found.")
@@ -71,6 +67,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     print(f"Registered feature branch: {name}")
     if conflicts:
         print(f"WARNING: Module overlaps detected: {'; '.join(conflicts)}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Register a feature branch with conflict detection")

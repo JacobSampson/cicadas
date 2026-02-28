@@ -3,11 +3,12 @@
 
 import argparse
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
 
 sys.path.append(str(Path(__file__).parent))
 from utils import load_json, save_json
+
 
 def register_existing(root_path, branch_name, intent, initiative=None, modules=""):
     root = Path(root_path).resolve()
@@ -26,23 +27,24 @@ def register_existing(root_path, branch_name, intent, initiative=None, modules="
 
     print(f"Registering existing branch '{branch_name}' in {registry_path}...")
 
-    my_mods = set(m.strip() for m in modules.split(",") if m.strip())
+    my_mods = {m.strip() for m in modules.split(",") if m.strip()}
 
     branch_info = {
         "intent": intent,
         "modules": list(my_mods),
         "owner": "unknown",
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(UTC).isoformat(),
     }
 
     if initiative:
-         if initiative not in registry.get("initiatives", {}):
+        if initiative not in registry.get("initiatives", {}):
             print(f"Warning: Initiative '{initiative}' not found in registry.")
-         else:
+        else:
             branch_info["initiative"] = initiative
     registry.setdefault("branches", {})[branch_name] = branch_info
     save_json(registry_path, registry)
     print(f"Successfully registered branch '{branch_name}'.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Register an existing git branch in the Cicadas registry.")

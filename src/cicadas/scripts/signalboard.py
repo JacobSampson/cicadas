@@ -3,8 +3,10 @@
 
 import argparse
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from utils import get_project_root, load_json, save_json
+
 
 def send_signal(message, initiative=None):
     root = get_project_root()
@@ -14,9 +16,7 @@ def send_signal(message, initiative=None):
     # Auto-detect initiative from current branch
     if not initiative:
         try:
-            curr = subprocess.check_output(
-                ["git", "branch", "--show-current"], cwd=root
-            ).decode().strip()
+            curr = subprocess.check_output(["git", "branch", "--show-current"], cwd=root).decode().strip()
             branch_info = registry.get("branches", {}).get(curr, {})
             initiative = branch_info.get("initiative")
         except Exception:
@@ -27,15 +27,14 @@ def send_signal(message, initiative=None):
         return
 
     signal = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "message": message,
-        "from_branch": subprocess.check_output(
-            ["git", "branch", "--show-current"], cwd=root
-        ).decode().strip()
+        "from_branch": subprocess.check_output(["git", "branch", "--show-current"], cwd=root).decode().strip(),
     }
     registry["initiatives"][initiative].setdefault("signals", []).append(signal)
     save_json(cicadas / "registry.json", registry)
     print(f"Signal sent to initiative '{initiative}': {message}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Broadcast a signal to the initiative's signal board")

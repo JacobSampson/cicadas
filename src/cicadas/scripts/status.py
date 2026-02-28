@@ -3,6 +3,7 @@
 
 from utils import get_project_root, load_json
 
+
 def show_status():
     root = get_project_root()
     cicadas = root / ".cicadas"
@@ -30,7 +31,7 @@ def show_status():
         for name, info in features.items():
             initiative = info.get("initiative", "standalone")
             print(f"  - {name}: {info['intent']} (Initiative: {initiative}, Modules: {', '.join(info.get('modules', []))})")
-    
+
     if fixes:
         print(f"\nActive Bugs ({len(fixes)}):")
         for name, info in fixes.items():
@@ -40,6 +41,7 @@ def show_status():
         print(f"\nActive Tweaks ({len(tweaks)}):")
         for name, info in tweaks.items():
             print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
+
 
 if __name__ == "__main__":
     show_status()

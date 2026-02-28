@@ -2,18 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import subprocess
-from utils import get_project_root, load_json
+
+from utils import get_default_branch, get_project_root, load_json
+
 
 def check_conflicts():
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
+    default_branch = get_default_branch()
 
     # Get current branch
     try:
-        curr = subprocess.check_output(
-            ["git", "branch", "--show-current"], cwd=root
-        ).decode().strip()
+        curr = subprocess.check_output(["git", "branch", "--show-current"], cwd=root).decode().strip()
     except Exception:
         curr = "unknown"
 
@@ -24,7 +25,8 @@ def check_conflicts():
     if curr_info:
         my_mods = set(curr_info.get("modules", []))
         for name, info in registry.get("branches", {}).items():
-            if name == curr: continue
+            if name == curr:
+                continue
             overlap = my_mods.intersection(set(info.get("modules", [])))
             if overlap:
                 print(f"⚠️  CONFLICT: Branch '{name}' overlaps on modules: {', '.join(overlap)}")
@@ -41,16 +43,15 @@ def check_conflicts():
     else:
         print(f"ℹ️  Current branch '{curr}' is not registered.")
 
-    # Check for master updates
+    # Check for branch updates
     try:
-        log = subprocess.check_output(
-            ["git", "log", f"{curr}..master", "--oneline"], cwd=root
-        ).decode()
+        log = subprocess.check_output(["git", "log", f"{curr}..{default_branch}", "--oneline"], cwd=root).decode()
         if log:
-            count = len(log.strip().split('\n'))
-            print(f"\n📥 {count} new commits on master since you branched.")
+            count = len(log.strip().split("\n"))
+            print(f"\n📥 {count} new commits on {default_branch} since you branched.")
     except Exception:
         pass
+
 
 if __name__ == "__main__":
     check_conflicts()

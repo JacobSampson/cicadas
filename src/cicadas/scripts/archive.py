@@ -3,8 +3,10 @@
 
 import argparse
 import shutil
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from utils import get_project_root, load_json, save_json
+
 
 def archive(name, type_="branch"):
     root = get_project_root()
@@ -19,7 +21,7 @@ def archive(name, type_="branch"):
 
     # Move active specs to archive
     active = cicadas / "active" / name
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    ts = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     husk = cicadas / "archive" / f"{ts}-{name}"
 
     if active.exists():
@@ -37,10 +39,10 @@ def archive(name, type_="branch"):
     save_json(cicadas / "registry.json", registry)
     print(f"Deregistered {type_}: {name}")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Archive active specs and deregister from registry")
     parser.add_argument("name")
-    parser.add_argument("--type", default="branch", choices=["branch", "initiative"],
-                        help="Type to archive: branch or initiative")
+    parser.add_argument("--type", default="branch", choices=["branch", "initiative"], help="Type to archive: branch or initiative")
     args = parser.parse_args()
     archive(args.name, args.type)

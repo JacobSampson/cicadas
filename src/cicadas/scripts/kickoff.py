@@ -4,9 +4,10 @@
 import argparse
 import shutil
 import subprocess
-from pathlib import Path
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from utils import get_project_root, load_json, save_json
+
 
 def kickoff(name, intent, owner="unknown"):
     root = get_project_root()
@@ -25,7 +26,8 @@ def kickoff(name, intent, owner="unknown"):
     if drafts_dir.exists():
         print(f"Promoting drafts for initiative: {name}...")
         for item in drafts_dir.iterdir():
-            if item.name.startswith("."): continue
+            if item.name.startswith("."):
+                continue
             shutil.move(str(item), str(active_dir / item.name))
         try:
             drafts_dir.rmdir()
@@ -35,12 +37,7 @@ def kickoff(name, intent, owner="unknown"):
         print(f"Warning: No drafts found for {name}. Creating empty initiative.")
 
     # Register
-    registry.setdefault("initiatives", {})[name] = {
-        "intent": intent,
-        "owner": owner,
-        "signals": [],
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
+    registry.setdefault("initiatives", {})[name] = {"intent": intent, "owner": owner, "signals": [], "created_at": datetime.now(UTC).isoformat()}
     save_json(cicadas / "registry.json", registry)
 
     # Create initiative branch and push to remote
@@ -58,6 +55,7 @@ def kickoff(name, intent, owner="unknown"):
         print(f"Warning: Could not push {branch_name} to remote. Push manually: git push -u origin {branch_name}")
 
     print(f"Initiative kicked off: {name}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Kickoff an initiative: promote drafts to active, register, create branch")

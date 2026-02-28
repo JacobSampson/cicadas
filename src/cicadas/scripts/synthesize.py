@@ -3,21 +3,18 @@
 
 import argparse
 import json
-import os
 import re
 from pathlib import Path
+
 from utils import get_project_root, load_json
+
 
 def gather_context(name, is_initiative=False):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
 
-    context = {
-        "active_docs": {},
-        "code_context": {},
-        "canon_docs": {}
-    }
+    context = {"active_docs": {}, "code_context": {}, "canon_docs": {}}
 
     # 1. Gather Active Specs
     source_dir = cicadas / "active" / name
@@ -36,7 +33,7 @@ def gather_context(name, is_initiative=False):
         # Simplistic mapping: mod.name -> src/mod/
         mod_path = root / "src" / mod.replace(".", "/")
         if not mod_path.exists():
-            mod_path = root / mod.replace(".", "/") # Try without src
+            mod_path = root / mod.replace(".", "/")  # Try without src
 
         if mod_path.exists():
             for py_file in mod_path.glob("**/*.py"):
@@ -60,8 +57,9 @@ def gather_context(name, is_initiative=False):
 
     return context
 
+
 def generate_prompt(context):
-    root = get_project_root()
+    get_project_root()
     prompt_template = Path(__file__).parent.parent / "templates" / "synthesis-prompt.md"
 
     template_text = prompt_template.read_text()
@@ -86,10 +84,11 @@ def generate_prompt(context):
 
     return prompt
 
+
 def apply_response(response_text):
     root = get_project_root()
     cicadas = root / ".cicadas"
-    canon_dir = cicadas / "canon"
+    cicadas / "canon"
 
     # Regex to find code blocks with file names
     pattern = r"File: (canon/[\w\/\.-]+)\n```(?:markdown|python)?\n(.*?)\n```"
@@ -104,6 +103,7 @@ def apply_response(response_text):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content.strip() + "\n")
         print(f"✅ Updated {file_path}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Synthesis Orchestrator — gather context and generate prompt")
