@@ -28,6 +28,13 @@
       "summary": "Bug fix complete: active dir convention unified to initiative name across all branch types",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T03:27:56.850952+00:00",
+      "branch": "tweak/abort-command",
+      "summary": "Added abort.py: context-aware escape hatch that detects branch type (tweak/fix/feat/initiative) and rolls back the appropriate scope, with prompt to move active specs to drafts or delete them. Updated SKILL.md, CLAUDE.md, and added 14 unit tests at 86% coverage.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
