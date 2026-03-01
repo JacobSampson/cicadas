@@ -16,14 +16,16 @@
 
 ## feat/agent-integrations
 
-- [ ] Merge `feat/install-core` as base
-- [ ] `--agent claude-code`: create `.claude/skills/cicadas` relative symlink
-- [ ] `--agent antigravity`: create `.agents/skills/cicadas` relative symlink
-- [ ] `--agent cursor`: copy `skill.md` → `.cursor/rules/cicadas.mdc`
-- [ ] `--agent none`: skip agent setup silently
-- [ ] Interactive agent prompt when no `--agent` flag and stdin is a tty
-- [ ] Skip interactive prompt when `curl | bash` (non-tty stdin); print manual setup instructions instead
-- [ ] Update `README.md`: replace manual install section with one-liner
-- [ ] Update `HOW-TO.md`: add Install section and Update workflow
-- [ ] Smoke test: `bash install.sh --agent claude-code` → `.claude/skills/cicadas` symlink points to `src/cicadas/`
-- [ ] Smoke test: `bash install.sh --agent cursor` → `.cursor/rules/cicadas.mdc` exists with skill content
+- [x] Merge `feat/install-core` as base (via initiative/installer)
+- [x] `--agent claude-code`: create `.claude/skills/cicadas` relative symlink
+- [x] `--agent antigravity`: create `.agents/skills/cicadas` relative symlink
+- [x] `--agent cursor`: copy `skill.md` → `.cursor/rules/cicadas.mdc`
+- [x] `--agent none`: skip agent setup silently
+- [x] Interactive agent prompt when no `--agent` flag and stdin is a tty
+- [x] Skip interactive prompt when `curl | bash` (non-tty stdin); print manual setup instructions instead
+- [x] Update `README.md`: replace manual install section with one-liner
+- [x] Update `HOW-TO.md`: add Install section and Update workflow
+- [x] Smoke test: `bash install.sh --agent claude-code` → `.claude/skills/cicadas` symlink points to `src/cicadas/`
+- [x] Smoke test: `bash install.sh --agent cursor` → `.cursor/rules/cicadas.mdc` exists with skill content
+
+**Reflect notes**: All agent integration logic (setup_agents, interactive prompt, tty detection) was implemented inline in install.sh on install-core. This branch delivers the doc layer: README.md one-liner and HOW-TO.md Install & Update sections.

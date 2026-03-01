@@ -7,18 +7,55 @@ Welcome to the Cicadas methodology. This guide explains how to install Cicadas, 
 ## 🚀 Installation & Setup
 
 ### 1. Install Cicadas
-Cicadas is a portable set of scripts. To add it to your project, copy the `src/cicadas` directory from the Cicadas repository into your project's `{skill root}/cicadas` folder:
+
+**One-liner** (requires Python 3.13+, `curl`, `unzip`, and a `git` repo):
 
 ```bash
-cp -r /path/to/cicadas/src/cicadas ./{skill root}/cicadas
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
 ```
 
-### 2. Initialize Cicadas
-Initialize the `.cicadas/` directory structure where all metadata and specs will live.
+This will:
+1. Check for Python 3.13+ (and print OS-specific guidance if missing)
+2. Download and extract Cicadas into `src/cicadas/` (configurable with `--dir`)
+3. Initialize the `.cicadas/` workspace
+4. Optionally set up your AI coding agent integration
 
-**Prompt**: *"Initialize cicadas for this project."*
+**With agent integration** (skips interactive prompt):
+```bash
+# Claude Code
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent claude-code
 
-**Agent Action**: `python {cicadas root}/scripts/init.py`
+# Cursor
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent cursor
+```
+
+**All flags:**
+```
+--dir <path>     Install location (default: src/cicadas/)
+--agent <list>   Agent integrations: claude-code, antigravity, cursor, none (comma-separated)
+--update         Re-download skill files only; never touches .cicadas/
+```
+
+**Supported agent integrations:**
+
+| Agent | What gets created |
+|-------|------------------|
+| `claude-code` | `.claude/skills/cicadas` → symlink to install dir |
+| `antigravity` | `.agents/skills/cicadas` → symlink to install dir |
+| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+
+### 2. Update Cicadas
+
+To refresh the Cicadas skill files without touching your `.cicadas/` workspace:
+
+```bash
+bash install.sh --update
+```
+
+Or re-run the one-liner with `--update`:
+```bash
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --update
+```
 
 ---
 
