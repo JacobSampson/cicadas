@@ -76,25 +76,47 @@ The **Cicadas** toolset manages the `.cicadas/` directory:
 ## Getting Started
 
 ### Installation
-Copy the `src/cicadas/` directory into your project:
+
+**One-liner** (requires Python 3.13+ and `git`):
 
 ```bash
-cp -r /path/to/cicadas/src/cicadas ./{your-skill-dir}/cicadas
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
 ```
 
-**Optional — Register as a Claude Code skill** (enables auto-invocation and the `/cicadas` slash command):
+This downloads Cicadas into `src/cicadas/`, initializes the `.cicadas/` workspace, and optionally sets up agent integrations.
 
+**With agent integration:**
 ```bash
-mkdir -p .claude/skills
-ln -s ../../{your-skill-dir}/cicadas .claude/skills/cicadas
+# Claude Code
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent claude-code
+
+# Cursor
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent cursor
+
+# Multiple agents
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent claude-code,cursor
 ```
 
-### Initialization
-Run the bootstrap script to create the `.cicadas/` structure:
-
+**Custom install directory:**
 ```bash
-python {your-skill-dir}/cicadas/scripts/init.py
+bash install.sh --dir tools/cicadas --agent claude-code
 ```
+
+**Update Cicadas files** (preserves your `.cicadas/` workspace):
+```bash
+bash install.sh --update
+```
+
+**Supported agents:**
+
+| Agent | Integration |
+|-------|------------|
+| `claude-code` | `.claude/skills/cicadas` symlink |
+| `antigravity` | `.agents/skills/cicadas` symlink |
+| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+| `none` | Skip; configure manually |
+
+**Requirements:** Python 3.13+, `curl`, `unzip`, `git`
 
 ### Quick Command Reference
 All scripts are in `src/cicadas/scripts/`.

@@ -49,6 +49,13 @@
       "summary": "Bug fix complete: archive.py now cleans up associated branches on initiative archive",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T22:13:45.025122+00:00",
+      "branch": "install-core",
+      "summary": "Implemented install.sh core: Python 3.13+ check with OS-specific guidance, GitHub archive download+extract, init.py call, --update flag. Includes agent integration scaffold. CLAUDE.md updated for .venv Python 3.13.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
