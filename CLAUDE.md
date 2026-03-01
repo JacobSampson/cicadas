@@ -2,35 +2,46 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Python / Environment
+
+Tests use **stdlib `unittest` + `coverage.py`** via the system `python3` (miniconda, 3.12). The `.venv` has Python 3.13 for running the scripts themselves but does **not** have pytest/coverage installed. Do **not** use `uv run` — the Atlassian PyPI mirror blocks package downloads.
+
 ## Commands
 
 **Run all tests:**
 ```bash
-python -m pytest tests/
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest discover -s tests/
 ```
 
 **Run a single test file:**
 ```bash
-python -m pytest tests/test_kickoff.py
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest tests.test_kickoff
 ```
 
 **Run a single test:**
 ```bash
-python -m pytest tests/test_kickoff.py::TestKickoff::test_basic_kickoff
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest tests.test_kickoff.TestKickoff.test_basic_kickoff
+```
+
+**Run with coverage:**
+```bash
+PYTHONPATH=src/cicadas/scripts:tests python3 -m coverage run -m unittest discover -s tests/
+python3 -m coverage report --include="src/cicadas/scripts/*" -m
 ```
 
 **Lint:**
 ```bash
-ruff check src/ tests/
+source .venv/bin/activate && ruff check src/ tests/
 ```
 
 **Format:**
 ```bash
-ruff format src/ tests/
+source .venv/bin/activate && ruff format src/ tests/
 ```
 
-**CLI scripts** (run from project root; scripts use `sys.path` to find `utils.py`):
+**CLI scripts** (activate venv first; scripts use `sys.path` to find `utils.py`):
 ```bash
+source .venv/bin/activate
 python src/cicadas/scripts/init.py
 python src/cicadas/scripts/status.py
 python src/cicadas/scripts/check.py
