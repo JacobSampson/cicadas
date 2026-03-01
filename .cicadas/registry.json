@@ -1,33 +1,5 @@
 {
   "schema_version": "2.0",
-  "initiatives": {
-    "installer": {
-      "intent": "Add shell script installer for zero-friction Cicadas setup on any dev stack",
-      "owner": "unknown",
-      "signals": [],
-      "created_at": "2026-03-01T04:56:10.404228+00:00"
-    }
-  },
-  "branches": {
-    "install-core": {
-      "intent": "Core installer: Python check, download, extract, init, --update flag",
-      "modules": [
-        "install.sh"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-03-01T04:56:19.089147+00:00",
-      "initiative": "installer"
-    },
-    "agent-integrations": {
-      "intent": "Agent symlink/config setup for claude-code, antigravity, cursor; README and HOW-TO updates",
-      "modules": [
-        "README.md",
-        "HOW-TO.md",
-        "install.sh"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-03-01T22:07:25.594985+00:00",
-      "initiative": "installer"
-    }
-  }
+  "initiatives": {},
+  "branches": {}
 }

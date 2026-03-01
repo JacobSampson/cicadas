@@ -63,6 +63,13 @@
       "summary": "Updated README.md and HOW-TO.md: one-liner curl install, --agent flag docs (claude-code, antigravity, cursor, none), --update workflow. All agent integration tasks complete.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T22:45:08.493036+00:00",
+      "branch": "installer",
+      "summary": "Completed installer initiative: install.sh with Python 3.13+ check, GitHub archive download, init.py bootstrap, --update flag, agent integrations (claude-code/antigravity/cursor), interactive prompt with tty detection. README and HOW-TO updated with one-liner. Canon updated: product-overview + tech-overview.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

@@ -39,11 +39,13 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 | **Orchestrator CLI** | Automated scripts for kickoff, branching, status tracking, signaling, and archiving. | Shipped |
 | **Synthesis** | Automated generation of Canon documentation from code and expired specs. | Shipped |
 | **Signaling** | Asynchronous coordination between parallel branches via a central registry. | Shipped |
+| **Installer** | One-command installation with Python 3.13+ check, GitHub archive distribution, agent integration setup (`claude-code`, `cursor`, `antigravity`), and `--update` workflow. | Shipped |
 
 ## Out of Scope (Intentional)
 
 - **CI/CD Management** — Cicadas manages the *development* lifecycle and specifications; it does not replace deployment pipelines.
 - **Project Management UI** — Cicadas lives in the terminal and filesystem; it is not a Jira/Linear replacement.
+- **Package Manager Distribution** — Installer uses GitHub archive URL directly; npm/pip/homebrew distribution is future scope.
 
 ---
 
@@ -51,6 +53,7 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 
 - **Spec Freshness**: Active specs match the codebase 100% at the time of merge.
 - **Reduced Friction**: Bug fixes and tweaks move from draft to merge in < 50% of the time required for a standard initiative.
+- **Zero-Friction Install**: `curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash` works in any fresh git repository in under 60 seconds.
 
 ---
 
