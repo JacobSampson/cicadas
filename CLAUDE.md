@@ -2,35 +2,44 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Python / Environment
+
+Python 3.13 lives in the `.venv`. Always activate it (or prefix commands with `source .venv/bin/activate &&`) when running Python. Do **not** use bare `python` or `uv run` — the Atlassian PyPI mirror blocks package downloads.
+
+```bash
+source .venv/bin/activate && python --version   # should print 3.13.x
+```
+
 ## Commands
 
 **Run all tests:**
 ```bash
-python -m pytest tests/
+source .venv/bin/activate && python -m pytest tests/
 ```
 
 **Run a single test file:**
 ```bash
-python -m pytest tests/test_kickoff.py
+source .venv/bin/activate && python -m pytest tests/test_kickoff.py
 ```
 
 **Run a single test:**
 ```bash
-python -m pytest tests/test_kickoff.py::TestKickoff::test_basic_kickoff
+source .venv/bin/activate && python -m pytest tests/test_kickoff.py::TestKickoff::test_basic_kickoff
 ```
 
 **Lint:**
 ```bash
-ruff check src/ tests/
+source .venv/bin/activate && ruff check src/ tests/
 ```
 
 **Format:**
 ```bash
-ruff format src/ tests/
+source .venv/bin/activate && ruff format src/ tests/
 ```
 
-**CLI scripts** (run from project root; scripts use `sys.path` to find `utils.py`):
+**CLI scripts** (activate venv first; scripts use `sys.path` to find `utils.py`):
 ```bash
+source .venv/bin/activate
 python src/cicadas/scripts/init.py
 python src/cicadas/scripts/status.py
 python src/cicadas/scripts/check.py
