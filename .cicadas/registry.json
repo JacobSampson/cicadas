@@ -1,24 +1,5 @@
 {
   "schema_version": "2.0",
   "initiatives": {},
-  "branches": {
-    "tweak/project-history": {
-      "intent": "Add history.py script to generate HTML timeline from archive and index",
-      "modules": [
-        "src/cicadas/scripts/history.py"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-02-28T05:12:09.956409+00:00",
-      "initiative": "project-history"
-    },
-    "fix/branch-active-dir": {
-      "intent": "Fix branch.py active dir naming to use initiative name not full branch name",
-      "modules": [
-        "src/cicadas/scripts/branch.py"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-02-28T05:22:32.476408+00:00",
-      "initiative": "branch-active-dir"
-    }
-  }
+  "branches": {}
 }

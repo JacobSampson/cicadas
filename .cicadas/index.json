@@ -35,6 +35,20 @@
       "summary": "Added abort.py: context-aware escape hatch that detects branch type (tweak/fix/feat/initiative) and rolls back the appropriate scope, with prompt to move active specs to drafts or delete them. Updated SKILL.md, CLAUDE.md, and added 14 unit tests at 86% coverage.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T04:10:15.925579+00:00",
+      "branch": "fix/archive-branch-cleanup",
+      "summary": "Fixed archive.py to deregister associated branches when archiving an initiative; cleaned up orphaned registry entries; added regression test",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T04:10:22.646182+00:00",
+      "branch": "archive-branch-cleanup",
+      "summary": "Bug fix complete: archive.py now cleans up associated branches on initiative archive",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

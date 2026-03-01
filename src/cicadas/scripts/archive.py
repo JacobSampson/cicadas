@@ -36,6 +36,14 @@ def archive(name, type_="branch"):
 
     # Remove from registry
     del registry[registry_key][name]
+
+    # When archiving an initiative, also deregister any associated branches
+    if type_ == "initiative":
+        orphaned = [b for b, info in registry.get("branches", {}).items() if info.get("initiative") == name]
+        for b in orphaned:
+            del registry["branches"][b]
+            print(f"Deregistered associated branch: {b}")
+
     save_json(cicadas / "registry.json", registry)
     print(f"Deregistered {type_}: {name}")
 

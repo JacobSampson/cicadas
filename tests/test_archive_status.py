@@ -61,6 +61,33 @@ class TestArchiveStatus(CicadasTest):
         output = f.getvalue()
         self.assertIn("!!! LIGHTWEIGHT PATH SIGNIFICANCE CHECK !!!", output)
 
+    def test_archive_initiative_deregisters_associated_branches(self):
+        """Archiving an initiative must also remove its linked branches from the registry."""
+        init_name = "my-initiative"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test initiative"}
+            reg["branches"]["feat/part-1"] = {"intent": "part 1", "initiative": init_name}
+            reg["branches"]["tweak/side-fix"] = {"intent": "side fix", "initiative": init_name}
+            reg["branches"]["feat/other"] = {"intent": "unrelated", "initiative": "other-initiative"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        (self.cicadas_dir / "active" / init_name).mkdir(parents=True)
+
+        archive.archive(init_name, type_="initiative")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+
+        # Initiative and its branches deregistered
+        self.assertNotIn(init_name, reg["initiatives"])
+        self.assertNotIn("feat/part-1", reg["branches"])
+        self.assertNotIn("tweak/side-fix", reg["branches"])
+        # Unrelated branch untouched
+        self.assertIn("feat/other", reg["branches"])
+
     def test_status_categorization(self):
         with open(self.cicadas_dir / "registry.json", "r+") as f:
             reg = json.load(f)
