@@ -67,7 +67,7 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 - `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`).
 - `emergence/` — Markdown instructions for subagents (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak). These are **agent prompts**, not code.
 - `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`).
-- `skill.md` — The master agent skill definition (read this for full operational detail).
+- `SKILL.md` — The master agent skill definition (read this for full operational detail).
 - `implementation.md` — Guardrails for implementation agents.
 
 ### `.cicadas/` State Directory
@@ -115,4 +115,4 @@ Tests live in `tests/` and inherit from `CicadasTest` in `tests/base.py`. The ba
 - Provides `init_git()` for tests that need a real git repo.
 - Cleans up in `tearDown`.
 
-`tests/conftest.py` inserts both `src/cicadas/scripts/` and `tests/` into `sys.path` before collection, so scripts are importable in all test modules. `base.py` also inserts the scripts path for backwards compatibility.
+Tests are run directly with `unittest` (not pytest); `PYTHONPATH=src/cicadas/scripts:tests` is set explicitly on the command line so all scripts are importable. `tests/conftest.py` exists for legacy pytest compatibility but is not used by the primary test runner.

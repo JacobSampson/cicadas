@@ -15,6 +15,14 @@ Cicadas is a sustainable **spec-driven development** methodology designed for hi
 
 The system is split between the **Skill** (logic) and the **Institutional Memory** (data).
 
+### 0. The Installer (`install.sh` — project root)
+A portable bash script for zero-friction setup. Run once to download Cicadas, check Python 3.13+, initialize `.cicadas/`, and optionally wire up agent integrations (`claude-code`, `antigravity`, `cursor`).
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
+bash install.sh --update   # refresh skill files without touching .cicadas/
+```
+
 ### 1. The Skill Directory (`src/cicadas/`)
 This is the orchestrator itself. It contains:
 - `SKILL.md`: The agent manual and technical definition.

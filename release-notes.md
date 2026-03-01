@@ -1,5 +1,13 @@
 # Release Notes
 
+## Version 0.4.0
+- **New Feature**: Added `install.sh` — a single-command bash installer that checks for Python 3.13+, downloads Cicadas from the GitHub archive URL, extracts to `src/cicadas/` (configurable via `--dir`), and calls `init.py` to bootstrap `.cicadas/`.
+- **Agent Integrations**: `--agent` flag supports `claude-code` (symlink at `.claude/skills/cicadas`), `antigravity` (symlink at `.agents/skills/cicadas`), and `cursor` (copies `SKILL.md` to `.cursor/rules/cicadas.mdc`). Interactive agent prompt when stdin is a tty; skipped gracefully in `curl | bash` context.
+- **Update Workflow**: `--update` flag re-downloads and overwrites skill files without touching `.cicadas/` state or re-running init.
+- **Docs**: `README.md` and `HOW-TO.md` updated with one-liner install, agent integration table, and update workflow.
+- **Tests**: Added 2 tests to `test_init.py` covering hook installation loop and `__main__` entry point; `init.py` coverage 74% → 97%. Overall test coverage 83% → 84% (54 tests).
+- **Canon**: Updated `product-overview.md` and `tech-overview.md` with installer feature, distribution architecture, and agent integration conventions.
+
 ## Version 0.3.5
 - **Bug Fix**: Fixed `archive.py` leaving orphaned branch entries in `registry.json` after archiving an initiative; associated branches (matching `initiative` field) are now deregistered automatically.
 - **Tests**: Added regression test `test_archive_initiative_deregisters_associated_branches` in `test_archive_status.py`.
