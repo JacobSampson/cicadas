@@ -113,6 +113,8 @@ For trivial changes, Cicadas supports a "fast path" that reduces documentation o
 3.  **Branch**: Forks directly from `main`.
 4.  **Complete**: Merge to `main`, optionally update Canon, and Archive.
 
+**Aborting a Lightweight Path**: Say *"Abort"* at any point. The agent runs `abort.py` from the current branch, rolls back the branch and registry entry, and prompts whether to move the promoted spec back to drafts or delete it entirely.
+
 ---
 
 ## 🤖 Agents & Skills

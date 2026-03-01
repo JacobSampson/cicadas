@@ -35,7 +35,7 @@ We draft specifications in `.cicadas/drafts/` using specialized subagents (Clari
 
 ### Phase 2: Kickoff
 We promote drafts to **Active Specs** and register the initiative.
-*   **Command**: `python src/cicadas/scripts/brood.py {name} --intent "..."`
+*   **Command**: `python src/cicadas/scripts/kickoff.py {name} --intent "..."`
 *   **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
 
 ### Phase 3: Execution (The Dual Loop)
@@ -108,6 +108,7 @@ All scripts are in `src/cicadas/scripts/`.
 | **Send Signal** | `python src/cicadas/scripts/signal.py "Message..."` |
 | **Log Work** | `python src/cicadas/scripts/update_index.py --branch {name} ...` |
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
+| **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |
 
 

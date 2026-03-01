@@ -1,5 +1,12 @@
 # Release Notes
 
+## Version 0.3.4
+- **New Script**: Added `src/cicadas/scripts/abort.py` — context-aware escape hatch that detects the current branch type (`tweak/`, `fix/`, `feat/`, `initiative/`) and rolls back the appropriate scope, prompting whether to move promoted active specs back to drafts or delete them entirely.
+- **Skill Update**: Added `"Abort"` builder command and `abort.py` entry to the CLI Quick Reference in `SKILL.md`.
+- **Docs**: Updated `README.md`, `HOW-TO.md`, `src/cicadas/README.md`, and `CLAUDE.md` to document the new command.
+- **Tests**: Added `tests/test_abort.py` with 14 tests at 86% coverage.
+- **Dev Dependencies**: Added `pytest` and `pytest-cov` to `pyproject.toml`.
+
 ## Version 0.3.3
 - **Bug Fix**: Fixed `branch.py` creating orphaned nested active directories (e.g. `active/tweak/X`) for lightweight fix/tweak branches; active dirs now consistently use the initiative name (`active/{name}/`).
 - **Test Infrastructure**: Added `tests/conftest.py` to ensure scripts dir is in `sys.path` before test collection, fixing test isolation failure.
