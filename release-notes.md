@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 0.3.5
+- **Bug Fix**: Fixed `archive.py` leaving orphaned branch entries in `registry.json` after archiving an initiative; associated branches (matching `initiative` field) are now deregistered automatically.
+- **Tests**: Added regression test `test_archive_initiative_deregisters_associated_branches` in `test_archive_status.py`.
+
 ## Version 0.3.4
 - **New Script**: Added `src/cicadas/scripts/abort.py` — context-aware escape hatch that detects the current branch type (`tweak/`, `fix/`, `feat/`, `initiative/`) and rolls back the appropriate scope, prompting whether to move promoted active specs back to drafts or delete them entirely.
 - **Skill Update**: Added `"Abort"` builder command and `abort.py` entry to the CLI Quick Reference in `SKILL.md`.
