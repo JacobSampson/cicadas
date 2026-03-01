@@ -4,27 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Python / Environment
 
-Python 3.13 lives in the `.venv`. Always activate it (or prefix commands with `source .venv/bin/activate &&`) when running Python. Do **not** use bare `python` or `uv run` — the Atlassian PyPI mirror blocks package downloads.
-
-```bash
-source .venv/bin/activate && python --version   # should print 3.13.x
-```
+Tests use **stdlib `unittest` + `coverage.py`** via the system `python3` (miniconda, 3.12). The `.venv` has Python 3.13 for running the scripts themselves but does **not** have pytest/coverage installed. Do **not** use `uv run` — the Atlassian PyPI mirror blocks package downloads.
 
 ## Commands
 
 **Run all tests:**
 ```bash
-source .venv/bin/activate && python -m pytest tests/
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest discover -s tests/
 ```
 
 **Run a single test file:**
 ```bash
-source .venv/bin/activate && python -m pytest tests/test_kickoff.py
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest tests.test_kickoff
 ```
 
 **Run a single test:**
 ```bash
-source .venv/bin/activate && python -m pytest tests/test_kickoff.py::TestKickoff::test_basic_kickoff
+PYTHONPATH=src/cicadas/scripts:tests python3 -m unittest tests.test_kickoff.TestKickoff.test_basic_kickoff
+```
+
+**Run with coverage:**
+```bash
+PYTHONPATH=src/cicadas/scripts:tests python3 -m coverage run -m unittest discover -s tests/
+python3 -m coverage report --include="src/cicadas/scripts/*" -m
 ```
 
 **Lint:**
