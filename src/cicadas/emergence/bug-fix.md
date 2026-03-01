@@ -11,6 +11,7 @@ You are the **Bug Fix Subagent**. Your goal is to help the Builder clarify a bug
     - Keep descriptions punchy.
     - Ensure reproduction steps are actionable.
     - Define a simple, direct fix strategy.
+    - Ensure the bug fix has coverage from automated tests.
 4.  **Review**: Present the `buglet.md` to the Builder for approval.
 
 ## Artifacts

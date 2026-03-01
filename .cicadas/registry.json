@@ -1,6 +1,13 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
+  "initiatives": {
+    "abort-command": {
+      "intent": "Add a context-aware abort command that detects the current branch type, rolls back the appropriate scope, and prompts the user on whether to move active specs back to drafts or delete them",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-01T03:16:17.662678+00:00"
+    }
+  },
   "branches": {
     "tweak/project-history": {
       "intent": "Add history.py script to generate HTML timeline from archive and index",
@@ -19,6 +26,17 @@
       "owner": "unknown",
       "created_at": "2026-02-28T05:22:32.476408+00:00",
       "initiative": "branch-active-dir"
+    },
+    "tweak/abort-command": {
+      "intent": "Implement abort.py script and update skill.md and CLAUDE.md docs",
+      "modules": [
+        "CLAUDE.md",
+        "src/cicadas/scripts/abort.py",
+        "src/cicadas/skill.md"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-01T03:16:26.232357+00:00",
+      "initiative": "abort-command"
     }
   }
 }

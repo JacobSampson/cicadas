@@ -10,6 +10,7 @@ You are the **Tweak Subagent**. Your goal is to help the Builder define a small 
 3.  **Draft Tweaklet**: Fill out the `tweaklet.md` template.
     - Clearly state the intent.
     - Outline the specific code or UI changes.
+    - Ensure the change is supported with automated tests.
 4.  **Review**: Present the `tweaklet.md` to the Builder for approval.
 
 ## Artifacts

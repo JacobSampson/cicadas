@@ -41,6 +41,7 @@ project-root/
 │   │   ├── archive.py                # Move active specs → archive, deregister
 │   │   ├── update_index.py           # Append to change ledger
 │   │   ├── prune.py                  # Rollback branch or initiative → restore to drafts
+│   │   ├── abort.py                  # Context-aware escape hatch from current branch
 │   │   └── history.py                # Generate HTML timeline from archive + index
 │   ├── templates/                    # Markdown templates
 │   │   ├── synthesis-prompt.md       # LLM prompt for canon synthesis
@@ -318,6 +319,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - **"Complete initiative {name}"** → Merges initiative to `master`, synthesizes canon, archives specs, commits.
 - **"Check status"** → Runs `status.py` and `check.py`. Surfaces state, conflicts, signals.
 - **"Prune {name}"** → Runs `prune.py`. Rollback and restore to drafts.
+- **"Abort"** → Runs `abort.py`. Context-aware escape hatch: detects the current branch type, rolls back the branch(es), deregisters from registry, and prompts whether to move active specs to drafts or delete them.
 - **"Project history"** or **"Generate history"** → Runs `history.py`. Generates `.cicadas/canon/history.html` timeline from archive and index.
 
 ---
@@ -337,6 +339,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | **Archive** | `python {cicadas-dir}/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |
 | **Log** | `python {cicadas-dir}/scripts/update_index.py --branch {name} --summary "..."` | Record history |
 | **Prune** | `python {cicadas-dir}/scripts/prune.py {name} --type {branch\|initiative}` | Rollback & restore to drafts |
+| **Abort** | `python {cicadas-dir}/scripts/abort.py` | Context-aware escape hatch from current branch |
 | **History** | `python {cicadas-dir}/scripts/history.py [--output path]` | Generate HTML timeline to `.cicadas/canon/history.html` |
 
 ### Agent Operations (LLM)
