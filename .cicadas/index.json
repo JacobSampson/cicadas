@@ -56,6 +56,13 @@
       "summary": "Implemented install.sh core: Python 3.13+ check with OS-specific guidance, GitHub archive download+extract, init.py call, --update flag. Includes agent integration scaffold. CLAUDE.md updated for .venv Python 3.13.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-01T22:19:15.702930+00:00",
+      "branch": "agent-integrations",
+      "summary": "Updated README.md and HOW-TO.md: one-liner curl install, --agent flag docs (claude-code, antigravity, cursor, none), --update workflow. All agent integration tasks complete.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
