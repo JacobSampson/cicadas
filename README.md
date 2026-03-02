@@ -83,7 +83,7 @@ The **Cicadas** toolset manages the `.cicadas/` directory:
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
 ```
 
-This downloads Cicadas into `src/cicadas/`, initializes the `.cicadas/` workspace, and optionally sets up agent integrations.
+This downloads Cicadas into `.cicadas-skill/cicadas/`, initializes the `.cicadas/` workspace, and optionally sets up agent integrations.
 
 **With agent integration:**
 ```bash

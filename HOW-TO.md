@@ -16,7 +16,7 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 
 This will:
 1. Check for Python 3.13+ (and print OS-specific guidance if missing)
-2. Download and extract Cicadas into `src/cicadas/` (configurable with `--dir`)
+2. Download and extract Cicadas into `.cicadas-skill/cicadas/` (configurable with `--dir`)
 3. Initialize the `.cicadas/` workspace
 4. Optionally set up your AI coding agent integration
 
@@ -31,7 +31,7 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 
 **All flags:**
 ```
---dir <path>     Install location (default: src/cicadas/)
+--dir <path>     Install location (default: .cicadas-skill/cicadas/)
 --agent <list>   Agent integrations: claude-code, antigravity, cursor, none (comma-separated)
 --update         Re-download skill files only; never touches .cicadas/
 ```
@@ -169,14 +169,14 @@ mkdir -p .claude/skills
 ln -s ../../{cicadas-dir} .claude/skills/cicadas
 ```
 
-Where `{cicadas-dir}` is the relative path from `.claude/skills/` to wherever you installed the Cicadas scripts (e.g., `../../src/cicadas`).
+Where `{cicadas-dir}` is the relative path from `.claude/skills/` to wherever you installed the Cicadas scripts (e.g., `../../.cicadas-skill/cicadas`).
 
 Alternatively, copy or symlink the directory directly:
 
 ```bash
-# If installed at src/cicadas (this repo's layout):
+# If installed at the default location:
 mkdir -p .claude/skills
-ln -s ../../src/cicadas .claude/skills/cicadas
+ln -s ../../.cicadas-skill/cicadas .claude/skills/cicadas
 ```
 
 Once registered, Claude Code will automatically load the skill and recognize Cicadas lifecycle commands like "kickoff", "start feature", and "check status".

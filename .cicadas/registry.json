@@ -1,5 +1,24 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "installer-default-path": {
+      "intent": "Change the installer default skill destination from src/cicadas to .cicadas-skill/cicadas to keep the skill out of the project source tree",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-02T03:57:55.463133+00:00"
+    }
+  },
+  "branches": {
+    "tweak/installer-default-path": {
+      "intent": "Change default INSTALL_DIR in install.sh and update HOW-TO.md and README.md references",
+      "modules": [
+        "README.md",
+        "install.sh",
+        "HOW-TO.md"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-02T03:58:04.743281+00:00",
+      "initiative": "installer-default-path"
+    }
+  }
 }
