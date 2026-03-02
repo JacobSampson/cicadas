@@ -1,7 +1,10 @@
 # Release Notes
 
+## Unreleased
+- **Requirement change**: Cicadas now requires **Python 3.11+** (was 3.13+). The scripts use stdlib only (e.g. `datetime.UTC`); the installer and docs have been updated accordingly.
+
 ## Version 0.4.0
-- **New Feature**: Added `install.sh` — a single-command bash installer that checks for Python 3.13+, downloads Cicadas from the GitHub archive URL, extracts to `src/cicadas/` (configurable via `--dir`), and calls `init.py` to bootstrap `.cicadas/`.
+- **New Feature**: Added `install.sh` — a single-command bash installer that checks for Python 3.12+, downloads Cicadas from the GitHub archive URL, extracts to `src/cicadas/` (configurable via `--dir`), and calls `init.py` to bootstrap `.cicadas/`.
 - **Agent Integrations**: `--agent` flag supports `claude-code` (symlink at `.claude/skills/cicadas`), `antigravity` (symlink at `.agents/skills/cicadas`), and `cursor` (copies `SKILL.md` to `.cursor/rules/cicadas.mdc`). Interactive agent prompt when stdin is a tty; skipped gracefully in `curl | bash` context.
 - **Update Workflow**: `--update` flag re-downloads and overwrites skill files without touching `.cicadas/` state or re-running init.
 - **Docs**: `README.md` and `HOW-TO.md` updated with one-liner install, agent integration table, and update workflow.
@@ -36,6 +39,7 @@
 - **SKILL.md Bug Fixes**: Corrected duplicate `emergence/` directory tree (scripts were misplaced), removed orphaned Bootstrap/Synthesis block, and added `{cicadas-dir}` definition note.
 
 ## Version 0.3.0
+- **Lightweight Paths (Bugs & Tweaks)**: Introduced streamlined workflows for simple bug fixes and small tweaks: `fix/` and `tweak/` branches (fork from main), minimal specs (`buglet.md`, `tweaklet.md`), and emergence subagents (Bug-fix, Tweak). Scripts updated to support relaxed validation, direct-from-main branching, and status/history for fix/tweak.
 - **Test Coverage**: Achieved >75% code coverage (83% overall) for all core scripts.
 - **Mock-Free Testing**: Refactored the test suite to use real file system operations and Git scaffolding instead of mocks.
 - **Linting & Formatting**: Integrated `ruff` and `pre-commit` hooks for automated code quality checks.

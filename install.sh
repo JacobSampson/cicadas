@@ -42,7 +42,7 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
 fi
 
 # ---------------------------------------------------------------------------
-# Python 3.13+ check
+# Python 3.11+ check
 # ---------------------------------------------------------------------------
 PYTHON_BIN=""
 
@@ -55,7 +55,7 @@ check_python() {
   done
 
   if [ -z "$PYTHON_BIN" ]; then
-    err "Python 3.13+ is required but Python was not found."
+    err "Python 3.11+ is required but Python was not found."
     blank
     print_python_install_guidance
     exit 1
@@ -67,8 +67,8 @@ check_python() {
   major=$(echo "$version" | cut -d. -f1)
   minor=$(echo "$version" | cut -d. -f2)
 
-  if [ "$major" -lt 3 ] || { [ "$major" -eq 3 ] && [ "$minor" -lt 13 ]; }; then
-    err "Python 3.13+ required (found: $version)"
+  if [ "$major" -lt 3 ] || { [ "$major" -eq 3 ] && [ "$minor" -lt 11 ]; }; then
+    err "Python 3.11+ required (found: $version)"
     blank
     print_python_install_guidance
     exit 1
@@ -78,11 +78,11 @@ check_python() {
 }
 
 print_python_install_guidance() {
-  log "Install Python 3.13:"
+  log "Install Python 3.11 or newer:"
   case "$(uname -s)" in
-    Darwin) log "  macOS:   brew install python@3.13" ;;
-    Linux)  log "  Ubuntu:  sudo apt install python3.13" ;;
-    *)      log "  Windows: winget install Python.Python.3.13 (or use WSL)" ;;
+    Darwin) log "  macOS:   brew install python@3.11" ;;
+    Linux)  log "  Ubuntu:  sudo apt install python3.11" ;;
+    *)      log "  Windows: winget install Python.Python.3.11 (or use WSL)" ;;
   esac
   blank
   log "Then re-run this installer."

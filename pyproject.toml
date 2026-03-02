@@ -6,12 +6,12 @@ name = "cicadas"
 version = "0.3.1"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = []
 
 [tool.ruff]
 line-length = 150
-target-version = "py313"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [

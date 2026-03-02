@@ -8,14 +8,14 @@ Welcome to the Cicadas methodology. This guide explains how to install Cicadas, 
 
 ### 1. Install Cicadas
 
-**One-liner** (requires Python 3.13+, `curl`, `unzip`, and a `git` repo):
+**One-liner** (requires Python 3.11+, `curl`, `unzip`, and a `git` repo):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
 ```
 
 This will:
-1. Check for Python 3.13+ (and print OS-specific guidance if missing)
+1. Check for Python 3.11+ (and print OS-specific guidance if missing)
 2. Download and extract Cicadas into `.cicadas-skill/cicadas/` (configurable with `--dir`)
 3. Initialize the `.cicadas/` workspace
 4. Optionally set up your AI coding agent integration

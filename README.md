@@ -77,7 +77,7 @@ The **Cicadas** toolset manages the `.cicadas/` directory:
 
 ### Installation
 
-**One-liner** (requires Python 3.13+ and `git`):
+**One-liner** (requires Python 3.11+ and `git`):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
@@ -116,7 +116,7 @@ bash install.sh --update
 | `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
 | `none` | Skip; configure manually |
 
-**Requirements:** Python 3.13+, `curl`, `unzip`, `git`
+**Requirements:** Python 3.11+, `curl`, `unzip`, `git`
 
 ### Quick Command Reference
 All scripts are in `src/cicadas/scripts/`.
