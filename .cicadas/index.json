@@ -70,6 +70,13 @@
       "summary": "Completed installer initiative: install.sh with Python 3.13+ check, GitHub archive download, init.py bootstrap, --update flag, agent integrations (claude-code/antigravity/cursor), interactive prompt with tty detection. README and HOW-TO updated with one-liner. Canon updated: product-overview + tech-overview.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-02T03:59:07.537479+00:00",
+      "branch": "tweak/installer-default-path",
+      "summary": "Changed installer default INSTALL_DIR from src/cicadas to .cicadas-skill/cicadas. Updated HOW-TO.md (3 references) and README.md (1 reference). Canon tech-overview.md needs a patch on master.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

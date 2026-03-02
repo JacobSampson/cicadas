@@ -50,7 +50,7 @@ A portable bash script in the project root that handles installation, setup, and
 
 **Key features:**
 - **Python 3.13+ Check**: Validates version; prints OS-specific install guidance if missing (macOS: `brew install python@3.13`, Ubuntu: `sudo apt install python3.13`).
-- **GitHub Archive Distribution**: Downloads `master.zip`, extracts to `src/cicadas/` (configurable via `--dir`).
+- **GitHub Archive Distribution**: Downloads `master.zip`, extracts to `.cicadas-skill/cicadas/` (configurable via `--dir`).
 - **Workspace Initialization**: Calls `init.py` to initialize the `.cicadas/` directory structure.
 - **Agent Integration Setup**: Optionally creates symlinks/configs for `claude-code` (`.claude/skills/cicadas`), `antigravity` (`.agents/skills/cicadas`), and `cursor` (`.cursor/rules/cicadas.mdc`).
 - **Update Workflow**: `--update` flag re-downloads skill files without touching `.cicadas/` state or re-running init.
