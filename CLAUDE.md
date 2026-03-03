@@ -50,6 +50,7 @@ python src/cicadas/scripts/branch.py {name} --intent "..." --modules "mod1,mod2"
 python src/cicadas/scripts/signal.py "message"
 python src/cicadas/scripts/archive.py {name} --type {branch|initiative}
 python src/cicadas/scripts/update_index.py --branch {name} --summary "..."
+python src/cicadas/scripts/create_lifecycle.py {name}  # optional: --pr-specs, --no-pr-initiatives, etc.
 python src/cicadas/scripts/prune.py {name} --type {branch|initiative}
 python src/cicadas/scripts/abort.py
 python src/cicadas/scripts/history.py [--output path]
@@ -97,8 +98,9 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 1. **Emergence** — Draft specs in `.cicadas/drafts/{name}/` using subagent prompts in `emergence/`.
 2. **Kickoff** — `kickoff.py` promotes drafts → `active/`, registers in `registry.json`, creates `initiative/{name}` branch.
 3. **Feature Branches** — `branch.py` creates `feat/{name}`, declares module scope to detect overlaps.
-4. **Inner Loop** — Task branches → Reflect (update active specs to match code) → PR to feature branch.
-5. **Complete Initiative** — Merge initiative → `master`, Synthesize Canon on `master`, Archive specs.
+4. **Inner Loop** — Task branches → Reflect (update active specs to match code) → PR to feature branch (if lifecycle has PR at tasks).
+5. **Complete Initiative** — Merge initiative → `master` (open PR if lifecycle has PR at initiatives), Synthesize Canon on `master`, Archive specs.
+6. **Lifecycle** — Per-initiative `lifecycle.json` (drafts/active) sets PR boundaries and steps; `status.py` reports Merged/Next (git-based).
 
 ### Key Invariants (Guardrails)
 

@@ -80,6 +80,8 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 | **Reflect** | Keeping active specs in sync with code *during* development. |
 | **Signal** | Broadcasting breaking changes to other peer branches. |
 | **Synthesis** | Overwriting Canon on `main` at the end of an initiative. |
+| **Lifecycle** | Per-initiative `lifecycle.json` (in drafts/active) defines PR boundaries (specs, initiatives, features, tasks) and an ordered step list. Created during Approach (e.g. `create_lifecycle.py`). |
+| **Status (Merged/Next)** | When lifecycle exists, `status.py` reports which branches are merged and suggests the next step (git-based; no host API). |
 
 ---
 

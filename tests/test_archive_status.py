@@ -133,6 +133,30 @@ class TestArchiveStatus(CicadasTest):
         self.assertIn("fix/b1", output)
         self.assertIn("tweak/t1", output)
 
+    def test_status_lifecycle_section_when_lifecycle_exists(self):
+        """When an initiative has active lifecycle.json, status prints a Lifecycle section with Next step."""
+        init_name = "with-lifecycle"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test initiative"}
+            reg["branches"]["feat/part1"] = {"intent": "part 1", "initiative": init_name, "modules": []}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        (self.cicadas_dir / "active" / init_name).mkdir(parents=True)
+        (self.cicadas_dir / "active" / init_name / "lifecycle.json").write_text(
+            '{"initiative": "with-lifecycle", "steps": [{"id": "complete_feature", "name": "Complete each feature"}]}'
+        )
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+
+        output = f.getvalue()
+        self.assertIn("Lifecycle (with-lifecycle):", output)
+        self.assertIn("Next:", output)
+
 
 if __name__ == "__main__":
     unittest.main()

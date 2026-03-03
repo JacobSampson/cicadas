@@ -105,9 +105,9 @@ project-root/
 1. Create task branch from feature branch: `git checkout -b task/{feature}/{task-name}`
 2. Implement code.
 3. **Reflect**: Keep active specs current as code diverges from plan.
-4. Open a **PR** against the feature branch. Include Reflect findings in the PR description.
+4. Open a **PR** against the feature branch (if lifecycle has PR at tasks). Include Reflect findings in the PR description. Use host CLI (`gh pr create`, `glab mr create`) if available; otherwise push and open in GitHub/GitLab/Bitbucket UI, or merge locally.
 5. Builder reviews and approves the PR.
-6. Merge the PR, delete the task branch.
+6. Merge the PR, delete the task branch. The agent discovers completion on the next `status.py` run (git-based merge detection).
 
 ### Branch Hierarchy
 
@@ -146,6 +146,7 @@ Progressive spec authoring in `.cicadas/drafts/{initiative-name}/`, using subage
 | 3. Tech | `tech-design.md` | **Architecture**. Components, data flow, schemas. |
 | 4. Approach | `approach.md` | **Strategy & Partitioning**. Sequencing, dependencies, and logical partitions that become feature branches. |
 | 5. Tasks | `tasks.md` | **Execution**. Ordered, testable checklist grouped by partition. |
+| 5b. Lifecycle (PRs) | `lifecycle.json` | **Boundary transitions**. Ask "Use PRs?" and at which boundaries (specs, initiatives, features, tasks). Created via `create_lifecycle.py`; promoted at kickoff. |
 
 **Critical**: `approach.md` MUST define logical partitions with declared module scopes. These become feature branches.
 
@@ -177,8 +178,8 @@ python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"
 
 **Steps**:
 1. **Update index**: `python {cicadas-dir}/scripts/update_index.py --branch {name} --summary "..."`
-2. **Merge to initiative**: `git checkout initiative/{name} && git merge {branch-name}`
-3. **Push initiative branch**: `git push origin initiative/{name}`
+2. **Open PR** (if lifecycle has PR at features): Push branch, then open a Pull Request to `initiative/{name}` (use host CLI e.g. `gh pr create` or open in GitHub/GitLab/Bitbucket UI). Merge the PR when approved.
+3. **Or merge directly**: `git checkout initiative/{name} && git merge {branch-name}` and `git push origin initiative/{name}` if not using PRs at this boundary.
 
 **Key**: No synthesis, no archiving at this step. Active specs stay active — they are the living document for the rest of the initiative, continuously updated by Reflect.
 
@@ -186,12 +187,8 @@ python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"
 **When**: All feature branches merged into the initiative branch.
 
 **Step 1 — Merge to main (default branch)**:
-```
-git checkout main (default branch) && git merge initiative/{name}
-git push origin main (default branch)
-git branch -d initiative/{name}
-git push origin --delete initiative/{name}
-```
+- If lifecycle has PR at initiatives: open a PR from `initiative/{name}` to main (default branch), get review, merge the PR. Then delete the initiative branch locally and on remote.
+- Or merge directly: `git checkout main (default branch) && git merge initiative/{name}`, push, then `git branch -d initiative/{name}` and `git push origin --delete initiative/{name}`.
 
 **Step 2 — Synthesize canon on main (default branch)** (Agent Operation):
 - Read: codebase on `main (default branch)`, active specs, existing canon, change ledger
@@ -215,6 +212,8 @@ python {cicadas-dir}/scripts/status.py
 python {cicadas-dir}/scripts/check.py
 ```
 The Agent should check for signals when performing a Check Status operation and assess their relevance.
+
+When `.cicadas/active/{initiative}/lifecycle.json` exists, `status.py` also reports **Merged** (branch pairs where source is merged into target) and **Next** (suggested lifecycle step). Completion is detected via git only (no host API); the agent discovers "PR merged" on the next status run.
 
 ### Broadcast: Signal
 **Trigger**: A change that affects other feature branches.
@@ -333,7 +332,8 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | **Init** | `python {cicadas-dir}/scripts/init.py` | Bootstrap project structure |
 | **Kickoff** | `python {cicadas-dir}/scripts/kickoff.py {name} --intent "..."` | Promote drafts, register initiative, create branch |
 | **Feature** | `python {cicadas-dir}/scripts/branch.py {name} --intent "..." --modules "..." --initiative {name}` | Register feature branch |
-| **Status** | `python {cicadas-dir}/scripts/status.py` | Show global state & signals |
+| **Status** | `python {cicadas-dir}/scripts/status.py` | Show state, signals, and (if lifecycle exists) Merged / Next step |
+| **Lifecycle** | `python {cicadas-dir}/scripts/create_lifecycle.py {name}` | Create lifecycle.json in drafts (use --pr-* flags to override defaults) |
 | **Check** | `python {cicadas-dir}/scripts/check.py` | Check for conflicts & updates |
 | **Signal** | `python {cicadas-dir}/scripts/signal.py "{message}"` | Broadcast to initiative |
 | **Archive** | `python {cicadas-dir}/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |
@@ -356,6 +356,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 Use templates in `{cicadas-dir}/templates/` directory:
 - `product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`: Canon templates
 - `prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`: Active spec templates
+- `lifecycle-default.json`, `lifecycle-schema.md`: Per-initiative lifecycle (PR boundaries + steps)
 - `synthesis-prompt.md`: System prompt for canon synthesis
 
 ---
