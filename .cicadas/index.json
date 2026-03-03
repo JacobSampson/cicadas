@@ -105,6 +105,13 @@
       "summary": "Lifecycle and PRs: lifecycle.json, create_lifecycle, status merge detection, open_pr, SKILL/HOW-TO/CLAUDE",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T03:46:50.272191+00:00",
+      "branch": "tweak/process-preview",
+      "summary": "Added process preview messages to emergence subagents (tweak.md, bug-fix.md, clarify.md): step 0 shows spec phase steps at start; post-approval message shows kickoff-through-implementation path",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

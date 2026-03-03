@@ -7,6 +7,13 @@
 
 ## Process
 
+0. **Process Preview**: Before starting, show the Builder the full spec phase steps:
+    ```
+    Spec phase:   Clarify (PRD) → UX → Tech Design → Approach → Tasks → [Your review after each]
+    Then:         Kickoff → Feature branch(es) → Task branches → Reflect → PR per task
+                  → Merge feature(s) → Merge initiative → Synthesize canon → Archive
+    ```
+
 1. **Ingest**: Read the initial request and identify the initiative name.
 
 2. **Canon Check**: On brownfield projects, read existing canon (`product-overview.md`, `ux-overview.md`, `tech-overview.md`) to understand what the system already does. Use this to ask sharper, more targeted questions and to avoid re-specifying existing behavior.
@@ -21,7 +28,12 @@
         - `[R] Review`: Adopt a critical persona to highlight risks or gaps.
         - `[C] Continue`: Mark the section complete in `steps_completed` and move on.
 
-5. **Finalize**: Once all sections are complete, present a summary and confirm the PRD is ready to hand off to the UX sub-skill.
+5. **Finalize**: Once all sections are complete, present a summary and confirm the PRD is ready to hand off to the UX sub-skill. Remind the Builder of the remaining spec steps:
+    ```
+    Remaining spec steps:   UX → Tech Design → Approach → Tasks → [Your review after each]
+    Then:                   Kickoff → Feature branch(es) → Task branches → Reflect → PR per task
+                            → Merge feature(s) → Merge initiative → Synthesize canon → Archive
+    ```
 
 ## Section-Specific Guidance
 
