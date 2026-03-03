@@ -59,6 +59,7 @@ Promote drafts to `active`, register the initiative, and create the `initiative/
 - **Start Feature**: Create a registered feature branch for a partition.
 - **Implement Task**: Work on ephemeral task branches.
 - **Reflect**: Periodically update active specs to match code changes.
+- **Code Review** (optional): After Reflect, run *"Code review"* to evaluate the diff against specs, security, correctness, and quality. Produces an ephemeral advisory report with a merge verdict.
 - **Signal**: Broadcast breaking changes to other active branches.
 
 ### 4. Completion & Synthesis
@@ -86,6 +87,7 @@ Merge back to `main`. The agent then **synthesizes** new Canon docs from the cod
 | **Start Initiative** | "Kickoff {initiative-name}" |
 | **Start Work** | "Start feature {partition-name}" |
 | **Do Coding** | "Implement task {X}" |
+| **Code Review** | "Code review" / "Review feature" / "Review fix" / "Review tweak" |
 | **Review** | "Check status" |
 | **Broadcast** | "Signal: {your message}" |
 | **Finish Feature** | "Complete feature {name}" |

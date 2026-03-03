@@ -78,6 +78,7 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 | **Active Specs** | The living requirements driving current work (`.cicadas/active/`). |
 | **Approach** | The strategy doc where you define the **Initiative** and its **Partitions**. |
 | **Reflect** | Keeping active specs in sync with code *during* development. |
+| **Code Review** | Optional agent operation run after Reflect, before opening a PR or merging. Evaluates the diff against active specs, security patterns, correctness bugs, and code quality. Produces an ephemeral advisory report with a merge verdict. |
 | **Signal** | Broadcasting breaking changes to other peer branches. |
 | **Synthesis** | Overwriting Canon on `main` at the end of an initiative. |
 | **Lifecycle** | Per-initiative `lifecycle.json` (in drafts/active) defines PR boundaries (specs, initiatives, features, tasks) and an ordered step list. Created during Approach (e.g. `create_lifecycle.py`). |
@@ -114,6 +115,7 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 7.  **Implementation Loop**:
     - **Start Feature**: *"Start feature [partition-name]."* (Forks from Initiative Branch).
     - **Reflect**: The Agent keeps specs current as you build.
+    - **Code Review** (optional): *"Code review"* — the Agent evaluates the diff against specs, security, correctness, and code quality and produces an advisory report before you open a PR.
     - **Complete Feature**: Merges back to the Initiative Branch.
 8.  **Complete Initiative**: *"Complete initiative [initiative-name]."*
     - Merges Initiative Branch to `main`, **Synthesizes** the Canon on `main`, and **Archives** the specs.

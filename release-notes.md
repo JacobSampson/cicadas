@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## Version 0.5.1
+- **Code Review**: New optional agent operation (`emergence/code-review.md`) for spec-anchored evaluation of code diffs. Covers task completeness, acceptance criteria, architectural conformance, module scope, Reflect completeness, security (OWASP patterns), correctness (9 named bug patterns with explicit blocking thresholds), and code quality. Produces an ephemeral advisory report with tiered findings (Blocking / Advisory) and a `MERGE-READY` / `NEEDS-WORK` verdict. Supports feature branches (Full mode) and fix/tweak branches (Lightweight mode).
+- **SKILL.md**: Added Code Review to Agent Operations, Agent Autonomy Boundaries table, Builder Commands (`"Code review"`, `"Review feature"`, `"Review fix"`, `"Review tweak"`), and quick reference table.
+- **Lint fixes**: Resolved pre-existing `ruff` errors in `history.py` (`timezone.utc` → `UTC`, two long CSS lines) and `tests/test_init.py` (unused import).
+
 ## Version 0.5.0
 - **Lifecycle & PRs**: Per-initiative `lifecycle.json` (in drafts/active) defines PR boundaries (specs, initiatives, features, tasks) and an ordered step list. Created during Approach via `create_lifecycle.py`; promoted at kickoff and archived with the initiative.
 - **Status merge detection**: When `lifecycle.json` exists, `status.py` reports which branches are merged (git-based) and suggests the next lifecycle step (Merged/Next).
