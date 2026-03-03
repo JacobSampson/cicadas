@@ -18,6 +18,24 @@
       "owner": "unknown",
       "created_at": "2026-03-03T00:19:51.155405+00:00",
       "initiative": "lifecycle-prs"
+    },
+    "feat/status-and-docs": {
+      "intent": "Status merge detection and lifecycle/PR docs (SKILL, HOW-TO, CLAUDE)",
+      "modules": [
+        "scripts"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-03T02:20:04.586369+00:00",
+      "initiative": "lifecycle-prs"
+    },
+    "feat/open-pr-helper": {
+      "intent": "Optional open_pr.py: gh/glab/URL/fallback for host-agnostic PR open",
+      "modules": [
+        "scripts"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-03T02:50:26.820694+00:00",
+      "initiative": "lifecycle-prs"
     }
   }
 }
