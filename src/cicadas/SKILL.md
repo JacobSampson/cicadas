@@ -42,7 +42,9 @@ project-root/
 │   │   ├── update_index.py           # Append to change ledger
 │   │   ├── prune.py                  # Rollback branch or initiative → restore to drafts
 │   │   ├── abort.py                  # Context-aware escape hatch from current branch
-│   │   └── history.py                # Generate HTML timeline from archive + index
+│   │   ├── history.py                # Generate HTML timeline from archive + index
+│   │   ├── create_lifecycle.py       # Create lifecycle.json in drafts/active
+│   │   └── open_pr.py                # Open PR (gh/glab/URL/fallback)
 │   ├── templates/                    # Markdown templates
 │   │   ├── synthesis-prompt.md       # LLM prompt for canon synthesis
 │   │   ├── product-overview.md       # Canon template
@@ -105,7 +107,7 @@ project-root/
 1. Create task branch from feature branch: `git checkout -b task/{feature}/{task-name}`
 2. Implement code.
 3. **Reflect**: Keep active specs current as code diverges from plan.
-4. Open a **PR** against the feature branch (if lifecycle has PR at tasks). Include Reflect findings in the PR description. Use host CLI (`gh pr create`, `glab mr create`) if available; otherwise push and open in GitHub/GitLab/Bitbucket UI, or merge locally.
+4. Open a **PR** against the feature branch (if lifecycle has PR at tasks). Run `open_pr.py` (tries `gh`/`glab`, then Bitbucket URL, else fallback). Include Reflect findings in the PR description.
 5. Builder reviews and approves the PR.
 6. Merge the PR, delete the task branch. The agent discovers completion on the next `status.py` run (git-based merge detection).
 
@@ -334,6 +336,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | **Feature** | `python {cicadas-dir}/scripts/branch.py {name} --intent "..." --modules "..." --initiative {name}` | Register feature branch |
 | **Status** | `python {cicadas-dir}/scripts/status.py` | Show state, signals, and (if lifecycle exists) Merged / Next step |
 | **Lifecycle** | `python {cicadas-dir}/scripts/create_lifecycle.py {name}` | Create lifecycle.json in drafts (use --pr-* flags to override defaults) |
+| **Open PR** | `python {cicadas-dir}/scripts/open_pr.py [--base branch]` | Open PR from current branch (tries gh → glab → Bitbucket URL → fallback) |
 | **Check** | `python {cicadas-dir}/scripts/check.py` | Check for conflicts & updates |
 | **Signal** | `python {cicadas-dir}/scripts/signal.py "{message}"` | Broadcast to initiative |
 | **Archive** | `python {cicadas-dir}/scripts/archive.py {name} --type {branch\|initiative}` | Expire active specs |

@@ -51,6 +51,7 @@ python src/cicadas/scripts/signal.py "message"
 python src/cicadas/scripts/archive.py {name} --type {branch|initiative}
 python src/cicadas/scripts/update_index.py --branch {name} --summary "..."
 python src/cicadas/scripts/create_lifecycle.py {name}  # optional: --pr-specs, --no-pr-initiatives, etc.
+python src/cicadas/scripts/open_pr.py [--base branch]   # open PR from current branch (gh/glab/URL/fallback)
 python src/cicadas/scripts/prune.py {name} --type {branch|initiative}
 python src/cicadas/scripts/abort.py
 python src/cicadas/scripts/history.py [--output path]
