@@ -55,6 +55,23 @@ class TestKickoff(CicadasTest):
         self.assertIn(name, registry["initiatives"])
         self.assertEqual(registry["initiatives"][name]["signals"], [])
 
+    def test_kickoff_promotes_lifecycle_json(self):
+        """When drafts contain lifecycle.json, kickoff promotes it to active."""
+        name = "with-lifecycle"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# Test PRD")
+        lifecycle_content = '{"initiative": "with-lifecycle", "pr_boundaries": {"specs": false}, "steps": []}'
+        (draft_dir / "lifecycle.json").write_text(lifecycle_content)
+
+        self.init_git()
+        kickoff.kickoff(name, "test intent")
+
+        active_lifecycle = self.cicadas_dir / "active" / name / "lifecycle.json"
+        self.assertTrue(active_lifecycle.exists())
+        self.assertEqual(active_lifecycle.read_text(), lifecycle_content)
+        self.assertFalse(draft_dir.exists())
+
     def test_kickoff_existing(self):
         self.init_git()
         name = "exists"

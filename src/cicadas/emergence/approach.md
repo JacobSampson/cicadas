@@ -18,10 +18,12 @@
     -   **Plan for backward compatibility and migration** (brownfield).
 3.  **Draft**: Create `.cicadas/drafts/{initiative}/approach.md`.
 4.  **Refine**: Builder review.
+5.  **Lifecycle (PR boundaries)**: Ask the Builder: *"Will you be doing PRs for this initiative?"* If yes, ask at which boundaries (defaults: specs **no**, initiatives **yes**, features **yes**, tasks **no**). Create `lifecycle.json` in `.cicadas/drafts/{initiative}/` with those choices and the standard steps. Use `python {cicadas-dir}/scripts/create_lifecycle.py {initiative}` with flags `--pr-specs`, `--no-pr-initiatives`, `--no-pr-features`, `--pr-tasks` to override defaults, or run with no flags for defaults.
 
-## Output Artifact: `approach.md`
+## Output Artifacts
 
-Use the template at `{cicadas-dir}/templates/approach.md`.
+- **approach.md**: Use the template at `{cicadas-dir}/templates/approach.md`.
+- **lifecycle.json** (after step 5): In `.cicadas/drafts/{initiative}/lifecycle.json`; created by `create_lifecycle.py` with the Builder's PR boundary choices. Promoted to active at kickoff.
 
 **The approach document is the single most important artifact in Emergence.** Every downstream decision — branch names, module scopes, conflict detection, registry entries — flows from the partitions defined here.
 

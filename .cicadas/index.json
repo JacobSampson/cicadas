@@ -77,6 +77,13 @@
       "summary": "Changed installer default INSTALL_DIR from src/cicadas to .cicadas-skill/cicadas. Updated HOW-TO.md (3 references) and README.md (1 reference). Canon tech-overview.md needs a patch on master.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T01:00:22.274054+00:00",
+      "branch": "feat/lifecycle-artifact",
+      "summary": "Lifecycle schema, default template, create_lifecycle.py, approach-phase PR/lifecycle step, kickoff/archive include lifecycle.json, tests",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

@@ -42,6 +42,29 @@ class TestArchiveStatus(CicadasTest):
         # Verify active dir removed
         self.assertFalse(active_dir.exists())
 
+    def test_archive_includes_lifecycle_json(self):
+        """When active contains lifecycle.json, archive moves it with the rest of active."""
+        name = "init-with-lifecycle"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][name] = {"intent": "test"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        active_dir = self.cicadas_dir / "active" / name
+        active_dir.mkdir(parents=True)
+        (active_dir / "prd.md").write_text("# PRD")
+        (active_dir / "lifecycle.json").write_text('{"initiative": "init-with-lifecycle", "steps": []}')
+
+        archive.archive(name, type_="initiative")
+
+        arch_dirs = list((self.cicadas_dir / "archive").iterdir())
+        self.assertEqual(len(arch_dirs), 1)
+        husk = arch_dirs[0]
+        self.assertTrue((husk / "lifecycle.json").exists())
+        self.assertEqual((husk / "lifecycle.json").read_text(), '{"initiative": "init-with-lifecycle", "steps": []}')
+
     def test_archive_significance_check(self):
         name = "fix/my-bug"
         with open(self.cicadas_dir / "registry.json", "r+") as f:

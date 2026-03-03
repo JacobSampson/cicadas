@@ -1,5 +1,23 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "lifecycle-prs": {
+      "intent": "Add per-initiative lifecycle and PR boundaries; host-agnostic open and git-based completion",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-03T00:19:23.024971+00:00"
+    }
+  },
+  "branches": {
+    "feat/lifecycle-artifact": {
+      "intent": "Lifecycle schema, approach-phase prompts, kickoff/archive copy lifecycle.json",
+      "modules": [
+        "scripts",
+        "templates"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-03T00:19:51.155405+00:00",
+      "initiative": "lifecycle-prs"
+    }
+  }
 }
