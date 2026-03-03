@@ -37,6 +37,7 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 | **Standard Initiative** | Full 5-document spec suite (PRD, UX, Tech, Approach, Tasks) for complex features. | Shipped |
 | **Lightweight Paths** | Streamlined workflows for bugs (`fix/`) and tweaks (`tweak/`) using single branches and minimal specs (`buglet.md`, `tweaklet.md`). | Shipped |
 | **Orchestrator CLI** | Automated scripts for kickoff, branching, status tracking, signaling, and archiving. | Shipped |
+| **Lifecycle & PRs** | Per-initiative `lifecycle.json` (PR boundaries + steps), `create_lifecycle.py`, `open_pr.py`, status merge detection (git-based); host-agnostic. | Shipped |
 | **Synthesis** | Automated generation of Canon documentation from code and expired specs. | Shipped |
 | **Signaling** | Asynchronous coordination between parallel branches via a central registry. | Shipped |
 | **Installer** | One-command installation with Python 3.13+ check, GitHub archive distribution, agent integration setup (`claude-code`, `cursor`, `antigravity`), and `--update` workflow. | Shipped |

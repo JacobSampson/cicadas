@@ -12,7 +12,8 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 - **Hierarchical Branching** — Complex work uses `initiative/{name}` and `feat/{name}` branches. Lightweight work forks directly from `master` using `fix/` or `tweak/`.
 - **Registry Source of Truth** — `registry.json` is the definitive map of all in-flight work and cross-branch signals.
 - **Distribution-First Design** — `install.sh` is the primary entry point; uses GitHub archive URL for zero-friction distribution without requiring a release pipeline.
-- **Universal Installation** — Installer works on any project stack (Go, Java, React, etc.); only requires Python 3.13+ and `git` at runtime.
+- **Universal Installation** — Installer works on any project stack (Go, Java, React, etc.); only requires Python 3.11+ and `git` at runtime.
+- **Lifecycle & PR Boundaries** — Per-initiative `lifecycle.json` (in drafts/active) defines at which boundaries to open PRs (specs, initiatives, features, tasks) and an ordered step list; completion is detected via git only (no host API).
 
 ---
 
@@ -23,8 +24,8 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 ├── registry.json                 # Global state (initiatives + feature branches)
 ├── index.json                    # Change ledger (append-only)
 ├── canon/                        # Authoritative documentation (synthesized)
-├── drafts/                       # Pre-kickoff staging area
-├── active/                       # Live specs for in-flight work
+├── drafts/                       # Pre-kickoff staging area (may include lifecycle.json)
+├── active/                       # Live specs for in-flight work (may include lifecycle.json)
 └── archive/                      # Expired spec trail
 ```
 
@@ -49,7 +50,7 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 A portable bash script in the project root that handles installation, setup, and updates. Requires only `bash`, `curl`, `unzip`, and `git`.
 
 **Key features:**
-- **Python 3.13+ Check**: Validates version; prints OS-specific install guidance if missing (macOS: `brew install python@3.13`, Ubuntu: `sudo apt install python3.13`).
+- **Python 3.11+ Check**: Validates version; prints OS-specific install guidance if missing.
 - **GitHub Archive Distribution**: Downloads `master.zip`, extracts to `.cicadas-skill/cicadas/` (configurable via `--dir`).
 - **Workspace Initialization**: Calls `init.py` to initialize the `.cicadas/` directory structure.
 - **Agent Integration Setup**: Optionally creates symlinks/configs for `claude-code` (`.claude/skills/cicadas`), `antigravity` (`.agents/skills/cicadas`), and `cursor` (`.cursor/rules/cicadas.mdc`).
@@ -67,11 +68,13 @@ bash install.sh --update
 
 The system uses a set of Python scripts in `src/cicadas/scripts/`:
 - `init.py`: Initializes `.cicadas/` directory on fresh install (idempotent; called by `install.sh`).
-- `kickoff.py`: Promotes drafts and registers initiatives.
+- `kickoff.py`: Promotes drafts (including `lifecycle.json` when present) and registers initiatives.
 - `branch.py`: Creates and registers feature/fix/tweak branches.
-- `status.py`: Reports global project state.
+- `status.py`: Reports global project state; when `lifecycle.json` exists for an initiative, reports Merged (branch pairs) and Next (suggested step) via git-based merge detection.
+- `create_lifecycle.py`: Creates `lifecycle.json` in drafts or active with PR boundaries and default steps.
+- `open_pr.py`: Opens a PR from current branch (tries `gh` → `glab` → Bitbucket URL → fallback); host-agnostic.
 - `update_index.py`: Logs changes to the ledger.
-- `archive.py`: Concludes work, deregisters branches, and expires specs.
+- `archive.py`: Concludes work, deregisters branches, and expires specs (includes `lifecycle.json` when present).
 - `abort.py`: Context-aware rollback for any branch type.
 - `signal.py`: Broadcasts breaking changes across peer branches.
 - `history.py`: Generates HTML timeline of completed initiatives.
