@@ -91,6 +91,13 @@
       "summary": "Status merge detection and lifecycle/PR docs (SKILL, HOW-TO, CLAUDE)",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T02:51:34.976377+00:00",
+      "branch": "feat/open-pr-helper",
+      "summary": "Optional open_pr.py: gh/glab/Bitbucket URL/fallback",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
