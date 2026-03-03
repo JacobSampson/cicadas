@@ -86,6 +86,7 @@ The system uses a set of Python scripts in `src/cicadas/scripts/`:
 
 - **Module-Awareness**: Feature branches declare their module scope in the registry to prevent silent merge conflicts.
 - **Reflect Operation**: Agents MUST update active specs before merging any code change.
+- **Code Review Operation**: Optional agent operation invoked after Reflect, before opening a PR or merging. Runs a structured algorithm (task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security scan, correctness scan, code quality) against the branch diff and active specs. Output is ephemeral and always advisory. Defined in `emergence/code-review.md`.
 - **Significance Check**: Lightweight paths must be evaluated for Canon updates before archiving.
 - **Relative Symlinks**: Agent integrations use relative symlinks for portability across machines with different mount paths.
 - **Non-Interactive Pipe Support**: Installer detects `curl | bash` context (`[ -t 0 ]`) and skips interactive prompts, printing manual setup guidance instead.

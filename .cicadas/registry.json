@@ -1,23 +1,5 @@
 {
   "schema_version": "2.0",
-  "initiatives": {
-    "code-review": {
-      "intent": "Add an optional Code Review agent operation \u2014 a structured, spec-anchored evaluation of code diffs covering task completeness, architectural conformance, security, correctness bugs, and code quality \u2014 producing an ephemeral advisory report with a merge verdict. Supports feature, fix, and tweak branches.",
-      "owner": "unknown",
-      "signals": [],
-      "created_at": "2026-03-03T04:54:05.352270+00:00"
-    }
-  },
-  "branches": {
-    "feat/code-review-subagent": {
-      "intent": "Write emergence/code-review.md subagent prompt and update SKILL.md with new Code Review operation, autonomy boundary, and Builder commands",
-      "modules": [
-        "src/cicadas/SKILL.md",
-        "src/cicadas/emergence"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-03-03T04:54:10.944778+00:00",
-      "initiative": "code-review"
-    }
-  }
+  "initiatives": {},
+  "branches": {}
 }

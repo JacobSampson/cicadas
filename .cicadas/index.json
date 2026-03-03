@@ -119,6 +119,20 @@
       "summary": "Remove Cicadas copyright from generated spec templates",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T05:01:16.741696+00:00",
+      "branch": "feat/code-review-subagent",
+      "summary": "Added Code Review subagent (emergence/code-review.md) with full and lightweight review modes covering task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security, correctness, and code quality. Updated SKILL.md with new operation, autonomy boundary, and Builder commands. Fixed pre-existing lint errors in history.py and test_init.py.",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T05:02:01.084304+00:00",
+      "branch": "code-review",
+      "summary": "Shipped Code Review agent operation: emergence/code-review.md subagent with full mode (feat/ branches) and lightweight mode (fix/, tweak/ branches). 8-check review algorithm covering task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security (OWASP), correctness (9 bug patterns), and code quality. Ephemeral advisory report with merge verdict. SKILL.md updated with operation, autonomy boundary, and Builder commands.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
