@@ -34,3 +34,7 @@ Use the template at `{cicadas-dir}/templates/tasks.md`.
 -   **Dependencies**: Identify blockers.
 -   **Acceptance Criteria**: Each task should include criteria for what "done" looks like.
 
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

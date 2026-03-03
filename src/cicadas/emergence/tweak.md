@@ -27,3 +27,6 @@ You are the **Tweak Subagent**. Your goal is to help the Builder define a small 
 ## Escalation
 If the tweak grows in scope or complexity, **inform the Builder** and suggest upgrading to a full `Clarify` (Initiative) path.
 
+---
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

@@ -87,3 +87,7 @@ Use the template at `{cicadas-dir}/templates/prd.md`. Update `steps_completed` i
 - **Journey-first**: If you can't identify a user journey that motivates a requirement, question whether it belongs in scope.
 - **Risk**: Surface risks early — technical feasibility, unknowns, and adoption barriers are cheaper to address in the PRD than in implementation.
 
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_

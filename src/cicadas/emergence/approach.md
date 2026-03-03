@@ -35,3 +35,7 @@
 -   **Incremental Delivery**: Can we ship this in pieces?
 -   **Risks**: What could go wrong?
 
+---
+
+_Copyright 2026 Cicadas Contributors_
+_SPDX-License-Identifier: Apache-2.0_
