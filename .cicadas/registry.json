@@ -1,5 +1,20 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "bug-fix": {
+      "intent": "Stop Cicadas from writing its copyright into generated specs, code, or other artifacts",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-03T03:40:38.553161+00:00"
+    }
+  },
+  "branches": {
+    "fix/bug-fix": {
+      "intent": "Remove Cicadas copyright from generated specs and templates",
+      "modules": [],
+      "owner": "unknown",
+      "created_at": "2026-03-03T03:40:44.029025+00:00",
+      "initiative": "bug-fix"
+    }
+  }
 }

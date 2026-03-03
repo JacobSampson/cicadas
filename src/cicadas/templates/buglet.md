@@ -17,7 +17,3 @@
 - [ ] Implement fix <!-- id: 1 -->
 - [ ] Verify fix with the test case <!-- id: 2 -->
 - [ ] Significance Check: Does this warrant a Canon update? <!-- id: 3 -->
-
----
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

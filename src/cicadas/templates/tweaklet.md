@@ -11,7 +11,3 @@
 - [ ] Implement tweak <!-- id: 10 -->
 - [ ] Verify functionality <!-- id: 11 -->
 - [ ] Significance Check: Does this warrant a Canon update? <!-- id: 12 -->
-
----
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

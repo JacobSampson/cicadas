@@ -25,7 +25,3 @@
 - [ ] Update `models/item.py`: Add recipes <!-- id: 20 -->
 
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

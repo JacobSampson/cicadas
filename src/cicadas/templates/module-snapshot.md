@@ -13,7 +13,3 @@
 ## Key Decisions
 {Module-specific decisions}
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_
