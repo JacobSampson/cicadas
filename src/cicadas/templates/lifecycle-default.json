@@ -19,20 +19,17 @@
     {
       "id": "feature_work",
       "name": "Feature work (per feature)",
-      "description": "Task branches → implement → test → reflect → commit → push → PR (if enabled) → merge to feature",
-      "opens_pr": true
+      "description": "Task branches → implement → test → reflect → commit → push → PR (if enabled) → merge to feature"
     },
     {
       "id": "complete_feature",
       "name": "Complete each feature",
-      "description": "Update index, push, open PR to initiative (if enabled), merge",
-      "opens_pr": true
+      "description": "Update index, push, open PR to initiative (if enabled), merge"
     },
     {
       "id": "complete_initiative",
       "name": "Complete initiative",
-      "description": "Open PR to main (if enabled), merge, synthesize canon, archive",
-      "opens_pr": true
+      "description": "Open PR to main (if enabled), merge, synthesize canon, archive"
     }
   ]
 }

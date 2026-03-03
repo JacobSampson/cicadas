@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import subprocess
+from pathlib import Path
 
 from utils import get_default_branch, get_project_root, load_json
 
 
-def _is_merged_into(root, source_ref, target_ref):
+def _is_merged_into(root: Path, source_ref: str, target_ref: str) -> bool:
     """Return True if source is merged into target (source's tip is ancestor of target's tip)."""
     try:
         subprocess.run(
@@ -20,7 +21,7 @@ def _is_merged_into(root, source_ref, target_ref):
         return False
 
 
-def _ref_exists(root, ref):
+def _ref_exists(root: Path, ref: str) -> bool:
     """Return True if ref or branch name exists."""
     try:
         subprocess.run(["git", "rev-parse", "--verify", ref], cwd=root, check=True, capture_output=True)
@@ -29,22 +30,31 @@ def _ref_exists(root, ref):
         return False
 
 
-def _lifecycle_merge_status(root, cicadas, registry, initiative_name, default_branch):
+def _lifecycle_merge_status(
+    root: Path,
+    cicadas: Path,
+    registry: dict,
+    initiative_name: str,
+    default_branch: str,
+) -> tuple[list[tuple[str, str]], str | None]:
     """For one initiative with active lifecycle, return (merged_pairs, next_step_name)."""
-    active_dir = cicadas / "active" / initiative_name
-    lifecycle_path = active_dir / "lifecycle.json"
+    active_dir: Path = cicadas / "active" / initiative_name
+    lifecycle_path: Path = active_dir / "lifecycle.json"
     if not lifecycle_path.exists():
         return [], None
-    lifecycle = load_json(lifecycle_path)
-    steps = lifecycle.get("steps", [])
+    lifecycle: dict = load_json(lifecycle_path)
+    steps: list[dict] = lifecycle.get("steps", [])
     if not steps:
         return [], None
 
-    initiative_branch = f"initiative/{initiative_name}"
-    branches = registry.get("branches", {})
-    feat_branches = [n for n, i in branches.items() if i.get("initiative") == initiative_name and not (n.startswith("fix/") or n.startswith("tweak/"))]
+    initiative_branch: str = f"initiative/{initiative_name}"
+    branches: dict = registry.get("branches", {})
+    feat_branches: list[str] = [
+        n for n, i in branches.items()
+        if i.get("initiative") == initiative_name and not (n.startswith("fix/") or n.startswith("tweak/"))
+    ]
 
-    merged = []
+    merged: list[tuple[str, str]] = []
     # Check each feature -> initiative (use refs/heads/ for local)
     for fb in feat_branches:
         if _ref_exists(root, fb) and _ref_exists(root, initiative_branch):
@@ -55,8 +65,8 @@ def _lifecycle_merge_status(root, cicadas, registry, initiative_name, default_br
         if _is_merged_into(root, initiative_branch, default_branch):
             merged.append((initiative_branch, default_branch))
 
-    # Next step: if initiative merged to default -> "Complete initiative" (already done) or first step name; else if all features merged to initiative -> "Complete initiative"; else "Complete each feature" or last step name
-    next_step = None
+    # Next step: if initiative merged to default -> done; elif all features merged -> complete initiative; else complete feature
+    next_step: str | None = None
     if _ref_exists(root, initiative_branch) and _is_merged_into(root, initiative_branch, default_branch):
         next_step = "Initiative complete (merge to default done)."
     elif feat_branches and all(_ref_exists(root, fb) and _is_merged_into(root, fb, initiative_branch) for fb in feat_branches):
@@ -67,27 +77,27 @@ def _lifecycle_merge_status(root, cicadas, registry, initiative_name, default_br
     return merged, next_step
 
 
-def show_status():
-    root = get_project_root()
-    cicadas = root / ".cicadas"
-    registry = load_json(cicadas / "registry.json")
+def show_status() -> None:
+    root: Path = get_project_root()
+    cicadas: Path = root / ".cicadas"
+    registry: dict = load_json(cicadas / "registry.json")
 
     print(f"Project: {root.name}\n")
 
-    initiatives = registry.get("initiatives", {})
+    initiatives: dict = registry.get("initiatives", {})
     print(f"Active Initiatives ({len(initiatives)}):")
     for name, info in initiatives.items():
-        signals = info.get("signals", [])
+        signals: list = info.get("signals", [])
         print(f"  - {name}: {info['intent']}")
         if signals:
             print(f"    Signals ({len(signals)}):")
             for s in signals[-3:]:  # Show last 3
                 print(f"      [{s['timestamp']}] ({s.get('from_branch', '?')}): {s['message']}")
 
-    branches = registry.get("branches", {})
-    features = {n: i for n, i in branches.items() if not (n.startswith("fix/") or n.startswith("tweak/"))}
-    fixes = {n: i for n, i in branches.items() if n.startswith("fix/")}
-    tweaks = {n: i for n, i in branches.items() if n.startswith("tweak/")}
+    branches: dict = registry.get("branches", {})
+    features: dict = {n: i for n, i in branches.items() if not (n.startswith("fix/") or n.startswith("tweak/"))}
+    fixes: dict = {n: i for n, i in branches.items() if n.startswith("fix/")}
+    tweaks: dict = {n: i for n, i in branches.items() if n.startswith("tweak/")}
 
     if features:
         print(f"\nActive Feature Branches ({len(features)}):")
@@ -105,9 +115,9 @@ def show_status():
         for name, info in tweaks.items():
             print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
 
-    # Lifecycle and merge status (git-based; optional)
+    # Lifecycle and merge status (git-based, local refs only; run 'git fetch' first for remote state)
     try:
-        default_branch = get_default_branch()
+        default_branch: str = get_default_branch()
         for init_name in initiatives:
             merged_pairs, next_step = _lifecycle_merge_status(root, cicadas, registry, init_name, default_branch)
             if merged_pairs or next_step:
@@ -116,7 +126,8 @@ def show_status():
                     print(f"  Merged: {src} → {tgt}")
                 if next_step:
                     print(f"  Next: {next_step}")
-    except Exception:
+                print("  (Tip: run 'git fetch' first for up-to-date remote merge state)")
+    except (KeyError, TypeError, ValueError):
         pass
 
 

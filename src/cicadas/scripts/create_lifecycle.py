@@ -5,42 +5,91 @@
 Create or update lifecycle.json for an initiative (drafts or active).
 Loads default template and sets pr_boundaries from CLI flags.
 Defaults: specs=no, initiatives=yes, features=yes, tasks=no.
+
+After setting pr_boundaries, opens_pr is applied to the relevant steps:
+  feature_work      → pr_boundaries.tasks
+  complete_feature  → pr_boundaries.features
+  complete_initiative → pr_boundaries.initiatives
 """
 
 import argparse
-import json
 from pathlib import Path
 
 from utils import get_project_root, load_json, save_json
 
+# Maps step id → the pr_boundaries key that controls whether that step opens a PR.
+_STEP_BOUNDARY_MAP: dict[str, str] = {
+    "feature_work": "tasks",
+    "complete_feature": "features",
+    "complete_initiative": "initiatives",
+}
 
-def _templates_dir():
+
+def _templates_dir() -> Path:
     """Directory containing lifecycle-default.json (sibling of scripts/)."""
     script_dir = Path(__file__).resolve().parent
     return script_dir.parent / "templates"
 
 
-def create_lifecycle(initiative_name, dest="drafts", pr_specs=False, pr_initiatives=True, pr_features=True, pr_tasks=False):
-    root = get_project_root()
-    cicadas = root / ".cicadas"
-    templates = _templates_dir()
-    default_path = templates / "lifecycle-default.json"
+def _apply_pr_to_steps(steps: list[dict], pr_boundaries: dict[str, bool]) -> list[dict]:
+    """Set or remove opens_pr on each step based on its corresponding pr_boundary."""
+    for step in steps:
+        boundary: str | None = _STEP_BOUNDARY_MAP.get(step.get("id", ""))
+        if boundary is not None:
+            if pr_boundaries.get(boundary, False):
+                step["opens_pr"] = True
+            else:
+                step.pop("opens_pr", None)
+    return steps
+
+
+def create_lifecycle(
+    initiative_name: str,
+    dest: str = "drafts",
+    pr_specs: bool = False,
+    pr_initiatives: bool = True,
+    pr_features: bool = True,
+    pr_tasks: bool = False,
+) -> Path:
+    root: Path = get_project_root()
+    cicadas: Path = root / ".cicadas"
+    templates: Path = _templates_dir()
+    default_path: Path = templates / "lifecycle-default.json"
 
     if not default_path.exists():
-        # Fallback: minimal default
-        data = {
+        # Fallback: minimal default (no opens_pr; _apply_pr_to_steps will set them)
+        data: dict = {
             "pr_boundaries": {"specs": False, "initiatives": True, "features": True, "tasks": False},
             "steps": [
-                {"id": "kickoff_initiative", "name": "Kickoff initiative", "description": "Promote drafts to active, create initiative branch"},
-                {"id": "kickoff_features", "name": "Kickoff feature branches", "description": "For each partition, run branch.py"},
-                {"id": "feature_work", "name": "Feature work (per feature)", "description": "Task branches → implement → test → reflect → commit → push → PR (if enabled) → merge to feature", "opens_pr": True},
-                {"id": "complete_feature", "name": "Complete each feature", "description": "Update index, push, open PR to initiative (if enabled), merge", "opens_pr": True},
-                {"id": "complete_initiative", "name": "Complete initiative", "description": "Open PR to main (if enabled), merge, synthesize canon, archive", "opens_pr": True},
+                {
+                    "id": "kickoff_initiative",
+                    "name": "Kickoff initiative",
+                    "description": "Promote drafts to active, create initiative branch",
+                },
+                {
+                    "id": "kickoff_features",
+                    "name": "Kickoff feature branches",
+                    "description": "For each partition, run branch.py",
+                },
+                {
+                    "id": "feature_work",
+                    "name": "Feature work (per feature)",
+                    "description": "Task branches → implement → test → reflect → commit → push → PR (if enabled) → merge to feature",
+                },
+                {
+                    "id": "complete_feature",
+                    "name": "Complete each feature",
+                    "description": "Update index, push, open PR to initiative (if enabled), merge",
+                },
+                {
+                    "id": "complete_initiative",
+                    "name": "Complete initiative",
+                    "description": "Open PR to main (if enabled), merge, synthesize canon, archive",
+                },
             ],
         }
     else:
-        with open(default_path) as f:
-            data = json.load(f)
+        data = load_json(default_path)
 
     data["initiative"] = initiative_name
     data["pr_boundaries"] = {
@@ -49,14 +98,15 @@ def create_lifecycle(initiative_name, dest="drafts", pr_specs=False, pr_initiati
         "features": pr_features,
         "tasks": pr_tasks,
     }
+    _apply_pr_to_steps(data.get("steps", []), data["pr_boundaries"])
 
     if dest == "active":
-        out_dir = cicadas / "active" / initiative_name
+        out_dir: Path = cicadas / "active" / initiative_name
     else:
         out_dir = cicadas / "drafts" / initiative_name
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "lifecycle.json"
+    out_path: Path = out_dir / "lifecycle.json"
     save_json(out_path, data)
     print(f"Wrote {out_path}")
     return out_path

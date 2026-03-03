@@ -5,17 +5,21 @@
 Open a Pull Request from the current branch to a target branch.
 Host-agnostic: tries gh, then glab, then Bitbucket URL, else prints fallback.
 No API keys; uses host CLI auth (e.g. gh auth login) when available.
+
+Note: --body-file paths are resolved relative to the project root (where .cicadas lives),
+not the current working directory.
 """
 
 import argparse
 import re
 import shutil
 import subprocess
+from pathlib import Path
 
 from utils import get_default_branch, get_project_root
 
 
-def _current_branch(root):
+def _current_branch(root: Path) -> str | None:
     try:
         out = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=root, text=True)
         return out.strip()
@@ -23,7 +27,7 @@ def _current_branch(root):
         return None
 
 
-def _remote_url(root, remote="origin"):
+def _remote_url(root: Path, remote: str = "origin") -> str | None:
     try:
         out = subprocess.check_output(["git", "remote", "get-url", remote], cwd=root, text=True, stderr=subprocess.DEVNULL)
         return out.strip()
@@ -31,7 +35,7 @@ def _remote_url(root, remote="origin"):
         return None
 
 
-def _bitbucket_pr_url(remote_url, source_branch, target_branch):
+def _bitbucket_pr_url(remote_url: str | None, source_branch: str | None, target_branch: str | None) -> str | None:
     """Build Bitbucket 'new pull request' URL if remote looks like Bitbucket."""
     if not remote_url or not source_branch or not target_branch:
         return None
@@ -43,23 +47,25 @@ def _bitbucket_pr_url(remote_url, source_branch, target_branch):
     return f"https://bitbucket.org/{workspace}/{repo}/pull-requests/new?source={source_branch}&dest={target_branch}"
 
 
-def open_pr(base_branch=None, body_file=None):
-    root = get_project_root()
-    current = _current_branch(root)
+def open_pr(base_branch: str | None = None, body_file: str | None = None) -> int:
+    root: Path = get_project_root()
+    current: str | None = _current_branch(root)
     if not current:
         print("Not a git repository or detached HEAD.")
         return 1
-    base = base_branch or get_default_branch()
+    base: str = base_branch or get_default_branch()
     if current == base:
         print(f"Current branch is already {base}. Switch to a feature branch first.")
         return 1
 
+    body_path: Path | None = (root / body_file) if body_file else None
+
     # 1) GitHub CLI
-    gh = shutil.which("gh")
+    gh: str | None = shutil.which("gh")
     if gh:
-        cmd = [gh, "pr", "create", "--base", base, "--head", current]
-        if body_file and (root / body_file).exists():
-            cmd.extend(["--body-file", str(root / body_file)])
+        cmd: list[str] = [gh, "pr", "create", "--base", base, "--head", current]
+        if body_path and body_path.exists():
+            cmd.extend(["--body-file", str(body_path)])
         try:
             subprocess.run(cmd, cwd=root, check=True)
             return 0
@@ -67,11 +73,11 @@ def open_pr(base_branch=None, body_file=None):
             pass
 
     # 2) GitLab CLI
-    glab = shutil.which("glab")
+    glab: str | None = shutil.which("glab")
     if glab:
         cmd = [glab, "mr", "create", "--target-branch", base]
-        if body_file and (root / body_file).exists():
-            cmd.extend(["--description", (root / body_file).read_text()])
+        if body_path and body_path.exists():
+            cmd.extend(["--description-file", str(body_path)])
         try:
             subprocess.run(cmd, cwd=root, check=True)
             return 0
@@ -79,7 +85,7 @@ def open_pr(base_branch=None, body_file=None):
             pass
 
     # 3) Bitbucket URL
-    url = _bitbucket_pr_url(_remote_url(root), current, base)
+    url: str | None = _bitbucket_pr_url(_remote_url(root), current, base)
     if url:
         print(f"Open a Pull Request in Bitbucket:\n  {url}")
         return 0
@@ -94,6 +100,6 @@ def open_pr(base_branch=None, body_file=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Open a PR from current branch to target (host-agnostic)")
     parser.add_argument("--base", default=None, help="Target branch (default: default branch)")
-    parser.add_argument("--body-file", default=None, help="Path to file for PR description")
+    parser.add_argument("--body-file", default=None, help="Path to PR description file (relative to project root)")
     args = parser.parse_args()
     exit(open_pr(base_branch=args.base, body_file=args.body_file) or 0)

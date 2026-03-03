@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import io
+import subprocess
 import unittest
 from contextlib import redirect_stdout
+from unittest.mock import patch
 
 import open_pr
 from base import CicadasTest
@@ -17,6 +19,18 @@ class TestOpenPr(CicadasTest):
             code = open_pr.open_pr(base_branch="main")
         self.assertEqual(code, 1)
         self.assertIn("Not a git repository", f.getvalue())
+
+    def test_open_pr_fallback_no_cli(self):
+        """In a git repo with no gh/glab and a non-Bitbucket remote, prints fallback and returns 0."""
+        self.init_git()
+        subprocess.run(["git", "checkout", "-b", "feat/my-feat"], cwd=self.root, check=True, capture_output=True)
+
+        f = io.StringIO()
+        with patch("shutil.which", return_value=None):
+            with redirect_stdout(f):
+                code = open_pr.open_pr(base_branch="master")
+        self.assertEqual(code, 0)
+        self.assertIn("No PR CLI found", f.getvalue())
 
     def test_bitbucket_pr_url_parsing(self):
         """_bitbucket_pr_url builds URL from HTTPS and SSH remote formats."""
