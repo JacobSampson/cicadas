@@ -1,6 +1,8 @@
 # Release Notes
 
 ## Unreleased
+
+## Version 0.5.0
 - **Lifecycle & PRs**: Per-initiative `lifecycle.json` (in drafts/active) defines PR boundaries (specs, initiatives, features, tasks) and an ordered step list. Created during Approach via `create_lifecycle.py`; promoted at kickoff and archived with the initiative.
 - **Status merge detection**: When `lifecycle.json` exists, `status.py` reports which branches are merged (git-based) and suggests the next lifecycle step (Merged/Next).
 - **open_pr.py**: New script to open a PR from the current branch (tries `gh` → `glab` → Bitbucket URL → fallback). Host-agnostic; no API keys.
