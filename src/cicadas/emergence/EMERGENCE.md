@@ -78,7 +78,3 @@ graph TD
 - [Approach](./approach.md)
 - [Tasks](./tasks.md)
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

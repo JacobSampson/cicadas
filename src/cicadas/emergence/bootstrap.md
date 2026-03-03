@@ -81,7 +81,3 @@ Once canon is complete and verified:
 - **Mark uncertainties explicitly**: If the "why" behind a decision isn't visible in the code, add it to Open Questions rather than guessing.
 - **Thoroughness**: Do not skip modules that contain business logic. A gap in the canon will surface as an agent error later.
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

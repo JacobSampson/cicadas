@@ -68,7 +68,3 @@ Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full technique
 - **Accessibility is not optional**: Identify WCAG target and keyboard/screen-reader requirements here — they affect component and flow decisions.
 - **Consistency over creativity**: On brownfield projects, prefer extending existing patterns over introducing new ones unless the existing pattern has a clear problem.
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_

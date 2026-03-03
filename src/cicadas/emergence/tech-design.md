@@ -73,7 +73,3 @@ Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full technique
 - **Implementation sequence matters**: Identify what blocks what. A design that doesn't acknowledge dependency ordering will produce a task list that deadlocks.
 - **Name the unknowns**: If a decision isn't ready to be made, say so explicitly and flag it as a spike. An unresolved decision that looks resolved is the most dangerous kind.
 
----
-
-_Copyright 2026 Cicadas Contributors_
-_SPDX-License-Identifier: Apache-2.0_
