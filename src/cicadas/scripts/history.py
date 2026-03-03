@@ -4,7 +4,7 @@
 import argparse
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -58,7 +58,7 @@ def parse_archive_entry(folder: Path, index_by_branch: dict) -> dict:
     name = parts[1] if len(parts) > 1 else folder.name
 
     try:
-        dt = datetime.strptime(timestamp_str, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+        dt = datetime.strptime(timestamp_str, "%Y%m%d%H%M%S").replace(tzinfo=UTC)
         date_str = dt.strftime("%b %d, %Y")
     except ValueError:
         date_str = timestamp_str
@@ -123,10 +123,12 @@ def render_html(entries: list[dict]) -> str:
   .timeline {{ position: relative; max-width: 780px; }}
   .timeline::before {{ content: ""; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }}
   .entry {{ display: flex; gap: 1.25rem; margin-bottom: 1.75rem; position: relative; }}
-  .dot {{ width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; margin-top: 0.9rem; border: 3px solid #f8fafc; box-shadow: 0 0 0 2px #e2e8f0; }}
+  .dot {{ width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; margin-top: 0.9rem;
+    border: 3px solid #f8fafc; box-shadow: 0 0 0 2px #e2e8f0; }}
   .card {{ background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.25rem; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,.06); }}
   .card-header {{ display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem; }}
-  .badge {{ color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; }}
+  .badge {{ color: #fff; font-size: 0.7rem; font-weight: 600; padding: 2px 8px;
+    border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; }}
   .date {{ color: #94a3b8; font-size: 0.82rem; margin-left: auto; }}
   h3 {{ font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; word-break: break-word; }}
   .tasks {{ font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; }}

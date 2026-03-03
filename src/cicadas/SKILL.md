@@ -67,7 +67,8 @@ project-root/
 │       ├── approach.md               # Partitioning & sequencing subagent
 │       ├── tasks.md                  # Task breakdown subagent
 │       ├── bug-fix.md                # Bug clarification drafting subagent
-│       └── tweak.md                  # Minor tweak drafting subagent
+│       ├── tweak.md                  # Minor tweak drafting subagent
+│       └── code-review.md            # Code Review subagent
 └── .cicadas/                         # Cicadas artifacts (managed by scripts)
     ├── config.json                   # Local configuration
     ├── registry.json                 # Global registry (initiatives + feature branches)
@@ -274,6 +275,17 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 **Trigger**: After Reflect discovers a cross-branch impact.
 **Action**: The Agent evaluates whether a change affects peer branches and runs `signal.py` autonomously if needed.
 
+### Code Review
+**Trigger**: End of a feature, fix, or tweak branch — after Reflect, before opening a PR or merging.
+**Action**:
+1. Auto-detect scope from the current branch prefix (`feat/` → Full mode; `fix/`, `tweak/` → Lightweight mode).
+2. Read the applicable spec files from `.cicadas/active/{initiative}/`.
+3. Gather the diff using the correct `git diff` command for the scope.
+4. Run the full review algorithm: task completeness, acceptance criteria, architectural conformance, module scope, Reflect completeness, security scan, correctness scan, and code quality.
+5. Compile and emit the structured report with tiered findings (Blocking / Advisory) and a merge verdict.
+
+Output is **ephemeral** — presented in the agent response only, not written to disk. The verdict is always **advisory**; the Builder retains merge authority.
+
 ### Bootstrap (Agent Operation)
 **Trigger**: Migrating a legacy project or initializing with existing code.
 **Action**:
@@ -298,6 +310,7 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 
 | Action | Autonomy | Rationale |
 |--------|----------|-----------|
+| **Code Review** | Autonomous | Agent runs review and presents findings; Builder retains merge authority. |
 | **Reflect** | Autonomous | Keeping specs current is mechanical. |
 | **Signal** | Autonomous | Agent assesses cross-branch impact. |
 | **Semantic Intent Check** | Autonomous | Conflict detection is informational. |
@@ -318,6 +331,8 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - **"Signal {message}"** → Runs `signal.py`. Broadcasts change to initiative.
 - **"Complete feature {name}"** → Runs `update_index.py`. Merges feature branch into initiative branch.
 - **"Complete initiative {name}"** → Merges initiative to `master`, synthesizes canon, archives specs, commits.
+- **"Code review"** or **"Review feature"** → Runs Code Review in Full mode on current `feat/` branch.
+- **"Review fix"** or **"Review tweak"** → Runs Code Review in Lightweight mode on current `fix/` or `tweak/` branch.
 - **"Check status"** → Runs `status.py` and `check.py`. Surfaces state, conflicts, signals.
 - **"Prune {name}"** → Runs `prune.py`. Rollback and restore to drafts.
 - **"Abort"** → Runs `abort.py`. Context-aware escape hatch: detects the current branch type, rolls back the branch(es), deregisters from registry, and prompts whether to move active specs to drafts or delete them.
@@ -351,6 +366,7 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 |-----------|---------|--------|
 | **Semantic Intent Check** | Before starting a feature branch | Analyze registry intents for logical conflicts |
 | **Reflect** | After significant code changes, before PR | Update active specs to match code reality. Include findings in PR. |
+| **Code Review** | After Reflect, before opening PR or merging | Evaluate code against specs, security, correctness, and quality. Emit advisory report with merge verdict. |
 | **Signal Assessment** | After Reflect, during status check | Evaluate cross-branch impact. Signal autonomously if needed. |
 | **Synthesis** | At initiative completion, on `main` | Generate canon from code + active specs. Requires Builder review. |
 
