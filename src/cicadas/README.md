@@ -26,9 +26,9 @@ bash install.sh --update   # refresh skill files without touching .cicadas/
 ### 1. The Skill Directory (`src/cicadas/`)
 This is the orchestrator itself. It contains:
 - `SKILL.md`: The agent manual and technical definition.
-- `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, etc.).
+- `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, etc.).
 - `emergence/`: Subagent instructions for the drafting phase.
-- `templates/`: Standardized markdown templates for specs and canon.
+- `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`).
 
 ### 2. The `.cicadas/` Directory
 Located at your project root, this folder stores all project-specific state:
@@ -50,6 +50,7 @@ Vague ideas are refined into structured drafts in `.cicadas/drafts/{initiative}/
 - **Tech**: Design the architecture.
 - **Approach**: Slice the work into logical partitions (Feature Branches).
 - **Tasks**: Create a testable checklist.
+- **Lifecycle** (optional): Run `create_lifecycle.py` to add `lifecycle.json` with PR boundaries and steps; promoted to active at kickoff.
 
 ### 2. Kickoff
 Promote drafts to `active`, register the initiative, and create the `initiative/{name}` branch.

@@ -125,10 +125,12 @@ All scripts are in `src/cicadas/scripts/`.
 | :--- | :--- |
 | **Kickoff Initiative** | `python src/cicadas/scripts/kickoff.py {name} --intent "..."` |
 | **Start Feature** | `python src/cicadas/scripts/branch.py {name} --intent "..."` |
-| **Check Status** | `python src/cicadas/scripts/status.py` |
+| **Check Status** | `python src/cicadas/scripts/status.py` (shows Merged/Next when lifecycle exists) |
 | **Check Conflicts** | `python src/cicadas/scripts/check.py` |
 | **Send Signal** | `python src/cicadas/scripts/signal.py "Message..."` |
 | **Log Work** | `python src/cicadas/scripts/update_index.py --branch {name} ...` |
+| **Lifecycle** | `python src/cicadas/scripts/create_lifecycle.py {name}` (PR boundaries + steps in drafts/active) |
+| **Open PR** | `python src/cicadas/scripts/open_pr.py [--base branch]` (gh/glab/Bitbucket/fallback) |
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
 | **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |

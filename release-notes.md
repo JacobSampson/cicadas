@@ -1,6 +1,10 @@
 # Release Notes
 
 ## Unreleased
+- **Lifecycle & PRs**: Per-initiative `lifecycle.json` (in drafts/active) defines PR boundaries (specs, initiatives, features, tasks) and an ordered step list. Created during Approach via `create_lifecycle.py`; promoted at kickoff and archived with the initiative.
+- **Status merge detection**: When `lifecycle.json` exists, `status.py` reports which branches are merged (git-based) and suggests the next lifecycle step (Merged/Next).
+- **open_pr.py**: New script to open a PR from the current branch (tries `gh` → `glab` → Bitbucket URL → fallback). Host-agnostic; no API keys.
+- **SKILL/HOW-TO/CLAUDE**: Updated Complete feature/initiative for PR-at-boundary wording, lifecycle step 5b, and create_lifecycle/open_pr in CLI references.
 - **Requirement change**: Cicadas now requires **Python 3.11+** (was 3.13+). The scripts use stdlib only (e.g. `datetime.UTC`); the installer and docs have been updated accordingly.
 
 ## Version 0.4.0
