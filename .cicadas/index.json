@@ -105,6 +105,13 @@
       "summary": "Lifecycle and PRs: lifecycle.json, create_lifecycle, status merge detection, open_pr, SKILL/HOW-TO/CLAUDE",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-03T03:47:58.505067+00:00",
+      "branch": "bug-fix",
+      "summary": "Remove Cicadas copyright from generated spec templates",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
