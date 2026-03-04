@@ -133,6 +133,13 @@
       "summary": "Shipped Code Review agent operation: emergence/code-review.md subagent with full mode (feat/ branches) and lightweight mode (fix/, tweak/ branches). 8-check review algorithm covering task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security (OWASP), correctness (9 bug patterns), and code quality. Ephemeral advisory report with merge verdict. SKILL.md updated with operation, autonomy boundary, and Builder commands.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-04T21:31:09.801778+00:00",
+      "branch": "rovodev-support",
+      "summary": "Add rovodev install target: .rovodev/skills/cicadas symlink; docs and canon updated",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

@@ -40,7 +40,7 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 | **Lifecycle & PRs** | Per-initiative `lifecycle.json` (PR boundaries + steps), `create_lifecycle.py`, `open_pr.py`, status merge detection (git-based); host-agnostic. | Shipped |
 | **Synthesis** | Automated generation of Canon documentation from code and expired specs. | Shipped |
 | **Signaling** | Asynchronous coordination between parallel branches via a central registry. | Shipped |
-| **Installer** | One-command installation with Python 3.13+ check, GitHub archive distribution, agent integration setup (`claude-code`, `cursor`, `antigravity`), and `--update` workflow. | Shipped |
+| **Installer** | One-command installation with Python 3.13+ check, GitHub archive distribution, agent integration setup (`claude-code`, `cursor`, `antigravity`, `rovodev`), and `--update` workflow. | Shipped |
 | **Code Review** | Optional agent operation for spec-anchored evaluation of code diffs. Covers task completeness, architectural conformance, security (OWASP), correctness bugs, and code quality. Produces an ephemeral advisory report with tiered findings and a merge verdict. Supports feature, fix, and tweak branches. | Shipped |
 
 ## Out of Scope (Intentional)
