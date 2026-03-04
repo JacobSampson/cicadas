@@ -181,10 +181,20 @@ setup_agents() {
           err "skill.md not found in $install_dir — cursor integration skipped"
         fi
         ;;
+      rovodev)
+        log "Setting up rovodev integration..."
+        mkdir -p .rovodev/skills
+        local depth
+        depth=$(echo ".rovodev/skills" | tr -cd '/' | wc -c)
+        local prefix
+        prefix=$(printf '../%.0s' $(seq 1 $((depth + 1))))
+        ln -sf "${prefix}${rel_path}" .rovodev/skills/cicadas
+        ok ".rovodev/skills/cicadas → ${rel_path}"
+        ;;
       none|"")
         ;;
       *)
-        err "Unknown agent: $agent (supported: claude-code, antigravity, cursor, none)"
+        err "Unknown agent: $agent (supported: claude-code, antigravity, cursor, rovodev, none)"
         ;;
     esac
   done
@@ -197,7 +207,7 @@ prompt_for_agents() {
   if [ -t 0 ]; then
     blank
     log "Which AI coding agents are you using? (comma-separated, or 'none')"
-    log "  Supported: claude-code, antigravity, cursor"
+    log "  Supported: claude-code, antigravity, cursor, rovodev"
     printf "[cicadas] > "
     read -r AGENTS
   else

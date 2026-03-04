@@ -27,12 +27,15 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 
 # Cursor
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent cursor
+
+# Rovodev
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent rovodev
 ```
 
 **All flags:**
 ```
 --dir <path>     Install location (default: .cicadas-skill/cicadas/)
---agent <list>   Agent integrations: claude-code, antigravity, cursor, none (comma-separated)
+--agent <list>   Agent integrations: claude-code, antigravity, cursor, rovodev, none (comma-separated)
 --update         Re-download skill files only; never touches .cicadas/
 ```
 
@@ -43,6 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 | `claude-code` | `.claude/skills/cicadas` → symlink to install dir |
 | `antigravity` | `.agents/skills/cicadas` → symlink to install dir |
 | `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+| `rovodev` | `.rovodev/skills/cicadas` → symlink to install dir |
 
 ### 2. Update Cicadas
 

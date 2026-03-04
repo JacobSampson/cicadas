@@ -1,6 +1,7 @@
 # Release Notes
 
 ## Unreleased
+- **Installer**: Added `rovodev` agent integration — `bash install.sh --agent rovodev` creates `.rovodev/skills/cicadas` symlink to the install dir. Documented in README.md, HOW-TO.md, and src/cicadas/README.md.
 
 ## Version 0.5.1
 - **Code Review**: New optional agent operation (`emergence/code-review.md`) for spec-anchored evaluation of code diffs. Covers task completeness, acceptance criteria, architectural conformance, module scope, Reflect completeness, security (OWASP patterns), correctness (9 named bug patterns with explicit blocking thresholds), and code quality. Produces an ephemeral advisory report with tiered findings (Blocking / Advisory) and a `MERGE-READY` / `NEEDS-WORK` verdict. Supports feature branches (Full mode) and fix/tweak branches (Lightweight mode).

@@ -94,6 +94,9 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 # Cursor
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent cursor
 
+# Rovodev
+curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent rovodev
+
 # Multiple agents
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash -s -- --agent claude-code,cursor
 ```
@@ -115,6 +118,7 @@ bash install.sh --update
 | `claude-code` | `.claude/skills/cicadas` symlink |
 | `antigravity` | `.agents/skills/cicadas` symlink |
 | `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+| `rovodev` | `.rovodev/skills/cicadas` symlink |
 | `none` | Skip; configure manually |
 
 **Requirements:** Python 3.11+, `curl`, `unzip`, `git`
