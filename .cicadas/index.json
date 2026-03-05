@@ -140,6 +140,13 @@
       "summary": "Add rovodev install target: .rovodev/skills/cicadas symlink; docs and canon updated",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-05T00:43:31.517830+00:00",
+      "branch": "tweak/agent-guardrails",
+      "summary": "Reflect+tasks+CR before commit on feat/; implementation guardrails in skill for all envs; install.sh SKILL.md for Cursor; CLAUDE.md env note",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
