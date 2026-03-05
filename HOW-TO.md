@@ -45,8 +45,10 @@ curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | 
 |-------|------------------|
 | `claude-code` | `.claude/skills/cicadas` → symlink to install dir |
 | `antigravity` | `.agents/skills/cicadas` → symlink to install dir |
-| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `SKILL.md`) |
 | `rovodev` | `.rovodev/skills/cicadas` → symlink to install dir |
+
+**Where implementation guardrails come from:** `CLAUDE.md` is used only by **Claude Code** (it lists commands, architecture, and points to `implementation.md` in the skill dir). **Cursor** and other environments do not use `CLAUDE.md`; they get lifecycle and implementation rules from the **skill file** (`SKILL.md` / `cicadas.mdc`) alone. The skill includes an "Implementation agent rules" section so the same guardrails apply in every environment.
 
 ### 2. Update Cicadas
 

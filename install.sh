@@ -174,11 +174,11 @@ setup_agents() {
       cursor)
         log "Setting up cursor integration..."
         mkdir -p .cursor/rules
-        if [ -f "$install_dir/skill.md" ]; then
-          cp "$install_dir/skill.md" .cursor/rules/cicadas.mdc
+        if [ -f "$install_dir/SKILL.md" ]; then
+          cp "$install_dir/SKILL.md" .cursor/rules/cicadas.mdc
           ok ".cursor/rules/cicadas.mdc created"
         else
-          err "skill.md not found in $install_dir — cursor integration skipped"
+          err "SKILL.md not found in $install_dir — cursor integration skipped"
         fi
         ;;
       rovodev)

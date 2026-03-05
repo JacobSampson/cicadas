@@ -115,9 +115,9 @@ bash install.sh --update
 
 | Agent | Integration |
 |-------|------------|
-| `claude-code` | `.claude/skills/cicadas` symlink |
+| `claude-code` | `.claude/skills/cicadas` symlink (uses project `CLAUDE.md` if present) |
 | `antigravity` | `.agents/skills/cicadas` symlink |
-| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `skill.md`) |
+| `cursor` | `.cursor/rules/cicadas.mdc` (copy of `SKILL.md`; guardrails are in the skill) |
 | `rovodev` | `.rovodev/skills/cicadas` symlink |
 | `none` | Skip; configure manually |
 

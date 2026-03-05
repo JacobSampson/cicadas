@@ -264,12 +264,12 @@ These are reasoning + editing operations performed by the Agent, NOT scripts.
 **Action**: Read `registry.json`, analyze the new intent against all active feature intents for logical conflicts. Module overlap alone is insufficient — this is an LLM reasoning step.
 
 ### Reflect
-**Trigger**: After significant code changes; before merging a task branch to the feature branch.
+**Trigger**: After significant code changes; **before every commit** on a feat/ or task/ branch; before merging a task branch to the feature branch.
 **Action**:
 1. Analyze `git diff` against the active specs.
-2. Update relevant docs in `.cicadas/active/` (e.g., `tech-design.md`, `approach.md`, `tasks.md`) to match code reality.
+2. Update relevant docs in `.cicadas/active/` (e.g., `tech-design.md`, `approach.md`, `tasks.md`) to match code reality. In `tasks.md`, mark completed work with `- [x]` and add or adjust tasks if implementation diverged.
 3. If the change is significant enough to impact other feature branches, proceed to Signal.
-4. Include Reflect findings in the PR description.
+4. Include Reflect findings in the PR description when opening a PR.
 
 ### Signal Assessment
 **Trigger**: After Reflect discovers a cross-branch impact.
@@ -303,8 +303,20 @@ Output is **ephemeral** — presented in the agent response only, not written to
 2. **Branch Only**: Only implement code on a registered feature branch or a task branch off of one. Never on `main (default branch)` or the initiative branch.
 3. **Hard Stop**: After drafting specs, STOP and wait for the Builder to approve. After synthesis, STOP and wait for review.
 4. **Tool Mandate**: NEVER manually edit `registry.json`. ALWAYS use the scripts.
-5. **Reflect Before PR**: Always run the Reflect operation before opening a PR for a task branch.
+5. **Reflect Before Commit**: Run the Reflect operation (including updating `tasks.md` with completed items) before committing on a feat/ or task/ branch. On **feature branches** (`feat/`), also run **Code Review** before committing (after Reflect). Always run Reflect before opening a PR for a task branch and include findings in the PR description.
 6. **No Canon on Branches**: Never write to `.cicadas/canon/` on any branch. Canon is only synthesized on `main (default branch)` at initiative completion.
+
+## Implementation Agent Rules (all environments)
+
+When **implementing code** on a Cicadas-managed project — in Cursor, Claude Code, or any other agent environment — you must follow these rules. (In Claude Code, `CLAUDE.md` points to `implementation.md` in the skill directory; in Cursor and other envs, this skill file is the single source.)
+
+- **Hard Stop**: Do not start implementing until the user says "Kickoff" or "Start a Feature". After Emergence (drafting specs), STOP for Builder approval.
+- **Identity Check**: Before writing code, verify you are on a **registered** feature branch or a task branch forked from one (check `.cicadas/registry.json`). No code on `main`/`master` or initiative branches.
+- **Execution Scope**: Only implement tasks assigned to your current feature partition. If work requires files outside declared modules, STOP and notify the user.
+- **Pause Before Committing**: Before every **commit** on a `feat/` or `task/` branch: run Reflect, update `.cicadas/active/{initiative}/tasks.md` (mark completed with `- [x]`, add/adjust tasks if implementation diverged). On **feature branches** (`feat/`), also run **Code Review** after Reflect before committing. Then commit. Before opening a PR, include Reflect findings in the PR description.
+- **No Canon on Branches**: Never write to `.cicadas/canon/`. Canon is only synthesized on `main` at initiative completion.
+- **Registry**: Never manually edit `registry.json`; use the CLI scripts only.
+- **Push**: After every branch creation and every merge to a long-lived branch, run `git push`.
 
 ## Agent Autonomy Boundaries
 
@@ -365,8 +377,8 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | Operation | Trigger | Action |
 |-----------|---------|--------|
 | **Semantic Intent Check** | Before starting a feature branch | Analyze registry intents for logical conflicts |
-| **Reflect** | After significant code changes, before PR | Update active specs to match code reality. Include findings in PR. |
-| **Code Review** | After Reflect, before opening PR or merging | Evaluate code against specs, security, correctness, and quality. Emit advisory report with merge verdict. |
+| **Reflect** | After significant code changes; before every commit on feat/task branch; before PR | Update active specs (including tasks.md — mark completed with `- [x]`) to match code reality. Include findings in PR. |
+| **Code Review** | After Reflect; before committing on feat/; before opening PR or merging | Evaluate code against specs, security, correctness, and quality. Emit advisory report with merge verdict. |
 | **Signal Assessment** | After Reflect, during status check | Evaluate cross-branch impact. Signal autonomously if needed. |
 | **Synthesis** | At initiative completion, on `main` | Generate canon from code + active specs. Requires Builder review. |
 

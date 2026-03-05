@@ -16,9 +16,14 @@ When working on a branch:
 - **Rule**: Only implement the tasks assigned to your current feature branch partition.
 - **Rule**: If you discover that a task requires changing files outside your declared modules, STOP and notify the user.
 
-## 4. Reflect Before PR
-Before opening a PR for a task branch:
-- **Rule**: Run the Reflect operation — analyze `git diff` against active specs and update them.
+## 4. Pause Before Committing (Reflect + Tasks + Code Review for Features)
+Before **committing** on a feature branch (`feat/`) or task branch (`task/`):
+- **Rule**: Do not commit without running Reflect and updating active specs. Treat "about to commit" as a trigger for Reflect.
+- **Rule**: As part of Reflect, update `.cicadas/active/{initiative}/tasks.md`: mark completed tasks with `- [x]`, add or adjust tasks if the implementation diverged from the plan.
+- **Rule (feature branches only)**: Before committing on a **feature branch** (`feat/`), also run the **Code Review** operation (after Reflect). Resolve or acknowledge Blocking findings before committing. This applies when completing feature-level work, not necessarily every single commit — but before any commit that would be considered "feature complete" or before opening a PR from the feature branch.
+- **Rule**: Only then commit. This keeps specs and code in sync at every commit, not only at PR time.
+
+Before opening a PR for a task branch, in addition to the above:
 - **Rule**: Include Reflect findings in the PR description.
 
 ## 5. No Canon on Branches
