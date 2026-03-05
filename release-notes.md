@@ -1,6 +1,8 @@
 # Release Notes
 
 ## Unreleased
+- **Implementation guardrails**: Require Reflect and task updates before every commit on feat/task branches; require Code Review before committing on feature branches. `implementation.md` and `SKILL.md` updated; new "Implementation agent rules (all environments)" section in SKILL so Cursor and other non–Claude Code envs get the same guardrails from the skill file alone.
+- **Install & docs**: Cursor integration now copies `SKILL.md` (was `skill.md`). README, HOW-TO, and CLAUDE.md clarify that `CLAUDE.md` is Claude Code–only and other envs use the skill for guardrails.
 - **Installer**: Added `rovodev` agent integration — `bash install.sh --agent rovodev` creates `.rovodev/skills/cicadas` symlink to the install dir. Documented in README.md, HOW-TO.md, and src/cicadas/README.md.
 
 ## Version 0.5.1

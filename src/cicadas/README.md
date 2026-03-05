@@ -25,7 +25,8 @@ bash install.sh --update   # refresh skill files without touching .cicadas/
 
 ### 1. The Skill Directory (`src/cicadas/`)
 This is the orchestrator itself. It contains:
-- `SKILL.md`: The agent manual and technical definition.
+- `SKILL.md`: The agent manual and technical definition (includes "Implementation agent rules" so the same guardrails apply in Cursor, Claude Code, and other envs).
+- `implementation.md`: Guardrails for implementation agents (pause before commit, Reflect, tasks, Code Review on feat/).
 - `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, etc.).
 - `emergence/`: Subagent instructions for the drafting phase.
 - `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`).

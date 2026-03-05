@@ -42,8 +42,8 @@ We promote drafts to **Active Specs** and register the initiative.
 Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
 
 *   **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
-*   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately*.
-*   **Code Review** (optional): After Reflect, the agent evaluates the diff against specs, security, correctness, and quality — producing an advisory report with a merge verdict.
+*   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately* (and before every commit on feat/task branches).
+*   **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing an advisory report with a merge verdict.
 *   **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
 
 ### Phase 4: Completion (Synthesis)
