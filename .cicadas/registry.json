@@ -1,5 +1,24 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "review-merge-gate": {
+      "intent": "Make code review a persistent artifact and merge gate: review agent writes review.md with PASS/PASS WITH NOTES/BLOCK verdict, review.py reads it, open_pr.py blocks on BLOCK",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-08T05:42:01.163954+00:00"
+    }
+  },
+  "branches": {
+    "tweak/review-merge-gate": {
+      "intent": "Implement code review as merge gate: review.md artifact, review.py verdict script, open_pr.py gate",
+      "modules": [
+        "emergence",
+        "templates",
+        "scripts"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T05:42:06.068335+00:00",
+      "initiative": "review-merge-gate"
+    }
+  }
 }

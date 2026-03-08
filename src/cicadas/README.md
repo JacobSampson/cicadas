@@ -27,7 +27,7 @@ bash install.sh --update   # refresh skill files without touching .cicadas/
 This is the orchestrator itself. It contains:
 - `SKILL.md`: The agent manual and technical definition (includes "Implementation agent rules" so the same guardrails apply in Cursor, Claude Code, and other envs).
 - `implementation.md`: Guardrails for implementation agents (pause before commit, Reflect, tasks, Code Review on feat/).
-- `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, tokens, etc.).
+- `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, review, tokens, etc.).
 - `emergence/`: Subagent instructions for the drafting phase.
 - `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`).
 
@@ -60,7 +60,7 @@ Promote drafts to `active`, register the initiative, and create the `initiative/
 - **Start Feature**: Create a registered feature branch for a partition.
 - **Implement Task**: Work on ephemeral task branches.
 - **Reflect**: Periodically update active specs to match code changes.
-- **Code Review** (optional): After Reflect, run *"Code review"* to evaluate the diff against specs, security, correctness, and quality. Produces an ephemeral advisory report with a merge verdict.
+- **Code Review** (optional): After Reflect, run *"Code review"* to evaluate the diff against specs, security, correctness, and quality. Writes `review.md` to `.cicadas/active/{initiative}/` with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `open_pr.py` reads the verdict and blocks on `BLOCK`. Check verdict anytime via `review.py`.
 - **Signal**: Broadcast breaking changes to other active branches.
 
 ### 4. Completion & Synthesis

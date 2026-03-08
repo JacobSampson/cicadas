@@ -51,7 +51,8 @@ python src/cicadas/scripts/signal.py "message"
 python src/cicadas/scripts/archive.py {name} --type {branch|initiative}
 python src/cicadas/scripts/update_index.py --branch {name} --summary "..."
 python src/cicadas/scripts/create_lifecycle.py {name}  # optional: --pr-specs, --no-pr-initiatives, etc.
-python src/cicadas/scripts/open_pr.py [--base branch]   # open PR from current branch (gh/glab/URL/fallback)
+python src/cicadas/scripts/open_pr.py [--base branch]   # open PR from current branch (gh/glab/URL/fallback); blocks on BLOCK verdict
+python src/cicadas/scripts/review.py [--initiative name]  # check review.md verdict (exit 0=PASS, 1=BLOCK, 2=not found)
 python src/cicadas/scripts/prune.py {name} --type {branch|initiative}
 python src/cicadas/scripts/abort.py
 python src/cicadas/scripts/history.py [--output path]
@@ -66,9 +67,9 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 
 ### `src/cicadas/` Structure
 
-- `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by `kickoff.py` and `branch.py`.
+- `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by `kickoff.py` and `branch.py`. `review.py` reads `review.md` verdict and returns exit codes; imported by `open_pr.py` for the merge gate check.
 - `emergence/` — Markdown instructions for subagents (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Code Review). These are **agent prompts**, not code.
-- `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`).
+- `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`, `review.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`).
 - `SKILL.md` — The master agent skill definition (read this for full operational detail).
 - `implementation.md` — Guardrails for implementation agents.
 

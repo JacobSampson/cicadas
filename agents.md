@@ -9,7 +9,7 @@ Cicadas is both the **product** and the **process**. We use the Cicadas methodol
 
 ### Source & Code
 - **[src/](src/)**: The main source directory.
-  - **[src/cicadas/](src/cicadas/)**: Contains the core logic of the orchestrator, including lifecycle scripts (kickoff, branch, status, create_lifecycle, open_pr), emergence subagent instructions, and spec templates.
+  - **[src/cicadas/](src/cicadas/)**: Contains the core logic of the orchestrator, including lifecycle scripts (kickoff, branch, status, create_lifecycle, open_pr, review), emergence subagent instructions, and spec templates.
 - **[tests/](tests/)**: A comprehensive suite of unit and integration tests ensuring the reliability of the CLI scripts and orchestration logic.
 
 ### Agent & Methodology Memory

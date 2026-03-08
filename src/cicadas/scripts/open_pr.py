@@ -16,7 +16,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from utils import get_default_branch, get_project_root
+from review import parse_verdict
+from utils import get_default_branch, get_project_root, load_json
 
 
 def _current_branch(root: Path) -> str | None:
@@ -47,6 +48,33 @@ def _bitbucket_pr_url(remote_url: str | None, source_branch: str | None, target_
     return f"https://bitbucket.org/{workspace}/{repo}/pull-requests/new?source={source_branch}&dest={target_branch}"
 
 
+def _check_review_verdict(root: Path, current_branch: str) -> int:
+    """
+    Check review.md verdict for the current branch's initiative.
+    Returns 0 to proceed, 1 to abort (BLOCK verdict).
+    Prints warnings for PASS WITH NOTES or missing review.md; does not abort those cases.
+    """
+    registry: dict = load_json(root / ".cicadas" / "registry.json")
+    entry: dict | None = registry.get("branches", {}).get(current_branch)
+    if not entry:
+        return 0  # unregistered branch — no review gate applies
+    initiative: str = entry.get("initiative", "")
+    review_path: Path = root / ".cicadas" / "active" / initiative / "review.md"
+    if not review_path.exists():
+        print(f"[WARN] No review.md found for '{initiative}'. Run Code Review before opening a PR.")
+        return 0
+    verdict: str | None = parse_verdict(review_path.read_text())
+    if verdict == "BLOCK":
+        print(f"[BLOCK] Code review verdict for '{initiative}' is BLOCK.")
+        print("  Resolve all Blocking findings before opening a PR.")
+        print(f"  See: {review_path}")
+        return 1
+    if verdict == "PASS WITH NOTES":
+        print(f"[NOTE] Code review verdict for '{initiative}' is PASS WITH NOTES.")
+        print("  Advisory findings present — review recommended before merging.")
+    return 0
+
+
 def open_pr(base_branch: str | None = None, body_file: str | None = None) -> int:
     root: Path = get_project_root()
     current: str | None = _current_branch(root)
@@ -56,6 +84,9 @@ def open_pr(base_branch: str | None = None, body_file: str | None = None) -> int
     base: str = base_branch or get_default_branch()
     if current == base:
         print(f"Current branch is already {base}. Switch to a feature branch first.")
+        return 1
+
+    if _check_review_verdict(root, current) != 0:
         return 1
 
     body_path: Path | None = (root / body_file) if body_file else None
