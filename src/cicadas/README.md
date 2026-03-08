@@ -29,7 +29,7 @@ This is the orchestrator itself. It contains:
 - `implementation.md`: Guardrails for implementation agents (pause before commit, Reflect, tasks, Code Review on feat/).
 - `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, review, tokens, etc.).
 - `emergence/`: Subagent instructions for the drafting phase.
-- `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`).
+- `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`). `canon-summary.md` is the template for the 300–500 token agent-optimized codebase snapshot produced during synthesis.
 
 ### 2. The `.cicadas/` Directory
 Located at your project root, this folder stores all project-specific state:
@@ -64,7 +64,7 @@ Promote drafts to `active`, register the initiative, and create the `initiative/
 - **Signal**: Broadcast breaking changes to other active branches.
 
 ### 4. Completion & Synthesis
-Merge back to `main`. The agent then **synthesizes** new Canon docs from the code and active specs, then archives the specs.
+Merge back to `main`. The agent then **synthesizes** new Canon docs from the code and active specs (including `canon/summary.md` — a 300–500 token agent-optimized snapshot used for context injection at branch start), then archives the specs.
 
 ---
 

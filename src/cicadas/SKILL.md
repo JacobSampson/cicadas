@@ -197,6 +197,7 @@ python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"
 - Read: codebase on `main (default branch)`, active specs, existing canon, change ledger
 - Synthesize: create (greenfield) or update (brownfield) canon files
 - **Extract Key Decisions** from active specs and embed in canon
+- Produce `canon/summary.md` — 300–500 token agent-optimized snapshot (purpose, architecture, modules, conventions); used for context injection at branch start
 - Present to Builder for review
 
 Use the prompt in `{cicadas-dir}/templates/synthesis-prompt.md` to guide synthesis.

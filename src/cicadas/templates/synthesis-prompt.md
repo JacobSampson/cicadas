@@ -43,6 +43,32 @@ From the active specs, identify and embed **Key Decisions** into the relevant ca
 -   **Brownfield caution**: When updating, preserve unchanged sections exactly. Only modify sections affected by the new code.
 -   **Verify Unchanged Modules**: If a canon module file exists but the corresponding code module was not modified, leave the canon file unchanged.
 
+### Step 5: Write Canon Summary
+
+Produce `canon/summary.md` — a concise, high-signal snapshot of the entire codebase
+targeting **300–500 tokens**. This file is consumed by agents at branch start (context
+injection), not by humans. Optimize for token density over readability.
+
+Required sections (terse, no padding):
+
+```
+## Purpose
+One sentence: what the product does and who it's for.
+
+## Architecture
+3–5 bullet points: key architectural decisions, trade-offs, or constraints an agent must know.
+
+## Modules
+{module-name}: one-line purpose (repeat for each canon module)
+
+## Conventions
+Bullet list: naming patterns, code style rules, testing approach, anything that must be
+consistent across all partitions.
+```
+
+If existing `canon/summary.md` content is still accurate, update only the sections affected
+by this initiative's changes.
+
 **Output:**
 1.  **Synthesis Plan**: A bulleted list of files and planned changes.
 2.  **File Content**: Provide the full markdown content for each file, formatted as:

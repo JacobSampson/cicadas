@@ -48,7 +48,7 @@ Work happens in **Feature Branches** (registered) and **Task Branches** (ephemer
 
 ### Phase 4: Completion (Synthesis)
 When all features are merged into the initiative branch, we merge to `main` and then:
-1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/`.
+1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/` (including `canon/summary.md` — a 300–500 token snapshot used to inject context at branch start).
 2.  **Archive**: Active specs are moved to `.cicadas/archive/`.
 
 ---

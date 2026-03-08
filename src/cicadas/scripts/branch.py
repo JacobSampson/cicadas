@@ -133,6 +133,8 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
             print(f"[INFO] Pushed {name} to remote.")
         except subprocess.CalledProcessError:
             print(f"[WARN] Could not push {name} to remote. Push manually: git push -u origin {name}")
+        _write_context_md(root, cicadas, list(my_mods), initiative)
+        print(f"[INFO] context.md written to project root (canon summary + module snapshots + tasks)")
 
     # Register
     branch_info = {

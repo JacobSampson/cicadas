@@ -1,5 +1,26 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "context-injection": {
+      "intent": "Complete roadmap item 4: inject canon context bundle at branch start for all branch types, and add canon/summary.md to synthesis",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-08T05:58:40.485887+00:00"
+    }
+  },
+  "branches": {
+    "tweak/context-injection": {
+      "intent": "Inject canon context bundle at branch start for sequential branches; add canon/summary.md to synthesis",
+      "modules": [
+        "src/cicadas/SKILL.md",
+        "src/cicadas/scripts/branch.py",
+        ".gitignore",
+        "src/cicadas/templates/canon-summary.md",
+        "src/cicadas/templates/synthesis-prompt.md"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T05:58:44.872026+00:00",
+      "initiative": "context-injection"
+    }
+  }
 }

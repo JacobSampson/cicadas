@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## Version 0.5.4
+- **Context Injection at Branch Start**: `branch.py` now writes `context.md` to the project root for sequential (non-worktree) branches, matching the existing behavior for parallel/worktree branches. Every registered branch now receives a canon summary + scoped module snapshots + `approach.md` + `tasks.md` at start. New `templates/canon-summary.md` template added. `synthesis-prompt.md` updated with Step 5 to produce `canon/summary.md` (300–500 token agent-optimized snapshot) as part of every canon synthesis run. `SKILL.md` synthesis step updated accordingly.
+
 ## Version 0.5.3
 - **Code Review as Merge Gate**: Code review is now a persistent artifact, not an ephemeral console report. The Code Review subagent writes a structured `review.md` to `.cicadas/active/{initiative}/` with one of three verdicts: `PASS`, `PASS WITH NOTES`, or `BLOCK`. New `scripts/review.py` reads the verdict and returns exit codes (0=PASS/PASS WITH NOTES, 1=BLOCK, 2=not found). `open_pr.py` checks the verdict before opening a PR and refuses on `BLOCK`. Verdict strings updated throughout `emergence/code-review.md` (was `MERGE-READY`/`NEEDS-WORK`). New `templates/review.md` template. 13 new tests.
 
