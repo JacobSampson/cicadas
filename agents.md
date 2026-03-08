@@ -20,6 +20,10 @@ Cicadas is both the **product** and the **process**. We use the Cicadas methodol
 - **Root [README.md](README.md)**: High-level introduction, philosophy, and quick-start guide.
 - **[src/cicadas/README.md](src/cicadas/README.md)**: Detailed technical breakdown of the orchestrator's architecture, directory structure, and operational formulas.
 
+## 🧪 Testing Conventions
+
+Tests live in `tests/` and use `unittest` with real temporary filesystems and real git repos — **not mocks**. Cicadas scripts touch the filesystem and git directly; mocking these layers hides the integration bugs that matter. Prefer real temp git repos (`tempfile.mkdtemp()` + `git init`) over `unittest.mock`. Mocks are acceptable only for pure logic with no I/O side-effects (e.g. string parsing).
+
 ---
 _Copyright 2026 Cicadas Contributors_
 _SPDX-License-Identifier: Apache-2.0_

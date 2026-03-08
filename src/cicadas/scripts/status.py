@@ -115,6 +115,34 @@ def show_status() -> None:
         for name, info in tweaks.items():
             print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
 
+    # Worktrees section — only shown if any branches have worktree_path recorded
+    worktree_branches = [(n, i) for n, i in branches.items() if i.get("worktree_path")]
+    if worktree_branches:
+        print(f"\nWorktrees ({len(worktree_branches)}):")
+        for name, info in worktree_branches:
+            wt = info["worktree_path"]
+            from pathlib import Path as _Path
+            wt_path = _Path(wt)
+            if not wt_path.exists():
+                print(f"  {name}  →  {wt}  [MISSING]")
+            else:
+                try:
+                    status_out = subprocess.check_output(
+                        ["git", "-C", wt, "status", "--porcelain"],
+                        stderr=subprocess.DEVNULL,
+                    ).decode().strip()
+                    state = "[dirty]" if status_out else "[clean]"
+                except subprocess.CalledProcessError:
+                    state = "[unknown]"
+                try:
+                    head = subprocess.check_output(
+                        ["git", "-C", wt, "log", "-1", "--oneline"],
+                        stderr=subprocess.DEVNULL,
+                    ).decode().strip()
+                except subprocess.CalledProcessError:
+                    head = ""
+                print(f"  {name}  →  {wt}  {state}  {head}")
+
     # Lifecycle and merge status (git-based, local refs only; run 'git fetch' first for remote state)
     try:
         default_branch: str = get_default_branch()

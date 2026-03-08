@@ -14,6 +14,10 @@
         - The modules it touches (e.g., `db`, `auth`, `frontend/core`)
         - Its scope and boundaries
     -   **Sequence**: Determine ordering and dependencies between partitions. Which must go first? Which can run in parallel?
+    -   **Author the Partitions DAG**: In the `## Sequencing` section, add a `yaml partitions` fenced block (see template). For every partition:
+        - Set `depends_on: []` if it can run in parallel (no prerequisites). This partition **will get its own git worktree** when `branch.py` is run.
+        - Set `depends_on: [feat/other-partition]` if it must wait for another partition to merge first. This partition will be a plain branch.
+        - If no partition is parallel (all have non-empty `depends_on`), the block is still valid — all branches will be plain. Omit the block entirely only if the concept of parallelism is irrelevant to the initiative.
     -   **Identify Risks**: Module overlaps between partitions, migration concerns, shared component boundaries.
     -   **Plan for backward compatibility and migration** (brownfield).
 3.  **Draft**: Create `.cicadas/drafts/{initiative}/approach.md`.
@@ -30,6 +34,10 @@
 ## Key Considerations
 
 -   **Partitions are mandatory**: The approach MUST define named partitions with declared module scopes. Without partitions, feature branches cannot be created.
+-   **Author the Partitions DAG**: Every approach.md MUST include the `yaml partitions` fenced block in `## Sequencing`. This block is machine-read by `branch.py` to decide whether to create a git worktree (parallel) or a plain branch (sequential). Use the exact format from the template.
+-   **`depends_on` semantics**:
+    - `depends_on: []` → parallel partition — gets its own isolated git worktree directory so agents can work on it simultaneously.
+    - `depends_on: [feat/x]` → sequential — plain branch created from the initiative branch, waits for `feat/x` to merge first.
 -   **Module boundary clarity**: If two partitions touch the same module, tighten the boundaries (e.g., `frontend/core/` vs. `frontend/social/`).
 -   **Testability**: How will we test this?
 -   **Incremental Delivery**: Can we ship this in pieces?

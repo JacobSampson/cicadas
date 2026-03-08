@@ -104,8 +104,86 @@ class TestBranch(CicadasTest):
             branch.create_branch("feat/new", "new intent", "src/shared.py")
 
         output = f.getvalue()
-        self.assertIn("WARNING: Module overlaps detected", output)
+        self.assertIn("[WARN]", output)
         self.assertIn("feat/old", output)
+
+
+class TestBranchWorktree(CicadasTest):
+    """Integration tests for worktree creation in branch.py."""
+
+    def setUp(self):
+        super().setUp()
+        self.init_git()
+        from utils import get_default_branch
+        self.default_branch = get_default_branch()
+        self.init_name = "my-initiative"
+        # Register initiative
+        import utils
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["initiatives"][self.init_name] = {"intent": "test"}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+        # Create active dir and approach.md with a parallel partition
+        active = self.cicadas_dir / "active" / self.init_name
+        active.mkdir(parents=True, exist_ok=True)
+        (active / "approach.md").write_text(
+            "# Approach\n\n## Sequencing\n\n"
+            "```yaml partitions\n"
+            "- name: feat/parallel-branch\n"
+            "  modules: [src/foo]\n"
+            "  depends_on: []\n"
+            "- name: feat/sequential-branch\n"
+            "  modules: [src/bar]\n"
+            "  depends_on: [feat/parallel-branch]\n"
+            "```\n"
+        )
+        (active / "tasks.md").write_text("# Tasks\n")
+        # Create initiative branch first
+        subprocess.run(["git", "checkout", "-b", f"initiative/{self.init_name}"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", self.default_branch], cwd=self.root, check=True, capture_output=True)
+        self._worktree_dirs = []
+
+    def tearDown(self):
+        for wt in self._worktree_dirs:
+            if wt.exists():
+                subprocess.run(["git", "worktree", "remove", "--force", str(wt)], cwd=self.root, capture_output=True)
+        super().tearDown()
+
+    def test_parallel_partition_gets_worktree(self):
+        import utils
+        expected_wt = utils.worktree_path(self.root, "feat/parallel-branch")
+        self._worktree_dirs.append(expected_wt)
+
+        branch.create_branch("feat/parallel-branch", "parallel intent", "src/foo", initiative=self.init_name)
+
+        # Worktree directory should exist
+        self.assertTrue(expected_wt.exists(), f"Worktree dir not found: {expected_wt}")
+        # Registry should have worktree_path
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        self.assertIn("worktree_path", reg["branches"]["feat/parallel-branch"])
+        # context.md should exist in worktree
+        self.assertTrue((expected_wt / "context.md").exists())
+
+    def test_sequential_partition_gets_plain_branch(self):
+        import utils
+        # Register parallel branch first so sequential can reference it
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["branches"]["feat/parallel-branch"] = {"modules": ["src/foo"], "initiative": self.init_name, "intent": "parallel"}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+        # Create initiative branch to branch from
+        subprocess.run(["git", "checkout", f"initiative/{self.init_name}"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", self.default_branch], cwd=self.root, check=True, capture_output=True)
+
+        branch.create_branch("feat/sequential-branch", "sequential intent", "src/bar", initiative=self.init_name)
+
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        # No worktree_path for sequential partition
+        self.assertNotIn("worktree_path", reg["branches"]["feat/sequential-branch"])
+
+    def test_no_worktree_flag_forces_plain_branch(self):
+        import utils
+        branch.create_branch("feat/parallel-branch", "parallel intent", "src/foo", initiative=self.init_name, no_worktree=True)
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        self.assertNotIn("worktree_path", reg["branches"]["feat/parallel-branch"])
 
 
 if __name__ == "__main__":

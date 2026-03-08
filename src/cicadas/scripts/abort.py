@@ -4,8 +4,9 @@
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
-from utils import get_default_branch, get_project_root, load_json, save_json
+from utils import WorktreeDirtyError, get_default_branch, get_project_root, load_json, remove_worktree, save_json
 
 LIGHTWEIGHT_PREFIXES = ("tweak/", "fix/")
 
@@ -50,9 +51,20 @@ def delete_branch(branch_name, root):
         print(f"  Warning: Could not delete git branch '{branch_name}'")
 
 
-def abort_lightweight(branch_name, initiative_name, root, cicadas, registry):
+def abort_lightweight(branch_name, initiative_name, root, cicadas, registry, force=False):
     """Abort a tweak/ or fix/ branch plus its paired initiative."""
     print(f"\nAborting {branch_name}...")
+
+    # Teardown worktree if present
+    wt = registry.get("branches", {}).get(branch_name, {}).get("worktree_path")
+    if wt:
+        try:
+            remove_worktree(root, Path(wt), force=force)
+            print(f"[OK]   Worktree removed: {wt}")
+        except WorktreeDirtyError:
+            print(f"[WARN] Worktree has uncommitted changes: {wt}")
+            print("[WARN] Use --force to remove anyway, or commit/stash changes first.")
+            sys.exit(1)
 
     # Remove the tweak/fix branch
     delete_branch(branch_name, root)
@@ -68,7 +80,7 @@ def abort_lightweight(branch_name, initiative_name, root, cicadas, registry):
     print(f"\nAborted: {branch_name}")
 
 
-def abort_feature(branch_name, initiative_name, root, cicadas, registry):
+def abort_feature(branch_name, initiative_name, root, cicadas, registry, force=False):
     """Abort a feat/ branch, with optional escalation to abort the whole initiative."""
     choice = prompt_choice(
         f"Aborting feature '{branch_name}'.",
@@ -76,6 +88,18 @@ def abort_feature(branch_name, initiative_name, root, cicadas, registry):
     )
 
     print(f"\nAborting {branch_name}...")
+
+    # Teardown worktree if present
+    wt = registry.get("branches", {}).get(branch_name, {}).get("worktree_path")
+    if wt:
+        try:
+            remove_worktree(root, Path(wt), force=force)
+            print(f"[OK]   Worktree removed: {wt}")
+        except WorktreeDirtyError:
+            print(f"[WARN] Worktree has uncommitted changes: {wt}")
+            print("[WARN] Use --force to remove anyway, or commit/stash changes first.")
+            sys.exit(1)
+
     delete_branch(branch_name, root)
     registry.setdefault("branches", {}).pop(branch_name, None)
     save_json(cicadas / "registry.json", registry)
@@ -110,18 +134,18 @@ def main():
         sys.exit(1)
 
     registry = load_json(cicadas / "registry.json")
+    force = "--force" in sys.argv
 
     if any(branch_name.startswith(p) for p in LIGHTWEIGHT_PREFIXES):
         prefix = next(p for p in LIGHTWEIGHT_PREFIXES if branch_name.startswith(p))
-        # initiative name is stored in the branch registry entry
         branch_meta = registry.get("branches", {}).get(branch_name, {})
         initiative_name = branch_meta.get("initiative") or branch_name[len(prefix):]
-        abort_lightweight(branch_name, initiative_name, root, cicadas, registry)
+        abort_lightweight(branch_name, initiative_name, root, cicadas, registry, force=force)
 
     elif branch_name.startswith("feat/"):
         branch_meta = registry.get("branches", {}).get(branch_name, {})
         initiative_name = branch_meta.get("initiative") or branch_name[len("feat/"):]
-        abort_feature(branch_name, initiative_name, root, cicadas, registry)
+        abort_feature(branch_name, initiative_name, root, cicadas, registry, force=force)
 
     elif branch_name.startswith("initiative/"):
         initiative_name = branch_name[len("initiative/"):]

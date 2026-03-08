@@ -158,5 +158,116 @@ class TestArchiveStatus(CicadasTest):
         self.assertIn("Next:", output)
 
 
+class TestArchiveWorktree(CicadasTest):
+    """Worktree teardown tests for archive.py."""
+
+    def setUp(self):
+        super().setUp()
+        self.init_git()
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "feat/wt-branch"], cwd=self.root, check=True, capture_output=True)
+        import utils
+        from utils import worktree_path
+        self.wt_dir = worktree_path(self.root, "feat/wt-branch")
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        # Create the worktree
+        utils.create_worktree(self.root, "feat/wt-branch", self.wt_dir)
+        # Register in registry
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["branches"]["feat/wt-branch"] = {"intent": "test", "worktree_path": str(self.wt_dir)}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+
+    def tearDown(self):
+        import subprocess
+        if self.wt_dir.exists():
+            subprocess.run(["git", "worktree", "remove", "--force", str(self.wt_dir)], cwd=self.root, capture_output=True)
+        super().tearDown()
+
+    def test_archive_cleans_worktree(self):
+        import utils
+        archive.archive("feat/wt-branch", type_="branch")
+        # Worktree should be removed
+        self.assertFalse(self.wt_dir.exists())
+        # worktree_path should be absent from registry (branch deregistered)
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        self.assertNotIn("feat/wt-branch", reg["branches"])
+
+    def test_archive_dirty_worktree_exits_without_force(self):
+        import sys
+        (self.wt_dir / "dirty.txt").write_text("uncommitted")
+        with self.assertRaises(SystemExit) as cm:
+            archive.archive("feat/wt-branch", type_="branch", force=False)
+        self.assertEqual(cm.exception.code, 1)
+        # Worktree should still exist
+        self.assertTrue(self.wt_dir.exists())
+
+    def test_archive_dirty_worktree_force_removes(self):
+        (self.wt_dir / "dirty.txt").write_text("uncommitted")
+        archive.archive("feat/wt-branch", type_="branch", force=True)
+        self.assertFalse(self.wt_dir.exists())
+
+    def test_archive_missing_worktree_dir_warns_and_continues(self):
+        """If worktree dir was already deleted, archive should still proceed and clear registry."""
+        import shutil, utils
+        shutil.rmtree(self.wt_dir)
+        # Prune the worktree from git's list
+        import subprocess
+        subprocess.run(["git", "worktree", "prune"], cwd=self.root, capture_output=True)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            archive.archive("feat/wt-branch", type_="branch")
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        self.assertNotIn("feat/wt-branch", reg["branches"])
+
+
+class TestStatusWorktrees(CicadasTest):
+    """Worktrees section in status.py output."""
+
+    def test_no_worktrees_section_when_none(self):
+        """If no branches have worktree_path, the Worktrees section must not appear."""
+        import utils
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["branches"]["feat/normal"] = {"intent": "normal", "modules": []}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        self.assertNotIn("Worktrees", f.getvalue())
+
+    def test_worktrees_section_shows_missing(self):
+        """A branch with a nonexistent worktree_path is shown as [MISSING]."""
+        import utils
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["branches"]["feat/gone"] = {"intent": "gone", "modules": [], "worktree_path": "/nonexistent/wt/path"}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        out = f.getvalue()
+        self.assertIn("Worktrees", out)
+        self.assertIn("[MISSING]", out)
+        self.assertIn("feat/gone", out)
+
+    def test_worktrees_section_shows_clean(self):
+        """A branch with a real clean worktree shows [clean] and HEAD."""
+        self.init_git()
+        import subprocess
+        import utils
+        subprocess.run(["git", "checkout", "-b", "feat/wt-clean"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        wt = utils.worktree_path(self.root, "feat/wt-clean")
+        utils.create_worktree(self.root, "feat/wt-clean", wt)
+        reg = utils.load_json(self.cicadas_dir / "registry.json")
+        reg["branches"]["feat/wt-clean"] = {"intent": "clean", "modules": [], "worktree_path": str(wt)}
+        utils.save_json(self.cicadas_dir / "registry.json", reg)
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        subprocess.run(["git", "worktree", "remove", "--force", str(wt)], cwd=self.root, capture_output=True)
+        out = f.getvalue()
+        self.assertIn("[clean]", out)
+        self.assertIn("feat/wt-clean", out)
+
+
 if __name__ == "__main__":
     unittest.main()
