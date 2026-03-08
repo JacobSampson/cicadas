@@ -18,6 +18,17 @@
       "owner": "unknown",
       "created_at": "2026-03-08T03:33:26.608678+00:00",
       "initiative": "worktrees-parallel-execution"
+    },
+    "feat/worktree-templates": {
+      "intent": "Update approach.md template and emergence instructions for partitions DAG; add context.md to .gitignore",
+      "modules": [
+        "src/cicadas/templates/approach.md",
+        "src/cicadas/emergence/approach.md",
+        ".gitignore"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T03:37:34.549696+00:00",
+      "initiative": "worktrees-parallel-execution"
     }
   }
 }
