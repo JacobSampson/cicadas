@@ -1,5 +1,23 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "worktrees-parallel-execution": {
+      "intent": "Add git worktree support so parallel partitions run in isolated filesystem directories, enabling true parallel agent execution driven by a dependency DAG in approach.md",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-08T03:32:06.741751+00:00"
+    }
+  },
+  "branches": {
+    "feat/worktree-utils": {
+      "intent": "Shared worktree utilities in utils.py: create_worktree, remove_worktree, parse_partitions_dag, WorktreeDirtyError",
+      "modules": [
+        "tests",
+        "src/cicadas/scripts/utils.py"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T03:33:26.608678+00:00",
+      "initiative": "worktrees-parallel-execution"
+    }
+  }
 }
