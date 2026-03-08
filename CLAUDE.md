@@ -119,3 +119,5 @@ Tests live in `tests/` and inherit from `CicadasTest` in `tests/base.py`. The ba
 - Cleans up in `tearDown`.
 
 Tests are run directly with `unittest` (not pytest); `PYTHONPATH=src/cicadas/scripts:tests` is set explicitly on the command line so all scripts are importable. `tests/conftest.py` exists for legacy pytest compatibility but is not used by the primary test runner.
+
+**Testing bias — real filesystems over mocks:** Prefer tests that operate on real temporary filesystems and real git repositories over mocks. Cicadas scripts touch the filesystem and git directly; mocking these layers hides the integration bugs that matter. Mocks are acceptable only for pure logic with no I/O side-effects (e.g., string parsing, slug computation).
