@@ -7,6 +7,7 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+from tokens import append_entry
 from utils import (
     WorktreeDirtyError,
     create_worktree,
@@ -159,6 +160,9 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     else:
         active_name = name
     (cicadas / "active" / active_name).mkdir(parents=True, exist_ok=True)
+
+    # Write implementation/branch-start token boundary entry
+    append_entry(cicadas / "active" / active_name / "tokens.json", initiative=active_name, phase="implementation", subphase=name, source="unavailable")
 
     print(f"[OK]   Branch registered: {name}")
     if conflicts:

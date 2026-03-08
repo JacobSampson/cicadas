@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from datetime import UTC, datetime
 
+from tokens import append_entry
 from utils import get_project_root, load_json, parse_partitions_dag, save_json
 
 
@@ -39,6 +40,9 @@ def kickoff(name, intent, owner="unknown"):
     # Register
     registry.setdefault("initiatives", {})[name] = {"intent": intent, "owner": owner, "signals": [], "created_at": datetime.now(UTC).isoformat()}
     save_json(cicadas / "registry.json", registry)
+
+    # Write lifecycle/kickoff token boundary entry
+    append_entry(active_dir / "tokens.json", initiative=name, phase="lifecycle", subphase="kickoff", source="unavailable")
 
     # Detect parallel partitions and run pre-execution conflict check
     approach_path = active_dir / "approach.md"

@@ -25,22 +25,22 @@
 ## Partition 2: feat/token-integration
 
 ### Feature: Kickoff Integration
-- [ ] Update `src/cicadas/scripts/kickoff.py`: import `append_entry` from `tokens` <!-- id: 20 -->
-- [ ] `kickoff.py`: after `active_dir` is set and initiative is registered, call `append_entry(active_dir / "tokens.json", initiative=name, phase="lifecycle", subphase="kickoff", source="unavailable")` <!-- id: 21 -->
-- [ ] `test_kickoff.py` or `test_tokens.py`: add integration test — after `kickoff()`, `tokens.json` exists in active dir with one entry having `phase="lifecycle"` and `subphase="kickoff"` <!-- id: 22 -->
+- [x] Update `src/cicadas/scripts/kickoff.py`: import `append_entry` from `tokens` <!-- id: 20 -->
+- [x] `kickoff.py`: after `active_dir` is set and initiative is registered, call `append_entry(active_dir / "tokens.json", initiative=name, phase="lifecycle", subphase="kickoff", source="unavailable")` <!-- id: 21 -->
+- [x] `test_kickoff.py` or `test_tokens.py`: add integration test — after `kickoff()`, `tokens.json` exists in active dir with one entry having `phase="lifecycle"` and `subphase="kickoff"` <!-- id: 22 -->
 
 ### Feature: Branch Integration
-- [ ] Update `src/cicadas/scripts/branch.py`: import `append_entry` from `tokens` <!-- id: 23 -->
-- [ ] `branch.py`: after branch is registered, call `append_entry(active_dir / "tokens.json", initiative=active_name, phase="implementation", subphase=name, source="unavailable")` <!-- id: 24 -->
-- [ ] `test_branch.py` or `test_tokens.py`: add integration test — after `create_branch()`, `tokens.json` in active dir has an entry with `phase="implementation"` and `subphase` matching branch name <!-- id: 25 -->
+- [x] Update `src/cicadas/scripts/branch.py`: import `append_entry` from `tokens` <!-- id: 23 -->
+- [x] `branch.py`: after branch is registered, call `append_entry(active_dir / "tokens.json", initiative=active_name, phase="implementation", subphase=name, source="unavailable")` <!-- id: 24 -->
+- [x] `test_branch.py` or `test_tokens.py`: add integration test — after `create_branch()`, `tokens.json` in active dir has an entry with `phase="implementation"` and `subphase` matching branch name <!-- id: 25 -->
 
 ### Feature: History Rollup
-- [ ] Update `src/cicadas/scripts/history.py`: add `load_token_summary(folder)` — reads `tokens.json` from archive folder; returns dict with `total_input`, `total_output`, `total_cached`, `by_phase`; returns `None` if file absent, corrupt, or all counts are null <!-- id: 26 -->
-- [ ] `history.py`: update `parse_archive_entry()` to include token summary in the entry dict <!-- id: 27 -->
-- [ ] `history.py`: update `render_html()` card template — add conditional token block: shows per-phase breakdown table only when token summary is non-None and at least one phase has non-null counts <!-- id: 28 -->
-- [ ] Add tests for `load_token_summary()`: returns None when file absent, returns None when all counts null, returns correct totals when counts present <!-- id: 29 -->
-- [ ] Add test for `render_html()`: card renders without error when token summary is None <!-- id: 30 -->
-- [ ] Add test for `render_html()`: card includes token block when summary has real counts <!-- id: 31 -->
+- [x] Update `src/cicadas/scripts/history.py`: add `load_token_summary(folder)` — reads `tokens.json` from archive folder; returns dict with `total_input`, `total_output`, `total_cached`, `by_phase`; returns `None` if file absent, corrupt, or all counts are null <!-- id: 26 -->
+- [x] `history.py`: update `parse_archive_entry()` to include token summary in the entry dict <!-- id: 27 -->
+- [x] `history.py`: update `render_html()` card template — add conditional token block: shows per-phase breakdown table only when token summary is non-None and at least one phase has non-null counts <!-- id: 28 -->
+- [x] Add tests for `load_token_summary()`: returns None when file absent, returns None when all counts null, returns correct totals when counts present <!-- id: 29 -->
+- [x] Add test for `render_html()`: card renders without error when token summary is None <!-- id: 30 -->
+- [x] Add test for `render_html()`: card includes token block when summary has real counts <!-- id: 31 -->
 
 ---
 

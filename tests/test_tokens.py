@@ -138,5 +138,108 @@ class TestAppendEntry(CicadasTest):
         self.assertTrue(log.exists())
 
 
+class TestKickoffTokenIntegration(CicadasTest):
+    def test_kickoff_writes_token_entry(self):
+        import kickoff
+
+        name = "test-kickoff-tokens"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# Test PRD")
+        self.init_git()
+
+        kickoff.kickoff(name, "test intent")
+
+        log_path = self.cicadas_dir / "active" / name / "tokens.json"
+        self.assertTrue(log_path.exists())
+        entries = load_log(log_path)
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["phase"], "lifecycle")
+        self.assertEqual(entries[0]["subphase"], "kickoff")
+        self.assertEqual(entries[0]["source"], "unavailable")
+        self.assertEqual(entries[0]["initiative"], name)
+
+
+class TestBranchTokenIntegration(CicadasTest):
+    def test_branch_writes_token_entry(self):
+        import branch
+        import kickoff
+
+        name = "test-branch-tokens"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# Test PRD")
+        self.init_git()
+
+        kickoff.kickoff(name, "test intent")
+
+        branch_name = f"feat/partition-a"
+        branch.create_branch(branch_name, "partition a", "scripts/utils.py", initiative=name, no_worktree=True)
+
+        log_path = self.cicadas_dir / "active" / name / "tokens.json"
+        entries = load_log(log_path)
+        # One from kickoff, one from branch
+        impl_entries = [e for e in entries if e["phase"] == "implementation"]
+        self.assertEqual(len(impl_entries), 1)
+        self.assertEqual(impl_entries[0]["subphase"], branch_name)
+        self.assertEqual(impl_entries[0]["source"], "unavailable")
+
+
+class TestLoadTokenSummary(CicadasTest):
+    def test_returns_none_when_file_absent(self):
+        from history import load_token_summary
+
+        self.assertIsNone(load_token_summary(self.root / "nonexistent"))
+
+    def test_returns_none_when_all_counts_null(self):
+        from history import load_token_summary
+
+        folder = self.root / "archive" / "test"
+        folder.mkdir(parents=True)
+        append_entry(folder / "tokens.json", initiative="test", phase="lifecycle", source="unavailable")
+
+        self.assertIsNone(load_token_summary(folder))
+
+    def test_returns_summary_with_real_counts(self):
+        from history import load_token_summary
+
+        folder = self.root / "archive" / "test"
+        folder.mkdir(parents=True)
+        append_entry(folder / "tokens.json", initiative="test", phase="emergence", source="agent-reported",
+                     input_tokens=1000, output_tokens=300, cached_tokens=500)
+        append_entry(folder / "tokens.json", initiative="test", phase="emergence", source="agent-reported",
+                     input_tokens=200, output_tokens=100, cached_tokens=0)
+
+        summary = load_token_summary(folder)
+        self.assertIsNotNone(summary)
+        self.assertEqual(summary["total_input"], 1200)
+        self.assertEqual(summary["total_output"], 400)
+        self.assertEqual(summary["total_cached"], 500)
+        self.assertIn("emergence", summary["by_phase"])
+
+    def test_render_html_no_crash_without_tokens(self):
+        from history import render_html
+
+        entries = [{"name": "test", "kind": "initiative", "date": "Jan 1, 2026",
+                    "summary": "", "ledger_summary": "", "total_tasks": 0,
+                    "done_tasks": 0, "token_summary": None}]
+        html = render_html(entries)
+        self.assertIn("test", html)
+
+    def test_render_html_includes_token_block_when_present(self):
+        from history import render_html
+
+        entries = [{"name": "test", "kind": "initiative", "date": "Jan 1, 2026",
+                    "summary": "", "ledger_summary": "", "total_tasks": 0,
+                    "done_tasks": 0, "token_summary": {
+                        "total_input": 1000, "total_output": 300, "total_cached": 500,
+                        "by_phase": {"emergence": {"input": 1000, "output": 300, "cached": 500}}
+                    }}]
+        html = render_html(entries)
+        self.assertIn("Tokens", html)
+        self.assertIn("1,000", html)
+        self.assertIn("emergence", html)
+
+
 if __name__ == "__main__":
     unittest.main()
