@@ -203,6 +203,20 @@
       "summary": "Initiative complete: code review as merge gate (review.py, review.md, open_pr.py gate, PASS/PASS WITH NOTES/BLOCK verdicts)",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T06:30:22.228240+00:00",
+      "branch": "tweak/context-injection",
+      "summary": "Context injection at branch start: branch.py now writes context.md for sequential branches (was worktree-only). synthesis-prompt.md updated to produce canon/summary.md (300-500 token agent snapshot) during synthesis. New canon-summary.md template.",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T06:31:17.771827+00:00",
+      "branch": "context-injection",
+      "summary": "Roadmap item 4: context injection at branch start complete. branch.py writes context.md for all branch types (was worktree-only). synthesis-prompt.md updated to produce canon/summary.md (300-500 token agent snapshot) at synthesis. New canon-summary.md template. Initial canon/summary.md produced.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

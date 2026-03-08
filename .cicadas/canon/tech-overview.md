@@ -17,6 +17,7 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 - **Token Usage Logging** — Each initiative carries an append-only `tokens.json` (drafts → active → archive) that captures input/output/cached token counts per phase and subphase. Scripts write null phase-boundary entries (`source: unavailable`); agents self-append real counts when the runtime exposes them (`source: agent-reported`). `history.py` rolls up per-initiative token summaries into the HTML timeline.
 - **Emergence Pace** — At the start of Clarify, the Builder chooses a review cadence (`section` / `doc` / `all`) stored in `emergence-config.json`. Every subsequent emergence agent reads this file and enforces the stop rule, preventing agents from silently drafting all specs without review gates.
 - **Code Review Merge Gate** — Code review produces a persistent `review.md` artifact (not an ephemeral console report) with a three-way verdict: `PASS`, `PASS WITH NOTES`, or `BLOCK`. `open_pr.py` reads this file and refuses to open a PR on `BLOCK`. The verdict is always advisory; the Builder retains merge authority.
+- **Context Injection at Branch Start** — `branch.py` writes a `context.md` bundle to the branch's working directory on creation (worktree root for parallel branches; project root for sequential branches). Bundle contains: `canon/summary.md` (if present), full module snapshots for the branch's declared scope, and the initiative's `approach.md` + `tasks.md`. Provides agents with the right context immediately without requiring manual file reads. `context.md` is gitignored.
 
 ---
 
@@ -72,7 +73,7 @@ bash install.sh --update
 The system uses a set of Python scripts in `src/cicadas/scripts/`:
 - `init.py`: Initializes `.cicadas/` directory on fresh install (idempotent; called by `install.sh`).
 - `kickoff.py`: Promotes drafts (including `lifecycle.json` when present) and registers initiatives.
-- `branch.py`: Creates and registers feature/fix/tweak branches.
+- `branch.py`: Creates and registers feature/fix/tweak branches. Writes `context.md` (canon summary + scoped module snapshots + approach.md + tasks.md) to the branch's working directory on creation for all branch types.
 - `status.py`: Reports global project state; when `lifecycle.json` exists for an initiative, reports Merged (branch pairs) and Next (suggested step) via git-based merge detection.
 - `create_lifecycle.py`: Creates `lifecycle.json` in drafts or active with PR boundaries and default steps.
 - `open_pr.py`: Opens a PR from current branch (tries `gh` → `glab` → Bitbucket URL → fallback); host-agnostic. Pre-flight checks `review.md` verdict: blocks on `BLOCK`, warns on `PASS WITH NOTES`.
