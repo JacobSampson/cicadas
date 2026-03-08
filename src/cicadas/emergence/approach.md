@@ -7,8 +7,20 @@
 
 ## Process
 
-1.  **Ingest**: Read `prd.md`, `ux.md`, and `tech-design.md` from `.cicadas/drafts/{initiative}/`.
-2.  **Plan**:
+1.  **PR Preference (ask first, before drafting)**: Before planning anything, ask the Builder:
+
+    > *"How do you want to handle PRs for this initiative?"*
+    > 1. **No PRs** — merge directly at every boundary (fastest, solo work)
+    > 2. **Final merge only** — one PR when the initiative merges to master
+    > 3. **Full PR flow** — PR at every feature boundary + the initiative merge (default, team workflow)
+
+    Then immediately run `create_lifecycle.py` with the matching flags:
+    - Option 1 (no PRs): `python {cicadas-dir}/scripts/create_lifecycle.py {initiative} --no-pr-initiatives --no-pr-features`
+    - Option 2 (final only): `python {cicadas-dir}/scripts/create_lifecycle.py {initiative} --no-pr-features`
+    - Option 3 (full, default): `python {cicadas-dir}/scripts/create_lifecycle.py {initiative}`
+
+2.  **Ingest**: Read `prd.md`, `ux.md`, and `tech-design.md` from `.cicadas/drafts/{initiative}/`.
+3.  **Plan**:
     -   **Define Partitions**: Identify logical partitions of work. Each partition becomes a **Feature Branch**. For each partition, declare:
         - A name (e.g., `feat/data-and-auth`, `feat/frontend-shell`)
         - The modules it touches (e.g., `db`, `auth`, `frontend/core`)
@@ -20,14 +32,13 @@
         - If no partition is parallel (all have non-empty `depends_on`), the block is still valid — all branches will be plain. Omit the block entirely only if the concept of parallelism is irrelevant to the initiative.
     -   **Identify Risks**: Module overlaps between partitions, migration concerns, shared component boundaries.
     -   **Plan for backward compatibility and migration** (brownfield).
-3.  **Draft**: Create `.cicadas/drafts/{initiative}/approach.md`.
-4.  **Refine**: Builder review.
-5.  **Lifecycle (PR boundaries)**: Ask the Builder: *"Will you be doing PRs for this initiative?"* If yes, ask at which boundaries (defaults: specs **no**, initiatives **yes**, features **yes**, tasks **no**). Create `lifecycle.json` in `.cicadas/drafts/{initiative}/` with those choices and the standard steps. Use `python {cicadas-dir}/scripts/create_lifecycle.py {initiative}` with flags `--pr-specs`, `--no-pr-initiatives`, `--no-pr-features`, `--pr-tasks` to override defaults, or run with no flags for defaults.
+4.  **Draft**: Create `.cicadas/drafts/{initiative}/approach.md`.
+5.  **Refine**: Builder review.
 
 ## Output Artifacts
 
+- **lifecycle.json** (after step 1): In `.cicadas/drafts/{initiative}/lifecycle.json`; created by `create_lifecycle.py` with the Builder's PR boundary choices. Promoted to active at kickoff.
 - **approach.md**: Use the template at `{cicadas-dir}/templates/approach.md`.
-- **lifecycle.json** (after step 5): In `.cicadas/drafts/{initiative}/lifecycle.json`; created by `create_lifecycle.py` with the Builder's PR boundary choices. Promoted to active at kickoff.
 
 **The approach document is the single most important artifact in Emergence.** Every downstream decision — branch names, module scopes, conflict detection, registry entries — flows from the partitions defined here.
 

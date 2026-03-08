@@ -26,6 +26,13 @@ Before **committing** on a feature branch (`feat/`) or task branch (`task/`):
 Before opening a PR for a task branch, in addition to the above:
 - **Rule**: Include Reflect findings in the PR description.
 
+## 4b. Pause at `Open PR` Tasks (Hard Stop)
+When executing a `tasks.md` checklist and the next unchecked task matches the pattern `- [ ] Open PR: ...`:
+- **Rule**: STOP. Do NOT mark it complete. Do NOT merge. Do NOT proceed to the next task.
+- **Rule**: Run `open_pr.py` to open the PR, then surface the PR URL to the Builder and explicitly state: *"Waiting for merge approval before continuing."*
+- **Rule**: Only after the Builder explicitly confirms the PR has been merged should the agent mark the task `- [x]` and continue with subsequent tasks.
+- **Why**: `Open PR` tasks are human-gated checkpoints, not automatic steps. The implementation agent has no authority to merge — that is always a Builder decision.
+
 ## 5. No Canon on Branches
 - **Rule**: Never write to `.cicadas/canon/` on any branch.
 - **Why**: Canon is only synthesized on `main` at initiative completion. Writing canon on branches creates merge conflicts.

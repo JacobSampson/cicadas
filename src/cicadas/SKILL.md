@@ -108,7 +108,7 @@ project-root/
 1. Create task branch from feature branch: `git checkout -b task/{feature}/{task-name}`
 2. Implement code.
 3. **Reflect**: Keep active specs current as code diverges from plan.
-4. Open a **PR** against the feature branch (if lifecycle has PR at tasks). Run `open_pr.py` (tries `gh`/`glab`, then Bitbucket URL, else fallback). Include Reflect findings in the PR description.
+4. When the next task in `tasks.md` is `- [ ] Open PR: ...` — **STOP**. Run `open_pr.py`, surface the PR URL to the Builder, and wait for explicit merge confirmation before continuing. Do NOT mark the task complete or proceed until the Builder confirms the merge.
 5. Builder reviews and approves the PR.
 6. Merge the PR, delete the task branch. The agent discovers completion on the next `status.py` run (git-based merge detection).
 
@@ -305,6 +305,7 @@ Output is **ephemeral** — presented in the agent response only, not written to
 4. **Tool Mandate**: NEVER manually edit `registry.json`. ALWAYS use the scripts.
 5. **Reflect Before Commit**: Run the Reflect operation (including updating `tasks.md` with completed items) before committing on a feat/ or task/ branch. On **feature branches** (`feat/`), also run **Code Review** before committing (after Reflect). Always run Reflect before opening a PR for a task branch and include findings in the PR description.
 6. **No Canon on Branches**: Never write to `.cicadas/canon/` on any branch. Canon is only synthesized on `main (default branch)` at initiative completion.
+7. **Pause at `Open PR` Tasks**: When executing `tasks.md` and the next unchecked task is `- [ ] Open PR: ...`, STOP. Run `open_pr.py`, surface the PR URL, and wait for the Builder to explicitly confirm the merge before marking it done and continuing. This is a hard stop — the agent has no authority to merge.
 
 ## Implementation Agent Rules (all environments)
 
@@ -314,6 +315,7 @@ When **implementing code** on a Cicadas-managed project — in Cursor, Claude Co
 - **Identity Check**: Before writing code, verify you are on a **registered** feature branch or a task branch forked from one (check `.cicadas/registry.json`). No code on `main`/`master` or initiative branches.
 - **Execution Scope**: Only implement tasks assigned to your current feature partition. If work requires files outside declared modules, STOP and notify the user.
 - **Pause Before Committing**: Before every **commit** on a `feat/` or `task/` branch: run Reflect, update `.cicadas/active/{initiative}/tasks.md` (mark completed with `- [x]`, add/adjust tasks if implementation diverged). On **feature branches** (`feat/`), also run **Code Review** after Reflect before committing. Then commit. Before opening a PR, include Reflect findings in the PR description.
+- **Pause at `Open PR` Tasks**: When the next unchecked task in `tasks.md` is `- [ ] Open PR: ...`, STOP. Run `open_pr.py`, surface the PR URL, and wait for the Builder to explicitly confirm the merge before marking it done and proceeding. Never merge autonomously.
 - **No Canon on Branches**: Never write to `.cicadas/canon/`. Canon is only synthesized on `main` at initiative completion.
 - **Registry**: Never manually edit `registry.json`; use the CLI scripts only.
 - **Push**: After every branch creation and every merge to a long-lived branch, run `git push`.
