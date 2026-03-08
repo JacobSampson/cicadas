@@ -147,6 +147,13 @@
       "summary": "Reflect+tasks+CR before commit on feat/; implementation guardrails in skill for all envs; install.sh SKILL.md for Cursor; CLAUDE.md env note",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T04:22:21.126257+00:00",
+      "branch": "tweak/pr-lifecycle-enforcement",
+      "summary": "Enforce PR pause rule and move PR preference question to start of Approach. Three changes: emergence/approach.md asks PR preference upfront (step 1) with three options and matching create_lifecycle.py flags; implementation.md adds Rule 4b hard-stopping agents at Open PR tasks until Builder confirms merge; SKILL.md mirrors the pause rule in Guardrails and Implementation Agent Rules.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
