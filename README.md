@@ -43,7 +43,7 @@ Work happens in **Feature Branches** (registered) and **Task Branches** (ephemer
 
 *   **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
 *   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately* (and before every commit on feat/task branches).
-*   **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing an advisory report with a merge verdict.
+*   **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing a structured `review.md` artifact with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `open_pr.py` checks this verdict and blocks on `BLOCK`.
 *   **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
 
 ### Phase 4: Completion (Synthesis)
@@ -135,7 +135,8 @@ All scripts are in `src/cicadas/scripts/`.
 | **Send Signal** | `python src/cicadas/scripts/signal.py "Message..."` |
 | **Log Work** | `python src/cicadas/scripts/update_index.py --branch {name} ...` |
 | **Lifecycle** | `python src/cicadas/scripts/create_lifecycle.py {name}` (PR boundaries + steps in drafts/active) |
-| **Open PR** | `python src/cicadas/scripts/open_pr.py [--base branch]` (gh/glab/Bitbucket/fallback) |
+| **Open PR** | `python src/cicadas/scripts/open_pr.py [--base branch]` (gh/glab/Bitbucket/fallback; blocks on BLOCK verdict) |
+| **Check Review** | `python src/cicadas/scripts/review.py [--initiative name]` (read verdict from review.md) |
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
 | **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |

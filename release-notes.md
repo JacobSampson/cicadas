@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## Version 0.5.3
+- **Code Review as Merge Gate**: Code review is now a persistent artifact, not an ephemeral console report. The Code Review subagent writes a structured `review.md` to `.cicadas/active/{initiative}/` with one of three verdicts: `PASS`, `PASS WITH NOTES`, or `BLOCK`. New `scripts/review.py` reads the verdict and returns exit codes (0=PASS/PASS WITH NOTES, 1=BLOCK, 2=not found). `open_pr.py` checks the verdict before opening a PR and refuses on `BLOCK`. Verdict strings updated throughout `emergence/code-review.md` (was `MERGE-READY`/`NEEDS-WORK`). New `templates/review.md` template. 13 new tests.
+
 ## Version 0.5.2
 - **Token Usage Logging**: New `tokens.py` module (`init_log`, `append_entry`, `load_log`) adds an append-only `tokens.json` log to every initiative. Created at kickoff, moves with specs through active → archive. Scripts write null phase-boundary entries; agents self-append real counts when the runtime exposes them. `history.py` now renders a per-initiative token summary (input/output/cached by phase) in the HTML timeline. 25 new tests.
 - **Emergence Pace Selection**: `clarify.md` step 0 now asks the Builder their preferred review cadence — `section` (pause after each section), `doc` (pause after each complete doc, default), or `all` (draft everything then present). Choice is stored in `emergence-config.json` in the drafts folder; every subsequent emergence agent (UX, Tech Design, Approach, Tasks) reads it and enforces the stop rule.
