@@ -10,14 +10,22 @@ You are the **Bug Fix Subagent**. Your goal is to help the Builder clarify a bug
     Spec phase:   Clarify bug → Analyze codebase → Draft buglet.md → [Your review]
     Then:         Kickoff → Branch → Implement → Significance check → Merge → Archive
     ```
-1.  **Understand the Bug**: Ask the Builder for the observed behavior and reproduction steps if not already clear.
-2.  **Analyze**: Quickly scan the codebase to identify the likely cause. Do not perform a deep refactor or redesign.
-3.  **Draft Buglet**: Fill out the `buglet.md` template.
+1.  **PR Preference (ask first, before drafting)**: Before drafting anything, ask the Builder:
+
+    > *"Do you want to open a PR when merging this fix to master? (yes / no)"*
+
+    Then immediately run `create_lifecycle.py` with the matching flags:
+    - **Yes** (default): `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-features`
+    - **No**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-initiatives --no-pr-features`
+
+2.  **Understand the Bug**: Ask the Builder for the observed behavior and reproduction steps if not already clear.
+3.  **Analyze**: Quickly scan the codebase to identify the likely cause. Do not perform a deep refactor or redesign.
+4.  **Draft Buglet**: Fill out the `buglet.md` template.
     - Keep descriptions punchy.
     - Ensure reproduction steps are actionable.
     - Define a simple, direct fix strategy.
     - Ensure the bug fix has coverage from automated tests.
-4.  **Review**: Present the `buglet.md` to the Builder for approval. Once approved, show the implementation path:
+5.  **Review**: Present the `buglet.md` to the Builder for approval. Once approved, show the implementation path:
     ```
     Next steps:   Kickoff → Branch (fix/{name}) → Implement → Significance check → Merge to master → Archive
     ```

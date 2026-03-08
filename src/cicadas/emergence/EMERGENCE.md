@@ -34,6 +34,7 @@ The Emergence phase consists of 5 progressive steps. Each step is handled by a s
 | **3. Tech** | `tech-design.md` | `emergence/tech-design` | **Architecture**. Components, data flow, schemas. |
 | **4. Approach** | `approach.md` | `emergence/approach` | **Strategy & Partitioning**. Implementation plan, sequencing, dependencies, and logical partitions (which become Feature Branches). |
 | **5. Tasks** | `tasks.md` | `emergence/tasks` | **Execution**. Ordered, testable checklist grouped by partition. |
+| **5b. Consistency Check** | _(inline)_ | `emergence/consistency-check` | **Cross-phase review**. After Tasks is approved, check all five docs for internal contradictions. Surfaces questions for Builder — no autonomous resolution. |
 
 ### Progressive Refinement
 
@@ -66,7 +67,8 @@ graph TD
     Approach --> APP[approach.md]
     APP --> Tasks
     Tasks --> T[tasks.md]
-    T --> Kickoff[Kickoff Initiative]
+    T --> CC[Consistency Check]
+    CC --> Kickoff[Kickoff Initiative]
 ```
 
 ## Subagent References
@@ -77,6 +79,7 @@ graph TD
 - [Technical Design](./tech-design.md)
 - [Approach](./approach.md)
 - [Tasks](./tasks.md)
+- [Consistency Check](./consistency-check.md)
 
 ---
 

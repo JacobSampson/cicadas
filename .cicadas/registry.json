@@ -1,5 +1,22 @@
 {
   "schema_version": "2.0",
-  "initiatives": {},
-  "branches": {}
+  "initiatives": {
+    "emergence-consistency-check": {
+      "intent": "Add cross-phase consistency check at end of emergence: subagent reads all five draft docs and surfaces contradictions as questions for the human before kickoff",
+      "owner": "unknown",
+      "signals": [],
+      "created_at": "2026-03-08T04:28:25.097344+00:00"
+    }
+  },
+  "branches": {
+    "tweak/emergence-consistency-check": {
+      "intent": "Add cross-phase consistency check subagent and wire it into emergence workflow",
+      "modules": [
+        "src/cicadas/emergence"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T04:28:29.816608+00:00",
+      "initiative": "emergence-consistency-check"
+    }
+  }
 }

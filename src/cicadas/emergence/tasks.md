@@ -22,7 +22,11 @@
 4.  **Draft**: Create `.cicadas/drafts/{initiative}/tasks.md`.
     -   Use the format `- [ ] Task Description <!-- id: N -->`
 5.  **Refine**: Builder review.
-6.  **Inject PR tasks from `lifecycle.json`**: Read `lifecycle.json` from `.cicadas/drafts/{initiative}/`. For each step with `opens_pr: true`, append a PR task at the relevant boundary:
+6.  **Consistency Check**: Once the Builder approves `tasks.md`, run the
+    `emergence/consistency-check` subagent. It reads all five draft docs and surfaces any
+    cross-phase contradictions as questions for the Builder. Resolve any flagged issues before
+    proceeding to kickoff.
+7.  **Inject PR tasks from `lifecycle.json`**: Read `lifecycle.json` from `.cicadas/drafts/{initiative}/`. For each step with `opens_pr: true`, append a PR task at the relevant boundary:
     -   If `pr_boundaries.features: true` → add at the end of **each partition's** task list:
         `- [ ] Open PR: feat/{branch} → initiative/{name} and await merge approval before continuing <!-- id: PR-feature -->`
     -   If `pr_boundaries.initiatives: true` → add at the very end of `tasks.md`:
