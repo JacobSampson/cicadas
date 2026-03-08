@@ -3,12 +3,14 @@
 
 import argparse
 import shutil
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
-from utils import get_project_root, load_json, save_json
+from utils import WorktreeDirtyError, get_project_root, load_json, remove_worktree, save_json
 
 
-def archive(name, type_="branch"):
+def archive(name, type_="branch", force=False):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
@@ -16,8 +18,22 @@ def archive(name, type_="branch"):
     registry_key = "initiatives" if type_ == "initiative" else "branches"
 
     if name not in registry.get(registry_key, {}):
-        print(f"Error: {type_.capitalize()} {name} not found in registry.")
+        print(f"[ERR]  {type_.capitalize()} {name} not found in registry.")
         return
+
+    # Worktree teardown (branch only — initiatives don't get worktrees directly)
+    if type_ == "branch":
+        wt = registry[registry_key][name].get("worktree_path")
+        if wt:
+            try:
+                remove_worktree(root, Path(wt), force=force)
+                print(f"[OK]   Worktree removed: {wt}")
+                # Clear worktree_path from registry entry
+                registry[registry_key][name].pop("worktree_path", None)
+            except WorktreeDirtyError:
+                print(f"[WARN] Worktree has uncommitted changes: {wt}")
+                print("[WARN] Use --force to remove anyway, or commit/stash changes first.")
+                sys.exit(1)
 
     # Move active specs to archive
     active = cicadas / "active" / name
@@ -32,25 +48,33 @@ def archive(name, type_="branch"):
             print("-" * 40)
 
         shutil.move(str(active), str(husk))
-        print(f"Archived active specs to {husk.name}")
+        print(f"[OK]   Archived active specs to {husk.name}")
 
     # Remove from registry
     del registry[registry_key][name]
 
-    # When archiving an initiative, also deregister any associated branches
+    # When archiving an initiative, also deregister any associated branches (and their worktrees)
     if type_ == "initiative":
         orphaned = [b for b, info in registry.get("branches", {}).items() if info.get("initiative") == name]
         for b in orphaned:
+            wt = registry["branches"][b].get("worktree_path")
+            if wt:
+                try:
+                    remove_worktree(root, Path(wt), force=force)
+                    print(f"[OK]   Worktree removed: {wt}")
+                except (WorktreeDirtyError, Exception) as e:
+                    print(f"[WARN] Could not remove worktree for {b}: {e}")
             del registry["branches"][b]
-            print(f"Deregistered associated branch: {b}")
+            print(f"[OK]   Deregistered associated branch: {b}")
 
     save_json(cicadas / "registry.json", registry)
-    print(f"Deregistered {type_}: {name}")
+    print(f"[OK]   Deregistered {type_}: {name}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Archive active specs and deregister from registry")
     parser.add_argument("name")
     parser.add_argument("--type", default="branch", choices=["branch", "initiative"], help="Type to archive: branch or initiative")
+    parser.add_argument("--force", action="store_true", help="Force worktree removal even if dirty")
     args = parser.parse_args()
-    archive(args.name, args.type)
+    archive(args.name, args.type, force=args.force)

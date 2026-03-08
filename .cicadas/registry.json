@@ -41,6 +41,19 @@
       "owner": "unknown",
       "created_at": "2026-03-08T03:39:02.948210+00:00",
       "initiative": "worktrees-parallel-execution"
+    },
+    "feat/worktree-teardown": {
+      "intent": "Worktree teardown in archive.py, prune.py, abort.py; worktree status section in status.py",
+      "modules": [
+        "tests",
+        "src/cicadas/scripts/abort.py",
+        "src/cicadas/scripts/prune.py",
+        "src/cicadas/scripts/status.py",
+        "src/cicadas/scripts/archive.py"
+      ],
+      "owner": "unknown",
+      "created_at": "2026-03-08T03:43:45.484172+00:00",
+      "initiative": "worktrees-parallel-execution"
     }
   }
 }
