@@ -189,6 +189,20 @@
       "summary": "Token usage logging (tokens.py), emergence pace selection (emergence-config.json), PR boundary reminder in clarify process preview",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:50:20.256696+00:00",
+      "branch": "tweak/review-merge-gate",
+      "summary": "Added review.py verdict script, review.md template, open_pr.py merge gate; updated code-review.md verdicts to PASS/PASS WITH NOTES/BLOCK; 13 new tests",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:51:09.687990+00:00",
+      "branch": "review-merge-gate",
+      "summary": "Initiative complete: code review as merge gate (review.py, review.md, open_pr.py gate, PASS/PASS WITH NOTES/BLOCK verdicts)",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

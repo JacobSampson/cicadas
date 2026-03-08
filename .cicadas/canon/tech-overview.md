@@ -16,6 +16,7 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 - **Lifecycle & PR Boundaries** — Per-initiative `lifecycle.json` (in drafts/active) defines at which boundaries to open PRs (specs, initiatives, features, tasks) and an ordered step list; completion is detected via git only (no host API).
 - **Token Usage Logging** — Each initiative carries an append-only `tokens.json` (drafts → active → archive) that captures input/output/cached token counts per phase and subphase. Scripts write null phase-boundary entries (`source: unavailable`); agents self-append real counts when the runtime exposes them (`source: agent-reported`). `history.py` rolls up per-initiative token summaries into the HTML timeline.
 - **Emergence Pace** — At the start of Clarify, the Builder chooses a review cadence (`section` / `doc` / `all`) stored in `emergence-config.json`. Every subsequent emergence agent reads this file and enforces the stop rule, preventing agents from silently drafting all specs without review gates.
+- **Code Review Merge Gate** — Code review produces a persistent `review.md` artifact (not an ephemeral console report) with a three-way verdict: `PASS`, `PASS WITH NOTES`, or `BLOCK`. `open_pr.py` reads this file and refuses to open a PR on `BLOCK`. The verdict is always advisory; the Builder retains merge authority.
 
 ---
 
@@ -74,7 +75,8 @@ The system uses a set of Python scripts in `src/cicadas/scripts/`:
 - `branch.py`: Creates and registers feature/fix/tweak branches.
 - `status.py`: Reports global project state; when `lifecycle.json` exists for an initiative, reports Merged (branch pairs) and Next (suggested step) via git-based merge detection.
 - `create_lifecycle.py`: Creates `lifecycle.json` in drafts or active with PR boundaries and default steps.
-- `open_pr.py`: Opens a PR from current branch (tries `gh` → `glab` → Bitbucket URL → fallback); host-agnostic.
+- `open_pr.py`: Opens a PR from current branch (tries `gh` → `glab` → Bitbucket URL → fallback); host-agnostic. Pre-flight checks `review.md` verdict: blocks on `BLOCK`, warns on `PASS WITH NOTES`.
+- `review.py`: Reads `.cicadas/active/{initiative}/review.md`, parses the verdict (`PASS`, `PASS WITH NOTES`, `BLOCK`), and exits with 0 (safe to merge), 1 (BLOCK), or 2 (no review.md found). Imported by `open_pr.py`.
 - `update_index.py`: Logs changes to the ledger.
 - `archive.py`: Concludes work, deregisters branches, and expires specs (includes `lifecycle.json` when present).
 - `abort.py`: Context-aware rollback for any branch type.
@@ -89,7 +91,7 @@ The system uses a set of Python scripts in `src/cicadas/scripts/`:
 
 - **Module-Awareness**: Feature branches declare their module scope in the registry to prevent silent merge conflicts.
 - **Reflect Operation**: Agents MUST update active specs before merging any code change.
-- **Code Review Operation**: Optional agent operation invoked after Reflect, before opening a PR or merging. Runs a structured algorithm (task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security scan, correctness scan, code quality) against the branch diff and active specs. Output is ephemeral and always advisory. Defined in `emergence/code-review.md`.
+- **Code Review Operation**: Optional agent operation invoked after Reflect, before opening a PR or merging. Runs a structured algorithm (task completeness, acceptance criteria, arch conformance, module scope, Reflect completeness, security scan, correctness scan, code quality) against the branch diff and active specs. Writes a structured `review.md` to `.cicadas/active/{initiative}/` with verdict `PASS`, `PASS WITH NOTES`, or `BLOCK`. `open_pr.py` enforces this as a merge gate (blocks on `BLOCK`). Defined in `emergence/code-review.md`; checked via `scripts/review.py`.
 - **Significance Check**: Lightweight paths must be evaluated for Canon updates before archiving.
 - **Relative Symlinks**: Agent integrations use relative symlinks for portability across machines with different mount paths.
 - **Non-Interactive Pipe Support**: Installer detects `curl | bash` context (`[ -t 0 ]`) and skips interactive prompts, printing manual setup guidance instead.
