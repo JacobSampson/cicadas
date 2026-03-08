@@ -7,11 +7,22 @@
 
 ## Process
 
-0. **Process Preview**: Before starting, show the Builder the full spec phase steps:
+0. **Process Preview & Pace**: Before starting, show the Builder the full spec phase steps and ask their preferred review pace:
     ```
-    Spec phase:   Clarify (PRD) → UX → Tech Design → Approach → Tasks → [Your review after each]
+    Spec phase:   Clarify (PRD) → UX → Tech Design → Approach (asks about PRs → lifecycle.json) → Tasks → [Review after each]
     Then:         Kickoff → Feature branch(es) → Task branches → Reflect → PR per task
                   → Merge feature(s) → Merge initiative → Synthesize canon → Archive
+    ```
+    Then ask:
+    ```
+    Emergence pace — how often do you want to review?
+      [S] Section  — pause after each section within a doc
+      [D] Doc      — pause after each complete doc  (default)
+      [A] All      — draft all docs, then present together
+    ```
+    Write the chosen pace (default `"doc"` if skipped) to `.cicadas/drafts/{initiative}/emergence-config.json`:
+    ```json
+    { "pace": "doc" }
     ```
 
 1. **Ingest**: Read the initial request and identify the initiative name.

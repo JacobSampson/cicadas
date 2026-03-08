@@ -40,8 +40,20 @@ The Emergence phase consists of 5 progressive steps. Each step is handled by a s
 
 - **Input**: Each step consumes the artifacts from the previous steps.
 - **Canon-Aware**: On brownfield projects, each subagent reads existing canon as context. This produces sharper, more targeted specs.
-- **Gate**: Human review is required after each step.
+- **Gate**: Human review is required after each step — unless the Builder chose a different pace (see below).
 - **Skip**: For simple changes, UX and Tech Design can be skipped or merged into simpler artifacts.
+
+### Emergence Pace
+
+At the start of **Clarify** (step 0), the agent asks the Builder how often they want to review:
+
+| Pace | Behavior |
+|------|----------|
+| `section` | Pause after each section within a doc — maximum oversight |
+| `doc` | Pause after each complete doc — **default** |
+| `all` | Draft all docs without stopping, present together at the end |
+
+The chosen pace is stored in `.cicadas/drafts/{initiative}/emergence-config.json` and read by every subsequent emergence agent. Each agent states the active stop rule at the top of its process before drafting anything.
 
 ## Usage
 

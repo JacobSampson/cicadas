@@ -7,6 +7,11 @@
 
 ## Process
 
+0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
+    - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
+    - `doc` — complete the full doc, then hard stop for Builder review before moving to Tasks
+    - `all` — complete the full doc and continue to Tasks without stopping
+
 1.  **PR Preference (ask first, before drafting)**: Before planning anything, ask the Builder:
 
     > *"How do you want to handle PRs for this initiative?"*

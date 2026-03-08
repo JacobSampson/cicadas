@@ -7,6 +7,11 @@
 
 ## Process
 
+0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
+    - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
+    - `doc` — complete the full doc, then hard stop for Builder review before moving to Approach
+    - `all` — complete the full doc and continue to Approach without stopping
+
 1. **Ingest**: Read `.cicadas/drafts/{initiative}/prd.md` and `ux.md`. Identify all functional and non-functional requirements that have architectural implications.
 
 2. **Canon Check**: On brownfield projects, read existing canon — especially `tech-overview.md` and relevant `modules/*.md`. Understand the current stack, data model, API surface, and established patterns before proposing anything. Your design must extend the existing system, not contradict it.

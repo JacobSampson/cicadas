@@ -7,6 +7,11 @@
 
 ## Process
 
+0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
+    - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
+    - `doc` — complete the full doc, then hard stop for Builder review before moving to Tech Design
+    - `all` — complete the full doc and continue to Tech Design without stopping
+
 1. **Ingest**: Read `.cicadas/drafts/{initiative}/prd.md`. Identify all personas, user journeys, and functional requirements. These are your source of truth.
 
 2. **Canon Check**: On brownfield projects, read `canon/product-overview.md` (specifically the **UX Overview** section) to understand the existing design language, navigation model, and established patterns. Design for *consistency with and evolution of* the existing experience — not from scratch.

@@ -47,17 +47,17 @@
 ## Partition 3: feat/emergence-pace
 
 ### Feature: Clarify Pace Question
-- [ ] Update `src/cicadas/emergence/clarify.md` step 0: present three-level pace menu (`[S] Section / [D] Doc / [A] All`) before any drafting begins <!-- id: 40 -->
-- [ ] `clarify.md`: write chosen pace to `.cicadas/drafts/{name}/emergence-config.json` with key `"pace"`; default to `"doc"` if Builder skips <!-- id: 41 -->
+- [x] Update `src/cicadas/emergence/clarify.md` step 0: present three-level pace menu (`[S] Section / [D] Doc / [A] All`) before any drafting begins <!-- id: 40 -->
+- [x] `clarify.md`: write chosen pace to `.cicadas/drafts/{name}/emergence-config.json` with key `"pace"`; default to `"doc"` if Builder skips <!-- id: 41 -->
 
 ### Feature: Pace Enforcement in Subsequent Agents
-- [ ] Update `src/cicadas/emergence/ux.md`: add step 0 — read `emergence-config.json`, state active stop rule, enforce accordingly <!-- id: 42 -->
-- [ ] Update `src/cicadas/emergence/tech-design.md`: same step 0 pace check <!-- id: 43 -->
-- [ ] Update `src/cicadas/emergence/approach.md`: same step 0 pace check <!-- id: 44 -->
-- [ ] Update `src/cicadas/emergence/tasks.md`: same step 0 pace check <!-- id: 45 -->
+- [x] Update `src/cicadas/emergence/ux.md`: add step 0 — read `emergence-config.json`, state active stop rule, enforce accordingly <!-- id: 42 -->
+- [x] Update `src/cicadas/emergence/tech-design.md`: same step 0 pace check <!-- id: 43 -->
+- [x] Update `src/cicadas/emergence/approach.md`: same step 0 pace check <!-- id: 44 -->
+- [x] Update `src/cicadas/emergence/tasks.md`: same step 0 pace check <!-- id: 45 -->
 
 ### Feature: Clarify Process Preview
-- [ ] Update `src/cicadas/emergence/clarify.md` step 0 Process Preview: add a note that Approach will ask about PR boundaries before drafting and that `lifecycle.json` is created at that step <!-- id: 47 -->
+- [x] Update `src/cicadas/emergence/clarify.md` step 0 Process Preview: add a note that Approach will ask about PR boundaries before drafting and that `lifecycle.json` is created at that step <!-- id: 47 -->
 
 ### Feature: EMERGENCE.md Documentation
-- [ ] Update `src/cicadas/emergence/EMERGENCE.md`: add pace option to workflow overview — note that `clarify.md` step 0 sets the pace for the entire emergence phase <!-- id: 46 -->
+- [x] Update `src/cicadas/emergence/EMERGENCE.md`: add pace option to workflow overview — note that `clarify.md` step 0 sets the pace for the entire emergence phase <!-- id: 46 -->

@@ -7,6 +7,11 @@
 
 ## Process
 
+0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
+    - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
+    - `doc` — complete the full doc, then hard stop for Builder review before proceeding to kickoff
+    - `all` — complete the full doc and present to Builder (this is the final doc — always present at the end regardless of pace)
+
 1.  **Ingest**: Read all previous docs in `.cicadas/drafts/{initiative}/`.
 2.  **Select Mode**:
     -   **Foundation Mode** (New Project/Module):
