@@ -14,6 +14,8 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 - **Distribution-First Design** — `install.sh` is the primary entry point; uses GitHub archive URL for zero-friction distribution without requiring a release pipeline.
 - **Universal Installation** — Installer works on any project stack (Go, Java, React, etc.); only requires Python 3.11+ and `git` at runtime.
 - **Lifecycle & PR Boundaries** — Per-initiative `lifecycle.json` (in drafts/active) defines at which boundaries to open PRs (specs, initiatives, features, tasks) and an ordered step list; completion is detected via git only (no host API).
+- **Token Usage Logging** — Each initiative carries an append-only `tokens.json` (drafts → active → archive) that captures input/output/cached token counts per phase and subphase. Scripts write null phase-boundary entries (`source: unavailable`); agents self-append real counts when the runtime exposes them (`source: agent-reported`). `history.py` rolls up per-initiative token summaries into the HTML timeline.
+- **Emergence Pace** — At the start of Clarify, the Builder chooses a review cadence (`section` / `doc` / `all`) stored in `emergence-config.json`. Every subsequent emergence agent reads this file and enforces the stop rule, preventing agents from silently drafting all specs without review gates.
 
 ---
 
@@ -24,8 +26,8 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 ├── registry.json                 # Global state (initiatives + feature branches)
 ├── index.json                    # Change ledger (append-only)
 ├── canon/                        # Authoritative documentation (synthesized)
-├── drafts/                       # Pre-kickoff staging area (may include lifecycle.json)
-├── active/                       # Live specs for in-flight work (may include lifecycle.json)
+├── drafts/                       # Pre-kickoff staging area (may include lifecycle.json, tokens.json, emergence-config.json)
+├── active/                       # Live specs for in-flight work (may include lifecycle.json, tokens.json)
 └── archive/                      # Expired spec trail
 ```
 
@@ -77,7 +79,8 @@ The system uses a set of Python scripts in `src/cicadas/scripts/`:
 - `archive.py`: Concludes work, deregisters branches, and expires specs (includes `lifecycle.json` when present).
 - `abort.py`: Context-aware rollback for any branch type.
 - `signal.py`: Broadcasts breaking changes across peer branches.
-- `history.py`: Generates HTML timeline of completed initiatives.
+- `tokens.py`: Append-only token usage log API (`init_log`, `append_entry`, `load_log`); called by `kickoff.py` and `branch.py` at phase boundaries.
+- `history.py`: Generates HTML timeline of completed initiatives; includes per-initiative token summary when `tokens.json` is present.
 - `check.py`: Validates for module conflicts across active branches.
 
 ---

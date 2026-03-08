@@ -161,6 +161,34 @@
       "summary": "Added cross-phase consistency check subagent (emergence/consistency-check.md) as final emergence gate; wired into EMERGENCE.md and tasks.md. Also fixed missing PR preference question in tweak.md and bug-fix.md lightweight paths.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:22:45.916348+00:00",
+      "branch": "feat/token-core",
+      "summary": "Add tokens.py with init_log, append_entry, load_log; 18 unit tests all passing",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:30:03.249309+00:00",
+      "branch": "feat/token-integration",
+      "summary": "Wire append_entry into kickoff.py and branch.py; add load_token_summary and token block to history.py; 7 new integration tests",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:32:14.950719+00:00",
+      "branch": "feat/emergence-pace",
+      "summary": "Add pace selection (section/doc/all) to clarify.md step 0; pace-check step 0 in ux, tech-design, approach, tasks; PR boundary reminder in process preview; EMERGENCE.md updated",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-08T05:38:34.458800+00:00",
+      "branch": "token-usage-logging",
+      "summary": "Token usage logging (tokens.py), emergence pace selection (emergence-config.json), PR boundary reminder in clarify process preview",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

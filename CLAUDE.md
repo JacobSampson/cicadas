@@ -66,7 +66,7 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 
 ### `src/cicadas/` Structure
 
-- `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`).
+- `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by `kickoff.py` and `branch.py`.
 - `emergence/` — Markdown instructions for subagents (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Code Review). These are **agent prompts**, not code.
 - `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`).
 - `SKILL.md` — The master agent skill definition (read this for full operational detail).
