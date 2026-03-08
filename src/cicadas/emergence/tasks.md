@@ -22,6 +22,13 @@
 4.  **Draft**: Create `.cicadas/drafts/{initiative}/tasks.md`.
     -   Use the format `- [ ] Task Description <!-- id: N -->`
 5.  **Refine**: Builder review.
+6.  **Inject PR tasks from `lifecycle.json`**: Read `lifecycle.json` from `.cicadas/drafts/{initiative}/`. For each step with `opens_pr: true`, append a PR task at the relevant boundary:
+    -   If `pr_boundaries.features: true` → add at the end of **each partition's** task list:
+        `- [ ] Open PR: feat/{branch} → initiative/{name} and await merge approval before continuing <!-- id: PR-feature -->`
+    -   If `pr_boundaries.initiatives: true` → add at the very end of `tasks.md`:
+        `- [ ] Open PR: initiative/{name} → master and await merge approval before continuing <!-- id: PR-initiative -->`
+    -   If `lifecycle.json` is absent or `pr_boundaries` all false: skip this step silently.
+    -   **Why**: These tasks make PR boundaries explicit and pauseable. The implementation agent will stop at these tasks and wait for Builder approval before merging.
 
 ## Output Artifact: `tasks.md`
 
