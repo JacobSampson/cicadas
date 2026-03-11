@@ -37,6 +37,8 @@
         - If no partition is parallel (all have non-empty `depends_on`), the block is still valid — all branches will be plain. Omit the block entirely only if the concept of parallelism is irrelevant to the initiative.
     -   **Identify Risks**: Module overlaps between partitions, migration concerns, shared component boundaries.
     -   **Plan for backward compatibility and migration** (brownfield).
+    -   **Other requirements or prohibitions**
+        - Do NOT include estimated effort or timeframes for phases or tasks.
 4.  **Draft**: Create `.cicadas/drafts/{initiative}/approach.md`.
 5.  **Refine**: Builder review.
 
