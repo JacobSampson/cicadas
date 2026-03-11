@@ -7,6 +7,9 @@
 
 ## Process
 
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
+
+
 0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
     - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
     - `doc` — complete the full doc, then hard stop for Builder review before moving to Tech Design

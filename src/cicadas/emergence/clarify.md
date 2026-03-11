@@ -7,6 +7,8 @@
 
 ## Process
 
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
+
 0. **Process Preview & Pace**: Before starting, show the Builder the full spec phase steps and ask their preferred review pace:
     ```
     Spec phase:   Clarify (PRD) → UX → Tech Design → Approach (asks about PRs → lifecycle.json) → Tasks → [Review after each]
