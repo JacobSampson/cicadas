@@ -46,7 +46,7 @@ Located at your project root, this folder stores all project-specific state:
 
 ### 1. Emergence (Planning)
 Vague ideas are refined into structured drafts in `.cicadas/drafts/{initiative}/`.
-- **Clarify**: Define the "What & Why" (PRD).
+- **Clarify**: Define the "What & Why" (PRD). At Clarify start, the Builder can choose **Q&A** (interactive), **Doc** (place a file at `drafts/{initiative}/requirements.md`), or **Loom** (save transcript to `drafts/{initiative}/loom.md`); the agent fills the PRD from the doc or transcript.
 - **UX**: Map the interaction and UI.
 - **Tech**: Design the architecture.
 - **Approach**: Slice the work into logical partitions (Feature Branches).

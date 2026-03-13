@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Clarify intake options**: At the start of Clarify, the Builder can choose how to provide requirements: **Q&A** (interactive), **Doc** (place a requirements document at `.cicadas/drafts/{initiative}/requirements.md`), or **Loom** (record in Loom, then save the transcript to `.cicadas/drafts/{initiative}/loom.md`). The agent fills the PRD from the doc or transcript. `EMERGENCE.md` now includes a "Requirements intake (Clarify)" subsection for discoverability. New regression test `tests/test_emergence_clarify.py` asserts that `clarify.md` documents the Intake step and file paths.
+
 ## Version 0.5.4
 - **Context Injection at Branch Start**: `branch.py` now writes `context.md` to the project root for sequential (non-worktree) branches, matching the existing behavior for parallel/worktree branches. Every registered branch now receives a canon summary + scoped module snapshots + `approach.md` + `tasks.md` at start. New `templates/canon-summary.md` template added. `synthesis-prompt.md` updated with Step 5 to produce `canon/summary.md` (300–500 token agent-optimized snapshot) as part of every canon synthesis run. `SKILL.md` synthesis step updated accordingly.
 

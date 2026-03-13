@@ -111,7 +111,7 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 ## 🟢 Greenfield: Starting a New Project
 
 1.  **Initialize**: *"Initialize cicadas for this project."*
-2.  **Clarify**: *"I want to build [Product Name]. Help me clarify the requirements."*
+2.  **Clarify**: *"I want to build [Product Name]. Help me clarify the requirements."* You can provide requirements via **Q&A** (interactive), a **doc** (`.cicadas/drafts/{initiative}/requirements.md`), or a **Loom transcript** (`.cicadas/drafts/{initiative}/loom.md`); the agent fills the PRD from the doc or transcript.
 3.  **Draft Appearance**: Use prompts like *"Draft the UX"* and *"Draft the tech design"*.
 4.  **Define Strategy (Approach)**: *"Draft the approach."*
     - **Note**: This is where you define the **Partitions** (future Feature Branches).
