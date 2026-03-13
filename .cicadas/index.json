@@ -217,6 +217,13 @@
       "summary": "Roadmap item 4: context injection at branch start complete. branch.py writes context.md for all branch types (was worktree-only). synthesis-prompt.md updated to produce canon/summary.md (300-500 token agent snapshot) at synthesis. New canon-summary.md template. Initial canon/summary.md produced.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-13T20:04:58.447016+00:00",
+      "branch": "visual-requirements",
+      "summary": "Clarify intake: Q/D/L choice at Clarify start; Doc (requirements.md) and Loom (loom.md) in drafts; EMERGENCE.md discoverability; regression test test_emergence_clarify",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

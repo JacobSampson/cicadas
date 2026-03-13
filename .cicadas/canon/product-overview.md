@@ -42,6 +42,7 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 | **Signaling** | Asynchronous coordination between parallel branches via a central registry. | Shipped |
 | **Installer** | One-command installation with Python 3.13+ check, GitHub archive distribution, agent integration setup (`claude-code`, `cursor`, `antigravity`, `rovodev`), and `--update` workflow. | Shipped |
 | **Code Review** | Optional agent operation for spec-anchored evaluation of code diffs. Covers task completeness, architectural conformance, security (OWASP), correctness bugs, and code quality. Produces an ephemeral advisory report with tiered findings and a merge verdict. Supports feature, fix, and tweak branches. | Shipped |
+| **Clarify Intake** | At Clarify start, the Builder can choose Q&A (interactive), Doc (`drafts/{initiative}/requirements.md`), or Loom (`drafts/{initiative}/loom.md`); the agent fills the PRD from the doc or transcript. | Shipped |
 
 ## Out of Scope (Intentional)
 
