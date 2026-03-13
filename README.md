@@ -30,7 +30,7 @@ For the full methodology specification, see:
 ## The Workflow
 
 ### Phase 1: Emergence (Drafting)
-We draft specifications in `.cicadas/drafts/` using specialized subagents (Clarify, UX, Tech, Approach, Tasks). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
+When you start an initiative, tweak, or bug, the agent runs a **standard start flow** first (name → draft folder → requirements source/pace for initiatives → PR preference), then drafts specs. We draft specifications in `.cicadas/drafts/` using specialized subagents (Clarify, UX, Tech, Approach, Tasks). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
 *   **Key Artifact**: `approach.md` defines the partitions (feature branches).
 
 ### Phase 2: Kickoff

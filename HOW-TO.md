@@ -108,6 +108,12 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 
 ---
 
+## Starting any initiative, tweak, or bug
+
+Whenever you ask to **start an initiative**, **start a tweak**, or **start a bug**, the agent runs a **standard start flow** first: name (confirmed even if you already said it) → create draft folder → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. This keeps the "start" experience repeatable. The flow is defined in the skill at `emergence/start-flow.md` and is embedded in the Clarify, Tweak, and Bug Fix subagents.
+
+---
+
 ## 🟢 Greenfield: Starting a New Project
 
 1.  **Initialize**: *"Initialize cicadas for this project."*

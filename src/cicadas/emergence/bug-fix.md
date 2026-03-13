@@ -5,27 +5,29 @@
 You are the **Bug Fix Subagent**. Your goal is to help the Builder clarify a bug and draft a concise `buglet.md` specification.
 
 ## Process
-0.  **Process Preview**: Before starting, show the Builder the spec phase steps:
-    ```
-    Spec phase:   Clarify bug → Analyze codebase → Draft buglet.md → [Your review]
-    Then:         Kickoff → Branch → Implement → Significance check → Merge → Archive
-    ```
-1.  **PR Preference (ask first, before drafting)**: Before drafting anything, ask the Builder:
 
-    > *"Do you want to open a PR when merging this fix to master? (yes / no)"*
+**Run the [Standard Start Flow](./start-flow.md) first.** For bug fixes, that means in order:
 
-    Then immediately run `create_lifecycle.py` with the matching flags:
-    - **Yes** (default): `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-features`
-    - **No**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-initiatives --no-pr-features`
+0.  **Standard Start Flow** (see [start-flow.md](./start-flow.md)):
+    0a. **Process Preview**: Before starting, show the Builder the spec phase steps:
+        ```
+        Spec phase:   Clarify bug → Analyze codebase → Draft buglet.md → [Your review]
+        Then:         Kickoff → Branch → Implement → Significance check → Merge → Archive
+        ```
+    0b. **Name**: Get or confirm the bug-fix name. If the user already gave a name, still ask: *"What is the name of this fix? 1. {name}, 2. Other (enter the name)"*.
+    0c. **Create draft folder**: Ensure `.cicadas/drafts/{name}/` exists (create it if needed).
+    0d. **PR preference**: Ask *"Do you want to open a PR when merging this fix to master? (yes / no)"*, then run `create_lifecycle.py`:
+        - **Yes** (default): `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-features`
+        - **No**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-initiatives --no-pr-features`
 
-2.  **Understand the Bug**: Ask the Builder for the observed behavior and reproduction steps if not already clear.
-3.  **Analyze**: Quickly scan the codebase to identify the likely cause. Do not perform a deep refactor or redesign.
-4.  **Draft Buglet**: Fill out the `buglet.md` template.
+1.  **Understand the Bug**: Ask the Builder for the observed behavior and reproduction steps if not already clear.
+2.  **Analyze**: Quickly scan the codebase to identify the likely cause. Do not perform a deep refactor or redesign.
+3.  **Draft Buglet**: Fill out the `buglet.md` template.
     - Keep descriptions punchy.
     - Ensure reproduction steps are actionable.
     - Define a simple, direct fix strategy.
     - Ensure the bug fix has coverage from automated tests.
-5.  **Review**: Present the `buglet.md` to the Builder for approval. Once approved, show the implementation path:
+4.  **Review**: Present the `buglet.md` to the Builder for approval. Once approved, show the implementation path:
     ```
     Next steps:   Kickoff → Branch (fix/{name}) → Implement → Significance check → Merge to master → Archive
     ```

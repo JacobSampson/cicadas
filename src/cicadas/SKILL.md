@@ -140,7 +140,9 @@ Use the **Bootstrap Subagent** to bring an existing codebase into Cicadas.
 4.  **Genesis**: Record the baseline in the index.
 
 ### Emergence (Drafting Specs)
-Progressive spec authoring in `.cicadas/drafts/{initiative-name}/`, using subagents in `emergence/` or manual drafting. See `emergence/emergence.md` for the full workflow.
+Progressive spec authoring in `.cicadas/drafts/{initiative-name}/`, using subagents in `emergence/` or manual drafting. See `emergence/EMERGENCE.md` for the full workflow.
+
+**Standard start flow**: When the Builder says "start an initiative", "start a tweak", or "start a bug", the agent MUST run the standard start flow first: see `{cicadas-dir}/emergence/start-flow.md`. All three entry points (Clarify, Tweak, Bug Fix subagents) embed this flow; do not skip it or reorder steps.
 
 | Step | Artifact | Focus |
 |------|----------|-------|

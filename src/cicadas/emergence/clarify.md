@@ -9,31 +9,34 @@
 
 FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
-0. **Process Preview & Pace**: Before starting, show the Builder the full spec phase steps and ask their preferred review pace:
-    ```
-    Spec phase:   Clarify (PRD) → UX → Tech Design → Approach (asks about PRs → lifecycle.json) → Tasks → [Review after each]
-    Then:         Kickoff → Feature branch(es) → Task branches → Reflect → PR per task
-                  → Merge feature(s) → Merge initiative → Synthesize canon → Archive
-    ```
-    Then ask:
-    ```
-    Emergence pace — how often do you want to review?
-      [S] Section  — pause after each section within a doc
-      [D] Doc      — pause after each complete doc  (default)
-      [A] All      — draft all docs, then present together
-    ```
-    Write the chosen pace (default `"doc"` if skipped) to `.cicadas/drafts/{initiative}/emergence-config.json`:
-    ```json
-    { "pace": "doc" }
-    ```
-
-0.5. **Intake**: Ask the Builder how they want to provide requirements:
+0. **Standard Start Flow** (see [start-flow.md](./start-flow.md)). Run in order:
+    0a. **Process Preview**: Show the Builder the full spec phase steps:
+        ```
+        Spec phase:   Clarify (PRD) → UX → Tech Design → Approach (lifecycle already set) → Tasks → [Review after each]
+        Then:         Kickoff → Feature branch(es) → Task branches → Reflect → PR per task
+                      → Merge feature(s) → Merge initiative → Synthesize canon → Archive
+        ```
+    0b. **Name**: Get or confirm the initiative name. If the user already gave a name (e.g. "Start an initiative called Foo"), still ask: *"What is the name of this initiative? 1. Foo, 2. Other (enter the name)"*. Ensure `.cicadas/drafts/{name}/` exists (create it if needed).
+    0c. **Requirements source**: Ask how they want to provide requirements:
     ```
     How do you want to clarify requirements?
       [Q] Q&A   — interactive text Q&A (I'll ask questions, you answer; we build the PRD together)
       [D] Doc   — you'll provide a requirements document (I'll tell you where to put it, then fill the PRD from it)
       [L] Loom  — you'll record a Loom video (I'll give instructions; you paste the transcript, then I fill the PRD from it)
     ```
+    0d. **Pace**: Ask how often they want to review:
+        ```
+        Emergence pace — how often do you want to review?
+          [S] Section  — pause after each section within a doc
+          [D] Doc      — pause after each complete doc  (default)
+          [A] All      — draft all docs, then present together
+        ```
+        Write the chosen pace (default `"doc"` if skipped) to `.cicadas/drafts/{initiative}/emergence-config.json`: `{ "pace": "doc" }`.
+    0e. **PR preference**: Ask *"When merging to master, do you want a PR at initiative merge, at feature merges, or no PRs? [F] Feature PRs, [I] Initiative PR only, [N] None"*. Then run `create_lifecycle.py` with the matching flags:
+        - **F**: `python {cicadas-dir}/scripts/create_lifecycle.py {name}` (default)
+        - **I**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-features`
+        - **N**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-initiatives --no-pr-features`
+    Then **start collecting requirements** per the chosen intake:
     - **If [Q] Q&A**: Proceed to step 1 (Ingest) and continue with iterative drafting.
     - **If [D] Doc**: Tell the Builder to place their requirements document in `.cicadas/drafts/{initiative}/requirements.md` (or another path they prefer, e.g. `requirements.txt` or `brief.md`). Once they confirm the file is in place, read it. If the file is missing when you try to read it, do not assume or invent content; ask the Builder to add the file and confirm. Then run Canon Check (step 2), Initialize (step 3), and **Fill from doc**: populate each PRD section from the document content, inferring structure as needed. Present the draft PRD for review per the chosen pace. Then proceed to step 5 (Finalize) when approved.
     - **If [L] Loom**: Show the following instructions and STOP until the Builder has added the transcript file.

@@ -61,9 +61,13 @@ The chosen pace is stored in `.cicadas/drafts/{initiative}/emergence-config.json
 
 ## Usage
 
+### Standard Start Flow (all entry points)
+
+Whenever the Builder says "start an initiative", "start a tweak", or "start a bug", the agent MUST run the **[Standard Start Flow](./start-flow.md)** first: Name → Create draft folder → (for initiatives: requirements source, pace) → PR preference → then collect requirements or draft the spec. See [start-flow.md](./start-flow.md) for the full sequence and scoping by type.
+
 ### Starting an Initiative
-1. Create folder: `.cicadas/drafts/{initiative-name}/`
-2. Run the **Clarify** subagent.
+1. Run the **Standard Start Flow** (name, draft folder, requirements source, pace, PR preference).
+2. Run the **Clarify** subagent (it embeds the start flow; then draft the PRD).
 
 ### The Flow
 ```mermaid
@@ -89,6 +93,7 @@ graph TD
 
 ## Subagent References
 
+- [Standard Start Flow](./start-flow.md) — run first for initiative, tweak, or bug
 - [Bootstrap](./bootstrap.md)
 - [Clarify](./clarify.md)
 - [User Experience](./ux.md)
