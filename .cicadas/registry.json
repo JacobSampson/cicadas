@@ -1,20 +1,5 @@
 {
   "schema_version": "2.0",
-  "initiatives": {
-    "clarify-standardization": {
-      "intent": "Standardize start flow for initiative, tweak, and bug",
-      "owner": "unknown",
-      "signals": [],
-      "created_at": "2026-03-13T21:19:54.348823+00:00"
-    }
-  },
-  "branches": {
-    "fix/clarify-standardization": {
-      "intent": "Standardize start flow for initiative, tweak, and bug",
-      "modules": [],
-      "owner": "unknown",
-      "created_at": "2026-03-13T21:20:24.973417+00:00",
-      "initiative": "clarify-standardization"
-    }
-  }
+  "initiatives": {},
+  "branches": {}
 }

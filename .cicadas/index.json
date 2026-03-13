@@ -224,6 +224,13 @@
       "summary": "Clarify intake: Q/D/L choice at Clarify start; Doc (requirements.md) and Loom (loom.md) in drafts; EMERGENCE.md discoverability; regression test test_emergence_clarify",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-13T21:27:53.850766+00:00",
+      "branch": "fix/clarify-standardization",
+      "summary": "Standard start flow for initiative, tweak, and bug (emergence/start-flow.md; Clarify, Tweak, Bug Fix wired)",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
