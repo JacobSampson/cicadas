@@ -43,6 +43,10 @@ The Emergence phase consists of 5 progressive steps. Each step is handled by a s
 - **Gate**: Human review is required after each step — unless the Builder chose a different pace (see below).
 - **Skip**: For simple changes, UX and Tech Design can be skipped or merged into simpler artifacts.
 
+### Requirements intake (Clarify)
+
+At the start of **Clarify**, the agent asks how the Builder wants to provide requirements: **Q&A** (interactive), **Doc** (a requirements document), or **Loom** (video transcript). If Doc: place the file at `.cicadas/drafts/{initiative}/requirements.md` (or an agreed path) and confirm. If Loom: record in Loom, copy the transcript, save to `.cicadas/drafts/{initiative}/loom.md`, then confirm. The agent fills the PRD from the doc or transcript. See [Clarify](./clarify.md) for the exact process.
+
 ### Emergence Pace
 
 At the start of **Clarify** (step 0), the agent asks the Builder how often they want to review:

@@ -27,7 +27,27 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
     { "pace": "doc" }
     ```
 
-1. **Ingest**: Read the initial request and identify the initiative name.
+0.5. **Intake**: Ask the Builder how they want to provide requirements:
+    ```
+    How do you want to clarify requirements?
+      [Q] Q&A   — interactive text Q&A (I'll ask questions, you answer; we build the PRD together)
+      [D] Doc   — you'll provide a requirements document (I'll tell you where to put it, then fill the PRD from it)
+      [L] Loom  — you'll record a Loom video (I'll give instructions; you paste the transcript, then I fill the PRD from it)
+    ```
+    - **If [Q] Q&A**: Proceed to step 1 (Ingest) and continue with iterative drafting.
+    - **If [D] Doc**: Tell the Builder to place their requirements document in `.cicadas/drafts/{initiative}/requirements.md` (or another path they prefer, e.g. `requirements.txt` or `brief.md`). Once they confirm the file is in place, read it. If the file is missing when you try to read it, do not assume or invent content; ask the Builder to add the file and confirm. Then run Canon Check (step 2), Initialize (step 3), and **Fill from doc**: populate each PRD section from the document content, inferring structure as needed. Present the draft PRD for review per the chosen pace. Then proceed to step 5 (Finalize) when approved.
+    - **If [L] Loom**: Show the following instructions and STOP until the Builder has added the transcript file.
+        ```
+        **Loom intake**
+        1. Open Loom (loom.com or desktop app) and start a new recording.
+        2. Record your requirements: problem, users, success criteria, scope, and any constraints (same ideas as the PRD sections).
+        3. When done, open the video in Loom and copy the **transcript** (use Loom’s transcript/caption export or paste from captions).
+        4. Save the transcript to:  .cicadas/drafts/{initiative}/loom.md
+        5. Reply here once loom.md is in place; I’ll read it and fill the PRD from it.
+        ```
+        Once the Builder confirms loom.md is in place: read `.cicadas/drafts/{initiative}/loom.md`. If the file is missing, do not assume or invent content; ask the Builder to add the file and confirm. Then run Canon Check (step 2), Initialize (step 3), and **Fill from Loom**: populate each PRD section from the transcript (map spoken content to Executive Summary, Success Criteria, User Journeys, etc.). Present the draft PRD for review per the chosen pace. Then proceed to step 5 (Finalize) when approved.
+
+1. **Ingest**: Read the initial request and identify the initiative name. _(Only when intake is [Q] Q&A.)_
 
 2. **Canon Check**: On brownfield projects, read existing canon (`product-overview.md`, `ux-overview.md`, `tech-overview.md`) to understand what the system already does. Use this to ask sharper, more targeted questions and to avoid re-specifying existing behavior.
 
