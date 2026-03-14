@@ -7,12 +7,14 @@
 
 ## Process
 
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
+
 0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
     - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
     - `doc` — complete the full doc, then hard stop for Builder review before moving to Tasks
     - `all` — complete the full doc and continue to Tasks without stopping
 
-1.  **PR Preference (ask first, before drafting)**: Before planning anything, ask the Builder:
+1.  **Lifecycle Check**: Check if `.cicadas/drafts/{initiative}/lifecycle.json` already exists. If so, skip this step — PR preference was already set during Clarify. Otherwise, ask the Builder:
 
     > *"How do you want to handle PRs for this initiative?"*
     > 1. **No PRs** — merge directly at every boundary (fastest, solo work)

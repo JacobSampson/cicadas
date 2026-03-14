@@ -9,7 +9,6 @@
 
 FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
-
 0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
     - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
     - `doc` — complete the full doc, then hard stop for Builder review before moving to Approach
@@ -29,7 +28,7 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
         - `[R] Review`: Adopt a critical persona — Security Auditor, Skeptic, or Future Maintainer.
         - `[C] Continue`: Mark section complete and move on.
 
-5. **Finalize**: Once all sections are approved, confirm the tech design is ready to hand off to the Approach/Tasks sub-skills.
+5. **Finalize**: Once all sections are approved, confirm the tech design is ready to hand off to the Approach/Tasks instruction modules.
 
 ## Section-Specific Guidance
 
@@ -67,9 +66,9 @@ Use tables with concrete targets where possible. "Fast" is not a specification; 
 ### Implementation Sequence
 Decompose the work into ordered phases with explicit dependency edges. Call out what can be parallelized. Flag implementation risks that need a spike or proof-of-concept before committing to the approach.
 
-## Balanced Elicitation (Abridged)
+## Balanced Elicitation
 
-Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full techniques.
+See the **Balanced Elicitation** appendix in [clarify.md](./clarify.md) for full techniques.
 - **Deep Dive**: "What breaks if we scale this 10x?", "What's the rollback plan?", "What happens at the failure boundary between these two components?"
 - **Review personas**: Security Auditor (attack surfaces?), Future Maintainer (can a new dev understand this in 6 months?), Skeptic (what's the weakest assumption here?).
 

@@ -231,6 +231,13 @@
       "summary": "Standard start flow for initiative, tweak, and bug (emergence/start-flow.md; Clarify, Tweak, Bug Fix wired)",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-14T18:32:33.802322+00:00",
+      "branch": "tweak/skill-tuning",
+      "summary": "Applied comprehensive skill file improvements (P0-P3): fixed PR lifecycle double-ask and UX canon reference bugs; replaced 'subagent' terminology with 'instruction module' throughout; added prompt injection guardrails; inlined balanced-elicitation appendix into clarify.md; added Resuming Mid-Initiative section; added FOLLOW THIS PROCESS EXACTLY banner to all 7 emergence files; added mode selection decision rule to tasks.md; cleaned up main(default branch) references.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

@@ -1,10 +1,12 @@
 
-# Subagent: Tweak
+# Instruction Module: Tweak
 
 ## Role
-You are the **Tweak Subagent**. Your goal is to help the Builder define a small improvement and draft a concise `tweaklet.md` specification.
+You are the **Tweak instruction module**. Your goal is to help the Builder define a small improvement and draft a concise `tweaklet.md` specification.
 
 ## Process
+
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
 **Run the [Standard Start Flow](./start-flow.md) first.** For tweaks, that means in order:
 
@@ -28,11 +30,11 @@ You are the **Tweak Subagent**. Your goal is to help the Builder define a small 
     - Ensure the change is supported with automated tests.
 4.  **Review**: Present the `tweaklet.md` to the Builder for approval. Once approved, show the implementation path:
     ```
-    Next steps:   Kickoff → Branch (tweak/{name}) → Implement → Significance check → Merge to master → Archive
+    Next steps:   Kickoff → Branch (tweak/{name}) → Implement → Significance check → Merge to master → Archive → Branch cleanup
     ```
 
 ## Artifacts
-- **Output**: `.cicadas/drafts/{initiative}/tweaklet.md`
+- **Output**: `.cicadas/drafts/{name}/tweaklet.md`
 
 ## Escalation
 If the tweak grows in scope or complexity, **inform the Builder** and suggest upgrading to a full `Clarify` (Initiative) path.

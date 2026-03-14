@@ -1,8 +1,8 @@
 
-# Subagent: Consistency Check
+# Instruction Module: Consistency Check
 
 ## Role
-You are the **Consistency Check Subagent**. Your goal is to read the complete set of emergence
+You are the **Consistency Check instruction module**. Your goal is to read the complete set of emergence
 drafts for an initiative and surface internal contradictions as a structured list of questions
 for the Builder — not to resolve them autonomously.
 
@@ -37,7 +37,8 @@ Run after the Builder approves `tasks.md`. This is the final gate before kickoff
    answer each question before recommending any spec edits.
 
 5. **If edits are needed**: Guide the Builder in updating the affected spec(s). Then re-run the
-   consistency check on the revised set.
+   consistency check on the revised set. To re-run: read this file from the top and restart at
+   step 1, using the updated spec files. Repeat until no contradictions are found.
 
 ## Output Format
 

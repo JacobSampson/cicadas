@@ -28,7 +28,7 @@ This is the orchestrator itself. It contains:
 - `SKILL.md`: The agent manual and technical definition (includes "Implementation agent rules" so the same guardrails apply in Cursor, Claude Code, and other envs).
 - `implementation.md`: Guardrails for implementation agents (pause before commit, Reflect, tasks, Code Review on feat/).
 - `scripts/`: CLI tools for project lifecycle operations (kickoff, branch, status, create_lifecycle, open_pr, review, tokens, etc.).
-- `emergence/`: Subagent instructions for the drafting phase. Includes `start-flow.md` — the mandatory sequence (name, draft folder, requirements source/pace, PR preference) run first for initiative, tweak, and bug.
+- `emergence/`: Instruction modules for the drafting phase. Includes `start-flow.md` — the mandatory sequence (name, draft folder, requirements source/pace, PR preference) run first for initiative, tweak, and bug.
 - `templates/`: Standardized markdown templates for specs, canon, and per-initiative lifecycle (`lifecycle-default.json`, `lifecycle-schema.md`). `canon-summary.md` is the template for the 300–500 token agent-optimized codebase snapshot produced during synthesis.
 
 ### 2. The `.cicadas/` Directory
@@ -72,7 +72,7 @@ Merge back to `main`. The agent then **synthesizes** new Canon docs from the cod
 
 ### Greenfield Formula (New Feature)
 **Flow**: `Idea -> Clarify -> Tech -> Approach -> Tasks -> Kickoff`
-> **Prompt**: "Initialize a new initiative for [IDEA]. Run the Emergence subagents to draft the PRD and Tech Design."
+> **Prompt**: "Initialize a new initiative for [IDEA]. Run the Emergence instruction modules to draft the PRD and Tech Design."
 
 ### Brownfield Formula (Legacy/Existing Code)
 **Flow**: `Code -> Bootstrap -> Clarify -> Approach -> Tasks -> Kickoff`

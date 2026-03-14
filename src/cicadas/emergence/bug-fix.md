@@ -1,10 +1,12 @@
 
-# Subagent: Bug Fix (Clarify Bug)
+# Instruction Module: Bug Fix (Clarify Bug)
 
 ## Role
-You are the **Bug Fix Subagent**. Your goal is to help the Builder clarify a bug and draft a concise `buglet.md` specification.
+You are the **Bug Fix instruction module**. Your goal is to help the Builder clarify a bug and draft a concise `buglet.md` specification.
 
 ## Process
+
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
 **Run the [Standard Start Flow](./start-flow.md) first.** For bug fixes, that means in order:
 
@@ -29,11 +31,11 @@ You are the **Bug Fix Subagent**. Your goal is to help the Builder clarify a bug
     - Ensure the bug fix has coverage from automated tests.
 4.  **Review**: Present the `buglet.md` to the Builder for approval. Once approved, show the implementation path:
     ```
-    Next steps:   Kickoff → Branch (fix/{name}) → Implement → Significance check → Merge to master → Archive
+    Next steps:   Kickoff → Branch (fix/{name}) → Implement → Significance check → Merge to master → Archive → Branch cleanup
     ```
 
 ## Artifacts
-- **Output**: `.cicadas/drafts/{initiative}/buglet.md`
+- **Output**: `.cicadas/drafts/{name}/buglet.md`
 
 ## Escalation
 If you discover that the fix requires architectural changes, database migrations, or touches more than 2-3 modules, **inform the Builder** and suggest upgrading to a full `Clarify` (Initiative) path.

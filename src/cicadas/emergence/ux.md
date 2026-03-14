@@ -9,7 +9,6 @@
 
 FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
-
 0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
     - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
     - `doc` — complete the full doc, then hard stop for Builder review before moving to Tech Design
@@ -17,7 +16,7 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
 1. **Ingest**: Read `.cicadas/drafts/{initiative}/prd.md`. Identify all personas, user journeys, and functional requirements. These are your source of truth.
 
-2. **Canon Check**: On brownfield projects, read `canon/product-overview.md` (specifically the **UX Overview** section) to understand the existing design language, navigation model, and established patterns. Design for *consistency with and evolution of* the existing experience — not from scratch.
+2. **Canon Check**: On brownfield projects, read `canon/ux-overview.md` to understand the existing design language, navigation model, and established patterns. Design for *consistency with and evolution of* the existing experience — not from scratch.
 
 3. **Initialize**: Create `.cicadas/drafts/{initiative}/ux.md` using the template at `{cicadas-dir}/templates/ux.md`. The template contains a **Progress** checklist — tick each item (`- [ ]` → `- [x]`) when a section is approved.
 
@@ -62,9 +61,9 @@ Define how the product will handle common recurring situations (buttons, forms, 
 ### Responsive & Accessibility
 Define target breakpoints and accessibility standards. If the product is CLI-only or has no responsive requirement, explicitly state that.
 
-## Balanced Elicitation (Abridged)
+## Balanced Elicitation
 
-Refer to [balanced-elicitation.md](./balanced-elicitation.md) for full techniques.
+See the **Balanced Elicitation** appendix in [clarify.md](./clarify.md) for full techniques.
 - **Deep Dive**: Focus on "What happens when…?" and edge cases.
 - **Review personas**: Skeptic (will this actually work?), End-User (does this feel right?), Accessibility Auditor (can everyone use this?).
 

@@ -7,13 +7,15 @@
 
 ## Process
 
+FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
+
 0. **Pace Check**: Read `.cicadas/drafts/{initiative}/emergence-config.json`. If absent, treat pace as `"doc"`. State the active rule before proceeding:
     - `section` — pause after each section (use the Balanced Elicitation Menu per section as normal)
     - `doc` — complete the full doc, then hard stop for Builder review before proceeding to kickoff
     - `all` — complete the full doc and present to Builder (this is the final doc — always present at the end regardless of pace)
 
 1.  **Ingest**: Read all previous docs in `.cicadas/drafts/{initiative}/`.
-2.  **Select Mode**:
+2.  **Select Mode**: Choose **Foundation Mode** for greenfield projects or new standalone modules with no existing codebase to extend. Choose **Feature Mode** when adding vertical slices of functionality to an existing system.
     -   **Foundation Mode** (New Project/Module):
         -   **Decompose**: Atomic, file-level tasks.
         -   **Order**: Strict dependency phases (Models → Engine → UI).
@@ -28,7 +30,7 @@
     -   Use the format `- [ ] Task Description <!-- id: N -->`
 5.  **Refine**: Builder review.
 6.  **Consistency Check**: Once the Builder approves `tasks.md`, run the
-    `emergence/consistency-check` subagent. It reads all five draft docs and surfaces any
+    `emergence/consistency-check` instruction module. It reads all five draft docs and surfaces any
     cross-phase contradictions as questions for the Builder. Resolve any flagged issues before
     proceeding to kickoff.
 7.  **Inject PR tasks from `lifecycle.json`**: Read `lifecycle.json` from `.cicadas/drafts/{initiative}/`. For each step with `opens_pr: true`, append a PR task at the relevant boundary:

@@ -14,7 +14,7 @@ All work in this phase happens in `.cicadas/drafts/{initiative-name}/`. This is 
 ### Workflow
 
 1. Create folder: `.cicadas/drafts/{initiative-name}/`
-2. Draft docs using subagents (below) or manually.
+2. Draft docs using instruction modules (below) or manually.
 3. Builder reviews each artifact before proceeding to the next.
 4. Run `python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"`:
    - Moves docs to `.cicadas/active/{initiative-name}/`.
@@ -24,22 +24,22 @@ All work in this phase happens in `.cicadas/drafts/{initiative-name}/`. This is 
 
 ## The Workflow
 
-The Emergence phase consists of 5 progressive steps. Each step is handled by a specialized subagent (or a human wearing that hat).
+The Emergence phase consists of 5 progressive steps. Each step is handled by a specialized instruction module (or a human wearing that hat). Each instruction module is an inline role — the orchestrator reads the file and follows it in the current context window; no separate agent process is spawned.
 
-| Step | Artifact | Subagent | Focus |
+| Step | Artifact | Instruction Module | Focus |
 |------|----------|----------|-------|
-| **0. Bootstrap** | `canon/` suite | `emergence/bootstrap` | **Legacy Migration**. Reverse engineer PRD, UX, Tech from existing code. |
-| **1. Clarify** | `prd.md` | `emergence/clarify` | **What & Why**. Problem, users, success criteria. |
-| **2. UX** | `ux.md` | `emergence/ux` | **Experience**. Interaction flow, UI states, copy. |
-| **3. Tech** | `tech-design.md` | `emergence/tech-design` | **Architecture**. Components, data flow, schemas. |
-| **4. Approach** | `approach.md` | `emergence/approach` | **Strategy & Partitioning**. Implementation plan, sequencing, dependencies, and logical partitions (which become Feature Branches). |
-| **5. Tasks** | `tasks.md` | `emergence/tasks` | **Execution**. Ordered, testable checklist grouped by partition. |
-| **5b. Consistency Check** | _(inline)_ | `emergence/consistency-check` | **Cross-phase review**. After Tasks is approved, check all five docs for internal contradictions. Surfaces questions for Builder — no autonomous resolution. |
+| **0. Bootstrap** | `canon/` suite | `emergence/bootstrap.md` | **Legacy Migration**. Reverse engineer PRD, UX, Tech from existing code. |
+| **1. Clarify** | `prd.md` | `emergence/clarify.md` | **What & Why**. Problem, users, success criteria. |
+| **2. UX** | `ux.md` | `emergence/ux.md` | **Experience**. Interaction flow, UI states, copy. |
+| **3. Tech** | `tech-design.md` | `emergence/tech-design.md` | **Architecture**. Components, data flow, schemas. |
+| **4. Approach** | `approach.md` | `emergence/approach.md` | **Strategy & Partitioning**. Implementation plan, sequencing, dependencies, and logical partitions (which become Feature Branches). |
+| **5. Tasks** | `tasks.md` | `emergence/tasks.md` | **Execution**. Ordered, testable checklist grouped by partition. |
+| **5b. Consistency Check** | _(inline)_ | `emergence/consistency-check.md` | **Cross-phase review**. After Tasks is approved, check all five docs for internal contradictions. Surfaces questions for Builder — no autonomous resolution. |
 
 ### Progressive Refinement
 
 - **Input**: Each step consumes the artifacts from the previous steps.
-- **Canon-Aware**: On brownfield projects, each subagent reads existing canon as context. This produces sharper, more targeted specs.
+- **Canon-Aware**: On brownfield projects, each instruction module reads existing canon as context. This produces sharper, more targeted specs.
 - **Gate**: Human review is required after each step — unless the Builder chose a different pace (see below).
 - **Skip**: For simple changes, UX and Tech Design can be skipped or merged into simpler artifacts.
 
@@ -67,13 +67,13 @@ Whenever the Builder says "start an initiative", "start a tweak", or "start a bu
 
 ### Starting an Initiative
 1. Run the **Standard Start Flow** (name, draft folder, requirements source, pace, PR preference).
-2. Run the **Clarify** subagent (it embeds the start flow; then draft the PRD).
+2. Run the **Clarify** instruction module (it embeds the start flow; then draft the PRD).
 
 ### The Flow
 ```mermaid
 graph TD
     User[User Idea] --> Canon{Existing Code?}
-    Canon -->|Yes| Bootstrap[Bootstrap Subagent]
+    Canon -->|Yes| Bootstrap[Bootstrap Instruction Module]
     Bootstrap --> Canonized[Base Canon Created]
     Canonized --> Clarify[Clarify with Canon Context]
     Canon -->|No| Clarify
@@ -91,7 +91,7 @@ graph TD
     CC --> Kickoff[Kickoff Initiative]
 ```
 
-## Subagent References
+## Instruction Module References
 
 - [Standard Start Flow](./start-flow.md) — run first for initiative, tweak, or bug
 - [Bootstrap](./bootstrap.md)
