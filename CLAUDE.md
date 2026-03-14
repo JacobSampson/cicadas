@@ -68,7 +68,7 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 ### `src/cicadas/` Structure
 
 - `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by `kickoff.py` and `branch.py`. `review.py` reads `review.md` verdict and returns exit codes; imported by `open_pr.py` for the merge gate check.
-- `emergence/` — Markdown instructions for subagents (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Code Review). **start-flow.md** defines the standard start flow (name → draft folder → requirements source/pace → PR preference) run first for initiative, tweak, or bug. Clarify supports intake via Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`). These are **agent prompts**, not code.
+- `emergence/` — Markdown instruction modules (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Code Review) — inline role files read in the current context window; no separate agent process is spawned. **start-flow.md** defines the standard start flow (name → draft folder → requirements source/pace → PR preference) run first for initiative, tweak, or bug. Clarify supports intake via Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`). These are **agent prompts**, not code.
 - `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`, `review.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`, `canon-summary.md`).
 - `SKILL.md` — The master agent skill definition (read this for full operational detail).
 - `implementation.md` — Guardrails for implementation agents.
@@ -97,7 +97,7 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 
 ### Initiative Lifecycle
 
-1. **Emergence** — Draft specs in `.cicadas/drafts/{name}/` using subagent prompts in `emergence/`.
+1. **Emergence** — Draft specs in `.cicadas/drafts/{name}/` using instruction modules in `emergence/`.
 2. **Kickoff** — `kickoff.py` promotes drafts → `active/`, registers in `registry.json`, creates `initiative/{name}` branch.
 3. **Feature Branches** — `branch.py` creates `feat/{name}`, declares module scope to detect overlaps.
 4. **Inner Loop** — Task branches → Reflect (update active specs to match code) → PR to feature branch (if lifecycle has PR at tasks).

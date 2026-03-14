@@ -1,5 +1,18 @@
 # Release Notes
 
+## Version 0.5.6
+
+- **Instruction module terminology**: Replaced all uses of "subagent" with "instruction module" throughout `SKILL.md`, `EMERGENCE.md`, and all `emergence/*.md` files. Emergence files are inline role-switches in the current context window — no separate agent process is spawned. The old term was misleading to integrators.
+- **Prompt injection guardrails**: Added explicit untrusted-input warnings to `clarify.md` (before reading `requirements.md` / `loom.md`) and `bootstrap.md`. Added corresponding Guardrail #8 to `SKILL.md`.
+- **Balanced elicitation inlined**: Deleted `emergence/balanced-elicitation.md` (28-line file); content inlined as a full appendix in `clarify.md`. References in `tech-design.md` and `ux.md` updated to point to the appendix.
+- **Process banner consistency**: Added `FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.` to all 7 emergence files (`clarify`, `ux`, `tech-design`, `approach`, `tasks`, `tweak`, `bug-fix`). Was previously present on only 2, implying the others were optional.
+- **Mode selection decision rule**: `tasks.md` now states when to use Foundation Mode vs. Feature Mode — greenfield/standalone → Foundation; existing system → Feature.
+- **Resuming Mid-Initiative**: New `## Resuming Mid-Initiative` section in `SKILL.md` guides context recovery when picking up an in-progress session.
+- **Branch cleanup**: Added branch deletion steps to both "Complete an Initiative" (Step 4) and "Lightweight Paths" (Step 7) in `SKILL.md`.
+- **Bug fixes**: Fixed `approach.md` asking for PR preference when `lifecycle.json` already exists (now skips); fixed `ux.md` Canon Check reading `product-overview.md` instead of `ux-overview.md`; fixed `bug-fix.md` and `tweak.md` using `{initiative}` instead of `{name}` in artifact paths.
+- **Implementation rules**: `implementation.md` is now the single canonical source for implementation guardrails; `SKILL.md` contains a pointer only (eliminates drift risk).
+- **Script failure recovery**: Added Guardrail #9 to `SKILL.md` with recovery guidance when a script fails mid-operation.
+
 ## Version 0.5.5
 
 - **Standard start flow**: When starting an initiative, tweak, or bug, the agent now runs a single mandatory sequence first: name (confirm even if given) → create draft folder → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. New `emergence/start-flow.md` is the source of truth; Clarify, Tweak, and Bug Fix subagents embed this flow. EMERGENCE.md, SKILL.md, and HOW-TO.md updated; README, src/cicadas/README, agents.md, and CLAUDE.md reference the flow.

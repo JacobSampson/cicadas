@@ -110,7 +110,7 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 
 ## Starting any initiative, tweak, or bug
 
-Whenever you ask to **start an initiative**, **start a tweak**, or **start a bug**, the agent runs a **standard start flow** first: name (confirmed even if you already said it) → create draft folder → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. This keeps the "start" experience repeatable. The flow is defined in the skill at `emergence/start-flow.md` and is embedded in the Clarify, Tweak, and Bug Fix subagents.
+Whenever you ask to **start an initiative**, **start a tweak**, or **start a bug**, the agent runs a **standard start flow** first: name (confirmed even if you already said it) → create draft folder → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. This keeps the "start" experience repeatable. The flow is defined in the skill at `emergence/start-flow.md` and is embedded in the Clarify, Tweak, and Bug Fix instruction modules.
 
 ---
 
@@ -141,7 +141,7 @@ If you are starting with an existing codebase that lacks Cicadas documentation, 
 1.  **Initialize**: *"Initialize cicadas for this project."*
 2.  **Bootstrap**: *"Bootstrap the baseline Canon."*
     - The Agent autonomously performs code discovery, synthesizes a full suite of docs (PRD, UX, Tech, Modules) using templates, and validates them against the code.
-3.  **Reference**: See the **Bootstrap Subagent** instructions in `{cicadas root}/emergence/bootstrap.md` for a deep-dive on legacy migration.
+3.  **Reference**: See the **Bootstrap** instruction module in `{cicadas root}/emergence/bootstrap.md` for a deep-dive on legacy migration.
 
 ---
 
