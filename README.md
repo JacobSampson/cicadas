@@ -1,5 +1,5 @@
 # Cicadas 
-**Version 0.5.0**
+**Version 0.5**
 
 **Sustainable, Spec-Driven Development (SDD) for human-AI teams.**
 
@@ -14,16 +14,6 @@ Cicadas reverses the traditional relationship between code and documentation. In
 3.  **Work is Coordinated**: Parallel initiatives and features are registered in a registry, allowing parallel work efforts to minimize overlap and clashes.
 4.  **Canon is Synthesized**: Authoritative documentation (`canon/`) is generated from the code + the intent of expired specs. It is never manually maintained.
 5.  **Reflect & Signal**: During development, we keep specs honest via **Reflect** (updating active specs to match code reality) and coordinate via **Signal** (broadcasting breaking changes to peer branches).
-
-### See It In Action
-
-For a complete end-to-end walkthrough of the method (Greenfield creation + Brownfield update), see:
-
-👉 **[Cicadas Method — Dry Run](docs/dry-run.md)**
-
-For the full methodology specification, see:
-
-📘 **[Cicadas Method (v2) Specification](docs/cicadas-method-general-02.md)**
 
 ---
 
@@ -140,6 +130,16 @@ All scripts are in `src/cicadas/scripts/`.
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
 | **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |
+
+### Additional Resources
+
+For the full methodology specification, see:
+
+📘 **[Cicadas Method Specification](docs/cicadas-method-general.md)**
+
+For a comparison of the Cicadas Method to other approaches, see:
+
+📘 **[SDD Comparison](docs/sdd-comparison.md)**
 
 
 ## License

@@ -1,6 +1,6 @@
 # Release Notes
 
-## Unreleased
+## Version 0.5.5
 
 - **Standard start flow**: When starting an initiative, tweak, or bug, the agent now runs a single mandatory sequence first: name (confirm even if given) → create draft folder → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. New `emergence/start-flow.md` is the source of truth; Clarify, Tweak, and Bug Fix subagents embed this flow. EMERGENCE.md, SKILL.md, and HOW-TO.md updated; README, src/cicadas/README, agents.md, and CLAUDE.md reference the flow.
 - **Clarify intake options**: At the start of Clarify, the Builder can choose how to provide requirements: **Q&A** (interactive), **Doc** (place a requirements document at `.cicadas/drafts/{initiative}/requirements.md`), or **Loom** (record in Loom, then save the transcript to `.cicadas/drafts/{initiative}/loom.md`). The agent fills the PRD from the doc or transcript. `EMERGENCE.md` now includes a "Requirements intake (Clarify)" subsection for discoverability. New regression test `tests/test_emergence_clarify.py` asserts that `clarify.md` documents the Intake step and file paths.

@@ -1,7 +1,11 @@
+---
+Original pressure test run on an early version of Cicadas. Directionally relevant but no longer current.
+---
+
 
 # Cicadas Method — Dry Run
 
-Pressure-testing the v2 methodology by walking through a fictional project end-to-end.
+Pressure-testing the v0.2 methodology by walking through a fictional project end-to-end.
 
 **Format**: The dry-run is written as a **dialog** between the Builder (human) and the Agent (AI with the Chorus skill). The Builder gives natural-language commands. The Agent handles all ceremony — script execution, agentic operations, git commands — behind the scenes.
 
