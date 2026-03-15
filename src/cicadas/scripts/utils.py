@@ -84,24 +84,11 @@ def worktree_path(repo_root: Path, branch_name: str) -> Path:
     return repo_root.parent / f"{repo_root.name}-{slug}"
 
 
-def parse_partitions_dag(approach_path: Path) -> list[dict]:
-    """
-    Parse the ```yaml partitions block from approach.md.
-    Returns list of dicts: [{name, modules, depends_on}, ...].
-    Returns [] if block absent, file missing, or parse fails — never raises.
-    """
+def _parse_partitions_yaml_block(raw: str) -> list[dict]:
+    """Parse YAML partitions block: try PyYAML first, fallback to minimal regex parse when yaml not installed."""
     try:
         import yaml
 
-        if not approach_path.exists():
-            return []
-        text = approach_path.read_text()
-        # Match fenced block: ```yaml partitions ... ```
-        pattern = r"```yaml\s+partitions\s*\n(.*?)```"
-        match = re.search(pattern, text, re.DOTALL)
-        if not match:
-            return []
-        raw = match.group(1)
         parsed = yaml.safe_load(raw)
         if not isinstance(parsed, list):
             return []
@@ -117,6 +104,54 @@ def parse_partitions_dag(approach_path: Path) -> list[dict]:
                 }
             )
         return result
+    except Exception:
+        pass
+    # Fallback when PyYAML not installed: parse "- name: ...\n  modules: ...\n  depends_on: ..." blocks
+    result = []
+    # Split on "- name:" so first block is "- name: value\n  modules: ...", rest are "value\n  modules: ..."
+    for block in re.split(r"\n-\s+name:\s*", raw):
+        if not block.strip():
+            continue
+        # Require "modules:" so we don't accept arbitrary invalid YAML as a partition
+        mod_match = re.search(r"modules:\s*\[(.*?)\]", block, re.DOTALL)
+        if not mod_match:
+            continue
+        # First block has "name: feat/..."; subsequent blocks start with "feat/..." (name only)
+        name_match = re.search(r"name:\s*([^\s\n]+)", block)
+        if name_match:
+            name = name_match.group(1).strip()
+        else:
+            first_line = re.match(r"^([^\s\n]+)", block)
+            if not first_line:
+                continue
+            name = first_line.group(1).strip()
+        modules = []
+        modules = [m.strip() for m in mod_match.group(1).split(",") if m.strip()]
+        depends_on = []
+        dep_match = re.search(r"depends_on:\s*\[(.*?)\]", block, re.DOTALL)
+        if dep_match and dep_match.group(1).strip():
+            depends_on = [m.strip() for m in dep_match.group(1).split(",") if m.strip()]
+        result.append({"name": name, "modules": modules, "depends_on": depends_on})
+    return result
+
+
+def parse_partitions_dag(approach_path: Path) -> list[dict]:
+    """
+    Parse the ```yaml partitions block from approach.md.
+    Returns list of dicts: [{name, modules, depends_on}, ...].
+    Returns [] if block absent, file missing, or parse fails — never raises.
+    """
+    try:
+        if not approach_path.exists():
+            return []
+        text = approach_path.read_text()
+        # Match fenced block: ```yaml partitions ... ```
+        pattern = r"```yaml\s+partitions\s*\n(.*?)```"
+        match = re.search(pattern, text, re.DOTALL)
+        if not match:
+            return []
+        raw = match.group(1)
+        return _parse_partitions_yaml_block(raw)
     except Exception:
         return []
 
