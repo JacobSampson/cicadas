@@ -238,6 +238,13 @@
       "summary": "Applied comprehensive skill file improvements (P0-P3): fixed PR lifecycle double-ask and UX canon reference bugs; replaced 'subagent' terminology with 'instruction module' throughout; added prompt injection guardrails; inlined balanced-elicitation appendix into clarify.md; added Resuming Mid-Initiative section; added FOLLOW THIS PROCESS EXACTLY banner to all 7 emergence files; added mode selection decision rule to tasks.md; cleaned up main(default branch) references.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-15T19:56:11.756595+00:00",
+      "branch": "build-on-ai-aware",
+      "summary": "Building on AI: start-flow gate + eval status, eval spec (initiatives), placement in Approach, tweak/bug reminder; parse_partitions_dag fallback when PyYAML missing",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

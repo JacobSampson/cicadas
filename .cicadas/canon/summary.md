@@ -12,7 +12,7 @@ Cicadas is a spec-driven development orchestrator for human-AI teams that treats
 - Filesystem state machine: all state lives in `.cicadas/` (registry.json, active/, archive/, canon/); no database or server.
 - Logic/state separation: the Skill (`src/cicadas/`) is portable and installable; the state (`.cicadas/`) stays in the project.
 - Scripts are pure Python stdlib — no external dependencies at runtime; only `git` and Python 3.11+ required.
-- Agent operations (Reflect, Code Review, Synthesis) are LLM tasks defined in `emergence/` markdown prompts, not scripts. Clarify supports intake via Q&A, doc (`drafts/{initiative}/requirements.md`), or Loom transcript (`drafts/{initiative}/loom.md`).
+- Agent operations (Reflect, Code Review, Synthesis) are LLM tasks defined in `emergence/` markdown prompts, not scripts. Clarify supports intake via Q&A, doc, or Loom. Start flow includes Building on AI? (yes/no) and eval status; stored in emergence-config.json. Initiatives: optional eval spec (eval-spec.md + template); Approach asks eval placement. Tweaks/bugs: optional eval/benchmark reminder. Cicadas does not run evals.
 - Context injection: `branch.py` writes `context.md` at branch creation time (canon summary + scoped module snapshots + specs); gitignored.
 
 ## Modules
@@ -32,8 +32,8 @@ scripts/abort.py: context-aware rollback for any branch type
 scripts/history.py: generate HTML timeline from archive + index; includes token summaries
 scripts/tokens.py: append-only token usage log API (init_log, append_entry, load_log)
 scripts/utils.py: shared utilities (root detection, git helpers, JSON I/O, worktree ops)
-emergence/: markdown prompts for Clarify (intake Q/D/L, loom.md and requirements.md in drafts), UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Code Review subagents
-templates/: spec templates (prd, ux, tech-design, approach, tasks, buglet, tweaklet, review), canon templates (product-overview, ux-overview, tech-overview, module-snapshot, canon-summary), synthesis prompt
+emergence/: markdown prompts for Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Eval Spec (Building on AI), Code Review; start-flow includes Building on AI? and eval status
+templates/: spec templates (prd, ux, tech-design, approach, tasks, buglet, tweaklet, eval-spec, review), canon templates, synthesis prompt
 
 ## Conventions
 
