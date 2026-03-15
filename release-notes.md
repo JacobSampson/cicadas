@@ -1,5 +1,10 @@
 # Release Notes
 
+## Version 0.5.7
+
+- **Building on AI**: Start flow now asks "Is this project building on AI? (yes/no)" and, if yes, eval status (already have / will do). Choices are stored in `emergence-config.json`. Initiatives with "will do" evals: optional eval-spec authoring (template + LLMOps playbook) after PRD/UX/Tech; Approach asks eval placement (before build / in parallel) with parallel warning. Tweaks and bug fixes with "will do": optional eval/benchmark reminder in tweaklet/buglet. Cicadas does not run or host evals. New `emergence/eval-spec.md` instruction module and `templates/eval-spec.md`. SKILL.md, HOW-TO.md, CLAUDE.md, and canon updated.
+- **parse_partitions_dag fallback**: When PyYAML is not installed, `utils.parse_partitions_dag()` uses a regex-based fallback to parse the `yaml partitions` block so tests and branch/worktree logic work in minimal environments.
+
 ## Version 0.5.6
 
 - **Instruction module terminology**: Replaced all uses of "subagent" with "instruction module" throughout `SKILL.md`, `EMERGENCE.md`, and all `emergence/*.md` files. Emergence files are inline role-switches in the current context window — no separate agent process is spawned. The old term was misleading to integrators.

@@ -19,6 +19,7 @@ Update the six canonical documentation files to reflect recent changes before a 
 | `release-notes.md` | Changelog — one entry per release | Always: add a new entry describing what changed |
 | `agents.md` | Project overview for agents | Structural or architectural changes |
 | `CLAUDE.md` | Claude Code guidance: commands, architecture, conventions | Script changes, new files, test convention changes |
+| `docs/cicadas-method-general.md` | general manual for cicadas method |
 
 ## Process
 

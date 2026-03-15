@@ -107,9 +107,9 @@ project-root/
         │   ├── tech-design.md        # Active spec template
         │   ├── approach.md           # Active spec template
         │   └── tasks.md              # Active spec template
-        └── emergence/                # Subagent definitions for spec authoring
+        └── emergence/                # Instruction modules for spec authoring
             ├── emergence.md          # Emergence phase overview
-            ├── start-flow.md         # Standard start flow
+            ├── start-flow.md         # Standard start flow (includes Building on AI? and eval status)
             ├── clarify.md            # PRD refinement subagent
             ├── ux.md                 # UX design subagent
             ├── tech-design.md        # Architecture subagent
@@ -134,7 +134,7 @@ project-root/
     │       ├── approach.md           # MUST define partitions → feature branches
     │       ├── tasks.md
     │       ├── lifecycle.json        # PR boundaries and step list
-    │       ├── emergence-config.json # Emergence review cadence
+    │       ├── emergence-config.json # Review cadence; Building on AI? and eval status
     │       └── tokens.json           # Token usage log
     ├── active/                       # Live specs for in-flight work
     │   └── {initiative-name}/
@@ -172,7 +172,7 @@ Progressive spec authoring using subagents or manual drafting:
 
 **Critical**: `approach.md` MUST define logical partitions (e.g., "Auth Module", "Frontend Shell", "Data Layer"). These partitions become **Feature Branches**.
 
-**Pace & Limits**: At the start of Clarify, the Builder chooses a review cadence (`section` / `doc` / `all`) stored in `emergence-config.json` that dictates where subagents stop to request human review. A `tokens.json` log actively captures LLM usage during drafting and updates throughout the initiative.
+**Pace & Limits**: At the start of Clarify, the Builder chooses a review cadence (`section` / `doc` / `all`) stored in `emergence-config.json` that dictates where instruction modules stop to request human review. The standard start flow also records **Building on AI?** (yes/no) and, if yes, eval status (already have / will do); initiatives with "will do" may add an eval spec and placement in Approach. A `tokens.json` log actively captures LLM usage during drafting and updates throughout the initiative.
 
 **Mechanism**: Subagents in `src/cicadas/emergence/` or manual authoring. See `EMERGENCE.md` for details.
 
