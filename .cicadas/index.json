@@ -266,6 +266,13 @@
       "summary": "Completed skill-builder initiative: validate_skill.py, skill_publish.py, skill-create.md, skill-edit.md, skill-SKILL.md template, skill/ prefix in 5 scripts, 174 tests all passing.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-16T15:02:04.788270+00:00",
+      "branch": "skill-test-coverage-review",
+      "summary": "Added test-coverage-review skill for auditing existing test suites for coverage gaps, weak assertions, over-mocking, and missing edge cases",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
