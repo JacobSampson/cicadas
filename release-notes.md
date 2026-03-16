@@ -1,6 +1,10 @@
 # Release Notes
 
-## Version 0.5.7
+## Version 0.6.1
+
+- **Agent Skill Authoring**: New `skill/` branch prefix and full skill lifecycle. `skill-create.md` — dialogue-driven authoring: start flow → 4-question clarifying dialogue → complete SKILL.md + optional bundled files (`scripts/`, `references/`, `assets/`) + `eval_queries.json` draft → kickoff + branch + validate. `skill-edit.md` — one diagnostic question, minimum-change before/after proposal, validate on apply. `validate_skill.py` — spec-compliance validator (name charset/length/dir-match, description ≤1024 chars, frontmatter delimiters; stdlib regex, handles single-line, folded, and block YAML scalars). `skill_publish.py` — copy or symlink active skill to `publish_dir` with pre-publish validation gate; reads destination from `emergence-config.json`. `skill-SKILL.md` scaffold template. `skill/` added to `branch.py`, `abort.py`, `archive.py`, `status.py` (new "Active Skills" display section). `start-flow.md` updated: new Publish destination step (skills only), skill column in scoping table, Building on AI? skips eval-status follow-up for skills. `SKILL.md` updated: branch hierarchy, Skills Operations section, Builder commands, CLI entries. 22 new tests (14 for validate_skill, 8 for skill_publish) plus skill/ regression assertions across 4 existing test files. 174 tests total.
+
+## Version 0.6.0
 
 - **Building on AI**: Start flow now asks "Is this project building on AI? (yes/no)" and, if yes, eval status (already have / will do). Choices are stored in `emergence-config.json`. Initiatives with "will do" evals: optional eval-spec authoring (template + LLMOps playbook) after PRD/UX/Tech; Approach asks eval placement (before build / in parallel) with parallel warning. Tweaks and bug fixes with "will do": optional eval/benchmark reminder in tweaklet/buglet. Cicadas does not run or host evals. New `emergence/eval-spec.md` instruction module and `templates/eval-spec.md`. SKILL.md, HOW-TO.md, CLAUDE.md, and canon updated.
 - **parse_partitions_dag fallback**: When PyYAML is not installed, `utils.parse_partitions_dag()` uses a regex-based fallback to parse the `yaml partitions` block so tests and branch/worktree logic work in minimal environments.

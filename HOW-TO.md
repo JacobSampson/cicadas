@@ -108,9 +108,9 @@ Cicadas uses a two-layer branching hierarchy to manage concurrent work and ensur
 
 ---
 
-## Starting any initiative, tweak, or bug
+## Starting any initiative, tweak, bug, or skill
 
-Whenever you ask to **start an initiative**, **start a tweak**, or **start a bug**, the agent runs a **standard start flow** first: name (confirmed even if you already said it) → create draft folder → **Building on AI?** (yes/no; if yes, eval status: already have / will do) → requirements source and pace (initiatives only) → PR preference → then collect requirements or draft the spec. This keeps the "start" experience repeatable. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** in the tweaklet/buglet; Cicadas does not run evals. The flow is defined in the skill at `emergence/start-flow.md` and is embedded in the Clarify, Tweak, and Bug Fix instruction modules.
+Whenever you ask to **start an initiative**, **start a tweak**, **start a bug**, or **create a skill**, the agent runs a **standard start flow** first: name (confirmed even if you already said it) → create draft folder → **Building on AI?** (yes/no; if yes, eval status: already have / will do — skipped for skills) → requirements source and pace (initiatives only) → publish destination (skills only) → PR preference → then collect requirements or draft the spec. This keeps the "start" experience repeatable. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** in the tweaklet/buglet; Cicadas does not run evals. The flow is defined in the skill at `emergence/start-flow.md` and is embedded in the Clarify, Tweak, Bug Fix, and Skill Create instruction modules.
 
 ---
 
@@ -176,6 +176,21 @@ For trivial changes, Cicadas supports a "fast path" that reduces documentation o
 - **Emergence Agent**: Authors specs (PRD, UX, Tech, Approach, Tasks).
 - **Implementation Agent**: Focuses on `tasks.md` and writing code.
 - **Synthesis Agent**: Operates on `main` to update the authoritative Canon.
+
+### Authoring Agent Skills
+
+Cicadas manages the full lifecycle of **Agent Skills** — portable instruction modules you can ship alongside your project to teach agents new capabilities.
+
+**Create a new skill**: *"Create a skill that handles our database migration runbook."*
+The agent runs the start flow (name, Building on AI?, publish destination, PR preference), then a dialogue-driven authoring session: 4 clarifying questions → complete `SKILL.md` + optional bundled `scripts/`, `references/`, or `assets/` → `eval_queries.json` draft → kickoff + branch (`skill/{name}`) + validate.
+
+**Edit an existing skill**: *"The skill isn't triggering reliably."* or *"Edit skill db-migrations."*
+The agent asks one diagnostic question (under-triggering / over-triggering / wrong output), proposes a minimum targeted change as a before/after diff, and validates after applying.
+
+**Validate a skill**: `python src/cicadas/scripts/validate_skill.py {slug}`
+
+**Publish a skill** (after merging `skill/{name}` to `main`): `python src/cicadas/scripts/skill_publish.py {slug}`
+Reads `publish_dir` from `emergence-config.json`, runs validation before copying.
 
 ### Registering Cicadas as a Claude Code Skill
 

@@ -1,0 +1,22 @@
+[
+  {"query": "review unit tests", "should_trigger": true},
+  {"query": "fix unit tests", "should_trigger": true},
+  {"query": "check for unit test coverage", "should_trigger": true},
+  {"query": "audit the test suite", "should_trigger": true},
+  {"query": "improve test coverage", "should_trigger": true},
+  {"query": "ensure 80% test coverage", "should_trigger": true},
+  {"query": "check test coverage at end of initiative", "should_trigger": true},
+  {"query": "our tests are weak, can you review them", "should_trigger": true},
+  {"query": "find gaps in our unit tests", "should_trigger": true},
+  {"query": "are the tests good enough to merge?", "should_trigger": true},
+  {"query": "write unit tests for this new module", "should_trigger": false},
+  {"query": "add tests for the new login feature", "should_trigger": false},
+  {"query": "generate tests for this function", "should_trigger": false},
+  {"query": "create a test file for utils.py", "should_trigger": false},
+  {"query": "run the tests", "should_trigger": false},
+  {"query": "fix this failing test", "should_trigger": false},
+  {"query": "what does this test do?", "should_trigger": false},
+  {"query": "set up pytest for this project", "should_trigger": false},
+  {"query": "how do I mock an API call in Jest?", "should_trigger": false},
+  {"query": "delete the test for the deprecated function", "should_trigger": false}
+]

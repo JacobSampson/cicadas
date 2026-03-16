@@ -1,5 +1,5 @@
 # Cicadas 
-**Version 0.5**
+**Version 0.6.1**
 
 **Sustainable, Spec-Driven Development (SDD) for human-AI teams.**
 
@@ -71,7 +71,7 @@ bash install.sh --update
 ## The Workflow
 
 ### Phase 1: Emergence (Drafting)
-When you start an initiative, tweak, or bug, the agent runs a **standard start flow** first (name → draft folder → **Building on AI?** (yes/no; if yes, eval status) → requirements source/pace for initiatives → PR preference), then drafts specs. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** (tweaks/bugs); Cicadas does not run evals. We draft specifications in `.cicadas/drafts/` using specialized instruction modules (Clarify, UX, Tech, Approach, Tasks). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
+When you start an initiative, tweak, bug, or skill, the agent runs a **standard start flow** first (name → draft folder → **Building on AI?** (yes/no; if yes, eval status) → requirements source/pace for initiatives → publish destination for skills → PR preference), then drafts specs. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** (tweaks/bugs); Cicadas does not run evals. We draft specifications in `.cicadas/drafts/` using specialized instruction modules (Clarify, UX, Tech, Approach, Tasks, Skill Create). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
 *   **Key Artifact**: `approach.md` defines the partitions (feature branches).
 
 ### Phase 2: Kickoff
@@ -111,6 +111,8 @@ All scripts are in `src/cicadas/scripts/`.
 | **Archive** | `python src/cicadas/scripts/archive.py {name}` |
 | **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |
+| **Validate Skill** | `python src/cicadas/scripts/validate_skill.py {slug}` |
+| **Publish Skill** | `python src/cicadas/scripts/skill_publish.py {slug} [--publish-dir DIR] [--symlink] [--force]` |
 
 ---
 
