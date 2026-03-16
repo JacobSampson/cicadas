@@ -273,6 +273,13 @@
       "summary": "Added test-coverage-review skill for auditing existing test suites for coverage gaps, weak assertions, over-mocking, and missing edge cases",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-16T16:39:25.818729+00:00",
+      "branch": "unit-tests",
+      "summary": "Fix unit test coverage gaps: test_history.py, status lifecycle merge tests, signalboard/open_pr/kickoff/synthesize/orchestration improvements",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
