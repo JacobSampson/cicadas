@@ -17,53 +17,6 @@ Cicadas reverses the traditional relationship between code and documentation. In
 
 ---
 
-## The Workflow
-
-### Phase 1: Emergence (Drafting)
-When you start an initiative, tweak, or bug, the agent runs a **standard start flow** first (name → draft folder → **Building on AI?** (yes/no; if yes, eval status) → requirements source/pace for initiatives → PR preference), then drafts specs. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** (tweaks/bugs); Cicadas does not run evals. We draft specifications in `.cicadas/drafts/` using specialized instruction modules (Clarify, UX, Tech, Approach, Tasks). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
-*   **Key Artifact**: `approach.md` defines the partitions (feature branches).
-
-### Phase 2: Kickoff
-We promote drafts to **Active Specs** and register the initiative.
-*   **Command**: `python src/cicadas/scripts/kickoff.py {name} --intent "..."`
-*   **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
-
-### Phase 3: Execution (The Dual Loop)
-Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
-
-*   **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
-*   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately* (and before every commit on feat/task branches).
-*   **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing a structured `review.md` artifact with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `open_pr.py` checks this verdict and blocks on `BLOCK`.
-*   **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
-
-### Phase 4: Completion (Synthesis)
-When all features are merged into the initiative branch, we merge to `main` and then:
-1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/` (including `canon/summary.md` — a 300–500 token snapshot used to inject context at branch start).
-2.  **Archive**: Active specs are moved to `.cicadas/archive/`.
-
----
-
-## Project Structure
-
-The **Cicadas** toolset manages the `.cicadas/` directory:
-
-```text
-.
-├── src/
-│   └── cicadas/                # The Cicadas orchestrator (scripts & agents)
-└── .cicadas/
-    ├── canon/                  # Authoritative, generated checks
-    │   ├── product-overview.md
-    │   ├── tech-overview.md
-    │   └── modules/            # Module-level snapshots
-    ├── active/                 # Live specs for in-flight initiatives
-    ├── drafts/                 # Staging area for new initiatives
-    ├── archive/                # Expired specs (historical record)
-    └── registry.json           # Active initiatives & branch registry
-```
-
----
-
 ## Getting Started
 
 ### Installation
@@ -113,6 +66,34 @@ bash install.sh --update
 
 **Requirements:** Python 3.11+, `curl`, `unzip`, `git`
 
+---
+
+## The Workflow
+
+### Phase 1: Emergence (Drafting)
+When you start an initiative, tweak, or bug, the agent runs a **standard start flow** first (name → draft folder → **Building on AI?** (yes/no; if yes, eval status) → requirements source/pace for initiatives → PR preference), then drafts specs. For work that builds on AI, the agent may later offer an **eval spec** (initiatives) or an **eval/benchmark reminder** (tweaks/bugs); Cicadas does not run evals. We draft specifications in `.cicadas/drafts/` using specialized instruction modules (Clarify, UX, Tech, Approach, Tasks). **Clarify** can be driven by Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`).
+*   **Key Artifact**: `approach.md` defines the partitions (feature branches).
+
+### Phase 2: Kickoff
+We promote drafts to **Active Specs** and register the initiative.
+*   **Command**: `python src/cicadas/scripts/kickoff.py {name} --intent "..."`
+*   **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
+
+### Phase 3: Execution (The Dual Loop)
+Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
+
+*   **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
+*   **Reflect**: When code implementation diverges from the plan, we update the active specs *immediately* (and before every commit on feat/task branches).
+*   **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing a structured `review.md` artifact with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `open_pr.py` checks this verdict and blocks on `BLOCK`.
+*   **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
+
+### Phase 4: Completion (Synthesis)
+When all features are merged into the initiative branch, we merge to `main` and then:
+1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/` (including `canon/summary.md` — a 300–500 token snapshot used to inject context at branch start).
+2.  **Archive**: Active specs are moved to `.cicadas/archive/`.
+
+
+
 ### Quick Command Reference
 All scripts are in `src/cicadas/scripts/`.
 
@@ -131,6 +112,27 @@ All scripts are in `src/cicadas/scripts/`.
 | **Abort** | `python src/cicadas/scripts/abort.py` |
 | **Project History** | `python src/cicadas/scripts/history.py` |
 
+---
+
+## Project Structure
+
+The **Cicadas** toolset manages the `.cicadas/` directory:
+
+```text
+.
+├── src/
+│   └── cicadas/                # The Cicadas orchestrator (scripts & agents)
+└── .cicadas/
+    ├── canon/                  # Authoritative, generated checks
+    │   ├── product-overview.md
+    │   ├── tech-overview.md
+    │   └── modules/            # Module-level snapshots
+    ├── active/                 # Live specs for in-flight initiatives
+    ├── drafts/                 # Staging area for new initiatives
+    ├── archive/                # Expired specs (historical record)
+    └── registry.json           # Active initiatives & branch registry
+```
+
 ### Additional Resources
 
 For the full methodology specification, see:
@@ -142,17 +144,19 @@ For a comparison of the Cicadas Method to other approaches, see:
 📘 **[SDD Comparison](docs/sdd-comparison.md)**
 
 
+---
+
+
+
+
+
 ## License
 
 Cicadas is licensed under the [Apache License 2.0](LICENSE).
-```
-
-**Optional: Add a NOTICE file** (recommended for Apache 2.0 projects):
-```
-Cicadas
 Copyright 2026 Cicadas Contributors
 
 This product includes software developed by Dan and contributors.
+
 ---
 
 _Copyright 2026 Cicadas Contributors_
