@@ -287,6 +287,53 @@ class TestAbort(CicadasTest):
         branches = subprocess.check_output(["git", "branch"], cwd=self.root).decode()
         self.assertNotIn("initiative/direct-init", branches)
 
+    def test_abort_skill_treated_as_lightweight(self):
+        """skill/ branches are recognised as lightweight and abort cleans up paired initiative."""
+        skill_name = "pdf-skill"
+        initiative_name = "pdf-skill"
+        reg = self._reg()
+        reg["initiatives"][initiative_name] = {"intent": "pdf skill"}
+        reg["branches"][f"skill/{skill_name}"] = {
+            "intent": "pdf skill branch",
+            "modules": [],
+            "initiative": initiative_name,
+        }
+        self._write_reg(reg)
+        self._create_active_specs(initiative_name)
+        self._create_paired_branches(f"skill/{skill_name}", f"initiative/{initiative_name}")
+
+        from utils import load_json
+        registry = load_json(self.cicadas_dir / "registry.json")
+        with patch("abort.prompt_choice", return_value="D"):
+            abort.abort_lightweight(
+                f"skill/{skill_name}", initiative_name, self.root, self.cicadas_dir, registry
+            )
+
+        reg = self._reg()
+        self.assertNotIn(f"skill/{skill_name}", reg["branches"])
+        self.assertNotIn(initiative_name, reg["initiatives"])
+        self.assertTrue((self.cicadas_dir / "drafts" / initiative_name).exists())
+
+    def test_main_dispatches_skill_branch(self):
+        """main() dispatches skill/ to abort_lightweight path."""
+        skill_name = "tool-skill"
+        reg = self._reg()
+        reg["initiatives"][skill_name] = {"intent": "tool skill"}
+        reg["branches"][f"skill/{skill_name}"] = {
+            "intent": "build tool skill",
+            "modules": [],
+            "initiative": skill_name,
+        }
+        self._write_reg(reg)
+        self._create_paired_branches(f"skill/{skill_name}", f"initiative/{skill_name}")
+
+        with patch("abort.prompt_choice", return_value="D"):
+            abort.main()
+
+        reg = self._reg()
+        self.assertNotIn(f"skill/{skill_name}", reg["branches"])
+        self.assertNotIn(skill_name, reg["initiatives"])
+
 
 if __name__ == "__main__":
     unittest.main()

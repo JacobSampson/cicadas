@@ -76,7 +76,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     # Determine parent branch
     if from_branch:
         parent = from_branch
-    elif name.startswith("fix/") or name.startswith("tweak/"):
+    elif name.startswith("fix/") or name.startswith("tweak/") or name.startswith("skill/"):
         parent = default_branch
     elif initiative:
         parent = f"initiative/{initiative}"
