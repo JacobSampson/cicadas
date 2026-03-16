@@ -72,6 +72,37 @@ class TestKickoff(CicadasTest):
         self.assertEqual(active_lifecycle.read_text(), lifecycle_content)
         self.assertFalse(draft_dir.exists())
 
+    def test_kickoff_promotes_all_draft_files(self):
+        """All files in the draft directory (prd, tech-design, tasks, lifecycle) are promoted."""
+        name = "multi-file"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# PRD")
+        (draft_dir / "tech-design.md").write_text("# Tech")
+        (draft_dir / "tasks.md").write_text("# Tasks")
+        (draft_dir / "lifecycle.json").write_text('{"initiative": "multi-file", "steps": []}')
+
+        self.init_git()
+        kickoff.kickoff(name, "multi file test")
+
+        active = self.cicadas_dir / "active" / name
+        self.assertTrue((active / "prd.md").exists())
+        self.assertTrue((active / "tech-design.md").exists())
+        self.assertTrue((active / "tasks.md").exists())
+        self.assertTrue((active / "lifecycle.json").exists())
+        self.assertFalse(draft_dir.exists())
+
+    def test_kickoff_creates_tokens_json(self):
+        """kickoff initializes tokens.json in the active directory."""
+        name = "token-init"
+        self.init_git()
+        kickoff.kickoff(name, "token test")
+
+        tokens_path = self.cicadas_dir / "active" / name / "tokens.json"
+        self.assertTrue(tokens_path.exists())
+        data = json.loads(tokens_path.read_text())
+        self.assertIn("entries", data)
+
     def test_kickoff_existing(self):
         self.init_git()
         name = "exists"

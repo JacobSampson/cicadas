@@ -75,7 +75,8 @@ class TestArchiveStatus(CicadasTest):
             f.truncate()
 
         # Significance check alert only prints if active dir exists
-        (self.cicadas_dir / "active" / name).mkdir(parents=True)
+        active_dir = self.cicadas_dir / "active" / name
+        active_dir.mkdir(parents=True)
 
         f = io.StringIO()
         with redirect_stdout(f):
@@ -83,6 +84,12 @@ class TestArchiveStatus(CicadasTest):
 
         output = f.getvalue()
         self.assertIn("!!! LIGHTWEIGHT PATH SIGNIFICANCE CHECK !!!", output)
+        # Archive must still complete despite the warning
+        with open(self.cicadas_dir / "registry.json") as f2:
+            reg = json.load(f2)
+        self.assertNotIn(name, reg["branches"])
+        # Verify something was written to the archive directory
+        self.assertTrue(any((self.cicadas_dir / "archive").iterdir()))
 
     def test_archive_initiative_deregisters_associated_branches(self):
         """Archiving an initiative must also remove its linked branches from the registry."""
@@ -311,6 +318,132 @@ class TestStatusWorktrees(CicadasTest):
         out = f.getvalue()
         self.assertIn("[clean]", out)
         self.assertIn("feat/wt-clean", out)
+
+
+class TestStatusLifecycleMerge(CicadasTest):
+    """Tests for _is_merged_into, _ref_exists, and _lifecycle_merge_status via real git repos."""
+
+    def setUp(self):
+        super().setUp()
+        self.init_git()
+
+    def _register_initiative_with_lifecycle(self, init_name: str, feat_branches: list[str], steps: list[dict] | None = None):
+        if steps is None:
+            steps = [
+                {"id": "complete_feature", "name": "Complete each feature"},
+                {"id": "complete_initiative", "name": "Complete the initiative"},
+            ]
+        reg = json.loads((self.cicadas_dir / "registry.json").read_text())
+        reg["initiatives"][init_name] = {"intent": "test"}
+        for fb in feat_branches:
+            reg["branches"][fb] = {"intent": "test feat", "initiative": init_name, "modules": []}
+        (self.cicadas_dir / "registry.json").write_text(json.dumps(reg))
+
+        (self.cicadas_dir / "active" / init_name).mkdir(parents=True)
+        (self.cicadas_dir / "active" / init_name / "lifecycle.json").write_text(
+            json.dumps({"initiative": init_name, "steps": steps})
+        )
+
+    def test_ref_exists_for_real_branch(self):
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "feat/real"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        self.assertTrue(status._ref_exists(self.root, "feat/real"))
+
+    def test_ref_exists_false_for_nonexistent(self):
+        self.assertFalse(status._ref_exists(self.root, "feat/ghost-branch-xyz"))
+
+    def test_is_merged_into_true_after_merge(self):
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "feat/merged"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "merge", "feat/merged", "--no-ff", "-m", "merge"], cwd=self.root, check=True, capture_output=True)
+        self.assertTrue(status._is_merged_into(self.root, "feat/merged", "master"))
+
+    def test_is_merged_into_false_before_merge(self):
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "feat/unmerged"], cwd=self.root, check=True, capture_output=True)
+        (self.root / "new.txt").write_text("new")
+        subprocess.run(["git", "add", "."], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "new commit"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        self.assertFalse(status._is_merged_into(self.root, "feat/unmerged", "master"))
+
+    def _make_commit(self, filename: str):
+        """Write and commit a file so branches have diverging histories."""
+        import subprocess
+        (self.root / filename).write_text(f"content of {filename}")
+        subprocess.run(["git", "add", filename], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", f"add {filename}"], cwd=self.root, check=True, capture_output=True)
+
+    def test_next_step_is_complete_feature_when_feats_open(self):
+        """When feature branches exist but are not merged, Next should be 'Complete each feature'."""
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "initiative/my-init"], cwd=self.root, check=True, capture_output=True)
+        # Commit on initiative so it's ahead of master (not trivially merged into master)
+        self._make_commit("init1.txt")
+        subprocess.run(["git", "checkout", "-b", "feat/part1"], cwd=self.root, check=True, capture_output=True)
+        # Add a commit on feat/part1 so it's ahead of initiative/my-init and not trivially merged
+        self._make_commit("feat1.txt")
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        self._register_initiative_with_lifecycle("my-init", ["feat/part1"])
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        out = f.getvalue()
+        self.assertIn("Complete each feature", out)
+
+    def test_next_step_is_complete_initiative_when_all_feats_merged(self):
+        """When all feat branches are merged into initiative, Next should be 'Complete the initiative'."""
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "initiative/my-init2"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "-b", "feat/part1"], cwd=self.root, check=True, capture_output=True)
+        self._make_commit("feat2.txt")
+        subprocess.run(["git", "checkout", "initiative/my-init2"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "merge", "feat/part1", "--no-ff", "-m", "merge feat"], cwd=self.root, check=True, capture_output=True)
+        # Do NOT merge initiative into master — initiative still open
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        self._register_initiative_with_lifecycle("my-init2", ["feat/part1"])
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        out = f.getvalue()
+        self.assertIn("Complete the initiative", out)
+
+    def test_next_step_is_done_when_initiative_merged_to_default(self):
+        """When initiative branch is merged to master, status shows 'Initiative complete'."""
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "initiative/my-init3"], cwd=self.root, check=True, capture_output=True)
+        self._make_commit("init3.txt")
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "merge", "initiative/my-init3", "--no-ff", "-m", "merge init"], cwd=self.root, check=True, capture_output=True)
+        self._register_initiative_with_lifecycle("my-init3", [])
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        out = f.getvalue()
+        self.assertIn("Initiative complete", out)
+
+    def test_merged_pair_reported_when_feat_merged_into_initiative(self):
+        """A merged feat→initiative pair must appear in the Merged: lines."""
+        import subprocess
+        subprocess.run(["git", "checkout", "-b", "initiative/my-init4"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "-b", "feat/part1"], cwd=self.root, check=True, capture_output=True)
+        self._make_commit("feat4.txt")
+        subprocess.run(["git", "checkout", "initiative/my-init4"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "merge", "feat/part1", "--no-ff", "-m", "merge"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        self._register_initiative_with_lifecycle("my-init4", ["feat/part1"])
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+        out = f.getvalue()
+        self.assertIn("Merged:", out)
+        self.assertIn("feat/part1", out)
 
 
 if __name__ == "__main__":

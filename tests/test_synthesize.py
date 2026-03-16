@@ -62,6 +62,54 @@ class TestSynthesize(CicadasTest):
         self.assertIn("Active", prompt)
         self.assertIn("print(1)", prompt)
 
+    def test_gather_context_empty_active_dir(self):
+        """gather_context returns empty active_docs when active dir has no files."""
+        name = "feat/empty"
+        (self.cicadas_dir / "active" / name).mkdir(parents=True)
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        registry["branches"][name] = {"modules": []}
+        with open(self.cicadas_dir / "registry.json", "w") as f:
+            json.dump(registry, f)
+
+        context = synthesize.gather_context(name)
+        self.assertEqual(context["active_docs"], {})
+
+    def test_gather_context_no_src_dir(self):
+        """gather_context returns empty code_context when no src/ directory exists."""
+        name = "feat/nosrc"
+        (self.cicadas_dir / "active" / name).mkdir(parents=True)
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        registry["branches"][name] = {"modules": ["nonexistent_mod"]}
+        with open(self.cicadas_dir / "registry.json", "w") as f:
+            json.dump(registry, f)
+
+        context = synthesize.gather_context(name)
+        self.assertEqual(context["code_context"], {})
+
+    def test_apply_response_multiple_file_blocks(self):
+        """apply_response writes all files when response contains multiple File: blocks."""
+        response = """
+File: canon/doc1.md
+```markdown
+Content one
+```
+
+File: canon/doc2.md
+```markdown
+Content two
+```
+"""
+        synthesize.apply_response(response)
+        self.assertEqual((self.cicadas_dir / "canon/doc1.md").read_text().strip(), "Content one")
+        self.assertEqual((self.cicadas_dir / "canon/doc2.md").read_text().strip(), "Content two")
+
+    def test_apply_response_empty_string_writes_nothing(self):
+        """apply_response with an empty string must not create any files."""
+        synthesize.apply_response("")
+        self.assertFalse(any((self.cicadas_dir / "canon").iterdir()))
+
     def test_apply_response(self):
         # Create a temp response file
         response = """

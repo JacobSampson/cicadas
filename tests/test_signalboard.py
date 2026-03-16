@@ -14,10 +14,18 @@ from base import CicadasTest
 
 class TestSignal(CicadasTest):
     def test_send_signal_no_initiative_unregistered_branch(self):
+        import io
+        from contextlib import redirect_stdout
         self.init_git()
-        # On master branch which is not registered for signal broadcasting
-        signal_mod.send_signal("test message", initiative=None)
-        # Should print error
+        f = io.StringIO()
+        with redirect_stdout(f):
+            signal_mod.send_signal("test message", initiative=None)
+        output = f.getvalue()
+        self.assertIn("Error", output)
+        # Registry must be unchanged — no signals added
+        with open(self.cicadas_dir / "registry.json") as reg_f:
+            reg = json.load(reg_f)
+        self.assertEqual(reg["initiatives"], {})
 
     def test_send_signal_auto_detect_success(self):
         self.init_git()

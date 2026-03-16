@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import io
+import os
 import subprocess
 import unittest
 from contextlib import redirect_stdout
-from unittest.mock import patch
 
 import open_pr
 from base import CicadasTest
@@ -21,14 +21,21 @@ class TestOpenPr(CicadasTest):
         self.assertIn("Not a git repository", f.getvalue())
 
     def test_open_pr_fallback_no_cli(self):
-        """In a git repo with no gh/glab and a non-Bitbucket remote, prints fallback and returns 0."""
+        """In a git repo with no gh/glab on PATH and no Bitbucket remote, prints fallback."""
         self.init_git()
         subprocess.run(["git", "checkout", "-b", "feat/my-feat"], cwd=self.root, check=True, capture_output=True)
 
-        f = io.StringIO()
-        with patch("shutil.which", return_value=None):
+        # Restrict PATH to system dirs so neither gh nor glab is found — tests real shutil.which
+        # detection logic without patching the function itself.
+        old_path = os.environ.get("PATH", "")
+        try:
+            os.environ["PATH"] = "/usr/bin:/bin"
+            f = io.StringIO()
             with redirect_stdout(f):
                 code = open_pr.open_pr(base_branch="master")
+        finally:
+            os.environ["PATH"] = old_path
+
         self.assertEqual(code, 0)
         self.assertIn("No PR CLI found", f.getvalue())
 

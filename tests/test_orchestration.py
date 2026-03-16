@@ -23,18 +23,57 @@ class TestOrchestration(CicadasTest):
         super().setUp()
         self.init_git()
 
-    def test_update_index(self):
-        update_index.update_index("feat/test", "test summary", decisions="d1", modules="m1,m2")
+    def test_end_to_end_kickoff_branch_archive_index(self):
+        """Full lifecycle: kickoff → register branch → archive branch → log to index."""
+        import kickoff as kickoff_mod
+        import archive as archive_mod
+
+        init_name = "e2e-init"
+        feat_name = "feat/e2e-part1"
+
+        # 1. Kickoff: draft → active, initiative branch created
+        draft_dir = self.cicadas_dir / "drafts" / init_name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# PRD")
+        kickoff_mod.kickoff(init_name, "end-to-end test initiative")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertIn(init_name, reg["initiatives"])
+        self.assertTrue((self.cicadas_dir / "active" / init_name / "prd.md").exists())
+
+        # 2. Register a feature branch
+        subprocess.run(["git", "checkout", f"initiative/{init_name}"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "-b", feat_name], cwd=self.root, check=True, capture_output=True)
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["branches"][feat_name] = {"intent": "part 1", "initiative": init_name, "modules": ["core"]}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+        (self.cicadas_dir / "active" / feat_name).mkdir(parents=True)
+        (self.cicadas_dir / "active" / feat_name / "tasks.md").write_text("- [x] task1\n")
+
+        # 3. Archive the feature branch
+        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        archive_mod.archive(feat_name, type_="branch")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertNotIn(feat_name, reg["branches"])
+        self.assertIn(init_name, reg["initiatives"])  # initiative still active
+
+        # 4. Log to index
+        update_index.update_index(feat_name, "completed e2e part 1", modules="core")
+
         with open(self.cicadas_dir / "index.json") as f:
             index = json.load(f)
         self.assertEqual(len(index["entries"]), 1)
-        self.assertEqual(index["entries"][0]["branch"], "feat/test")
-        self.assertEqual(index["entries"][0]["modules"], ["m1", "m2"])
+        self.assertEqual(index["entries"][0]["branch"], feat_name)
+        self.assertEqual(index["entries"][0]["modules"], ["core"])
 
     def test_prune_branch(self):
-        self.init_git()
         name = "feat/to-prune"
-        # Setup branch
         subprocess.run(["git", "checkout", "-b", name], cwd=self.root, check=True)
         with open(self.cicadas_dir / "registry.json", "r+") as f:
             reg = json.load(f)
@@ -47,23 +86,16 @@ class TestOrchestration(CicadasTest):
         active_dir.mkdir(parents=True)
         (active_dir / "draft-spec.md").write_text("# Spec")
 
-        # Run prune
         prune.prune(name, type_="branch")
 
-        # Verify git branch deleted
         branches = subprocess.check_output(["git", "branch"], cwd=self.root).decode()
         self.assertNotIn(name, branches)
-
-        # Verify restored to drafts
         self.assertTrue((self.cicadas_dir / "drafts" / name / "draft-spec.md").exists())
-
-        # Verify removed from registry
         with open(self.cicadas_dir / "registry.json") as f:
             reg = json.load(f)
         self.assertNotIn(name, reg["branches"])
 
     def test_signal_basic(self):
-        # Register an initiative
         init_name = "test-init"
         with open(self.cicadas_dir / "registry.json", "r+") as f:
             reg = json.load(f)
