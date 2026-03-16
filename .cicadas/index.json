@@ -245,6 +245,27 @@
       "summary": "Building on AI: start-flow gate + eval status, eval spec (initiatives), placement in Approach, tweak/bug reminder; parse_partitions_dag fallback when PyYAML missing",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-16T14:33:16.839806+00:00",
+      "branch": "feat/script-infrastructure",
+      "summary": "Added skill/ lightweight branch prefix support to branch.py, abort.py, archive.py, status.py; new validate_skill.py (spec-compliance validator) and skill_publish.py (publish with pre-publish validation gate); skill-SKILL.md template; 14+8 new tests plus skill/ regression assertions across 4 existing test files. All 174 tests pass.",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-16T14:40:42.761180+00:00",
+      "branch": "feat/emergence-and-docs",
+      "summary": "Wrote skill-create.md (dialogue-driven skill authoring), skill-edit.md (minimum-change edit flow). Updated start-flow.md with Publish destination step for skills. Updated SKILL.md with skill/ branch hierarchy, Skills Operations section, Builder commands, and CLI entries. Final consistency check passed.",
+      "decisions": "",
+      "modules": []
+    },
+    {
+      "timestamp": "2026-03-16T14:41:07.762230+00:00",
+      "branch": "skill-builder",
+      "summary": "Completed skill-builder initiative: validate_skill.py, skill_publish.py, skill-create.md, skill-edit.md, skill-SKILL.md template, skill/ prefix in 5 scripts, 174 tests all passing.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }
