@@ -41,7 +41,7 @@ def archive(name, type_="branch", force=False):
     husk = cicadas / "archive" / f"{ts}-{name}"
 
     if active.exists():
-        if name.startswith("fix/") or name.startswith("tweak/"):
+        if name.startswith("fix/") or name.startswith("tweak/") or name.startswith("skill/"):
             print("!!! LIGHTWEIGHT PATH SIGNIFICANCE CHECK !!!")
             print(f"Agent: Before archiving {name}, have you verified if this change warrants a Canon update?")
             print("If yes, perform a 'Reflect' operation to update .cicadas/canon/ before proceeding.")

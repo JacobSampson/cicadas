@@ -117,6 +117,7 @@ class TestArchiveStatus(CicadasTest):
             reg["branches"]["feat/f1"] = {"intent": "feat", "modules": []}
             reg["branches"]["fix/b1"] = {"intent": "bug", "modules": []}
             reg["branches"]["tweak/t1"] = {"intent": "tweak", "modules": []}
+            reg["branches"]["skill/s1"] = {"intent": "skill", "modules": []}
             f.seek(0)
             json.dump(reg, f)
             f.truncate()
@@ -129,9 +130,52 @@ class TestArchiveStatus(CicadasTest):
         self.assertIn("Active Feature Branches (1):", output)
         self.assertIn("Active Bugs (1):", output)
         self.assertIn("Active Tweaks (1):", output)
+        self.assertIn("Active Skills (1):", output)
         self.assertIn("feat/f1", output)
         self.assertIn("fix/b1", output)
         self.assertIn("tweak/t1", output)
+        self.assertIn("skill/s1", output)
+
+    def test_skill_branch_not_counted_as_feature(self):
+        """skill/ branches must not appear in the Active Feature Branches section."""
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["branches"]["skill/my-tool"] = {"intent": "build tool skill", "modules": []}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            status.show_status()
+
+        output = f.getvalue()
+        self.assertIn("Active Skills (1):", output)
+        self.assertNotIn("Active Feature Branches (1):", output)
+
+    def test_archive_skill_initiative(self):
+        """Archiving a skill-prefixed initiative works correctly."""
+        init_name = "skill-pdf"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "pdf skill"}
+            reg["branches"]["skill/pdf"] = {"intent": "pdf skill branch", "initiative": init_name}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        (self.cicadas_dir / "active" / init_name).mkdir(parents=True)
+        (self.cicadas_dir / "active" / init_name / "SKILL.md").write_text("# Skill")
+
+        archive.archive(init_name, type_="initiative")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertNotIn(init_name, reg["initiatives"])
+        self.assertNotIn("skill/pdf", reg["branches"])
+
+        arch_dirs = [d.name for d in (self.cicadas_dir / "archive").iterdir()]
+        self.assertTrue(any(init_name in d for d in arch_dirs))
 
     def test_status_lifecycle_section_when_lifecycle_exists(self):
         """When an initiative has active lifecycle.json, status prints a Lifecycle section with Next step."""

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from utils import WorktreeDirtyError, get_default_branch, get_project_root, load_json, remove_worktree, save_json
 
-LIGHTWEIGHT_PREFIXES = ("tweak/", "fix/")
+LIGHTWEIGHT_PREFIXES = ("tweak/", "fix/", "skill/")
 
 
 def prompt_choice(question, choices):
