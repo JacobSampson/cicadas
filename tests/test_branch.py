@@ -55,6 +55,45 @@ class TestBranch(CicadasTest):
         default_hash = subprocess.check_output(["git", "rev-parse", self.default_branch], cwd=self.root).decode().strip()
         self.assertEqual(branch_hash, default_hash)
 
+    def test_skill_branch_forks_from_default_branch(self):
+        """skill/ branches should fork from default branch, not from an initiative branch."""
+        init_name = "my-skill"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test skill"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        branch_name = "skill/my-skill"
+        branch.create_branch(branch_name, "skill intent", "", initiative=init_name)
+
+        # Should be on skill/ branch
+        curr = subprocess.check_output(["git", "branch", "--show-current"], cwd=self.root).decode().strip()
+        self.assertEqual(curr, branch_name)
+
+        # Parent must be default branch (not initiative/my-skill)
+        branch_hash = subprocess.check_output(["git", "rev-parse", branch_name], cwd=self.root).decode().strip()
+        default_hash = subprocess.check_output(["git", "rev-parse", self.default_branch], cwd=self.root).decode().strip()
+        self.assertEqual(branch_hash, default_hash)
+
+    def test_skill_branch_registered_with_initiative(self):
+        """skill/ branch registration records the initiative key."""
+        init_name = "skill-pdf"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "pdf skill"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        branch.create_branch("skill/pdf", "build pdf skill", "", initiative=init_name)
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertIn("skill/pdf", reg["branches"])
+        self.assertEqual(reg["branches"]["skill/pdf"]["initiative"], init_name)
+
     def test_tweak_branch_active_dir_uses_initiative_name(self):
         """Active dir for a tweak branch should be active/{initiative}, not active/tweak/{name}."""
         init_name = "my-tweak"

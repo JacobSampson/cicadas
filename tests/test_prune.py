@@ -70,6 +70,33 @@ class TestPrune(CicadasTest):
         prune.prune("ghost", "initiative")
         # Should just print error messages
 
+    def test_prune_skill_initiative(self):
+        """Pruning a skill-prefixed initiative deregisters it and restores specs to drafts."""
+        self.init_git()
+        name = "skill-pdf"
+        branch_name = f"initiative/{name}"
+        subprocess.run(["git", "checkout", "-b", branch_name], cwd=self.root, check=True)
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        registry["initiatives"][name] = {"intent": "pdf skill"}
+        with open(self.cicadas_dir / "registry.json", "w") as f:
+            json.dump(registry, f)
+
+        active_dir = self.cicadas_dir / "active" / name
+        active_dir.mkdir(parents=True)
+        (active_dir / "SKILL.md").write_text("# Skill")
+
+        prune.prune(name, "initiative")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        self.assertNotIn(name, registry["initiatives"])
+        self.assertTrue((self.cicadas_dir / "drafts" / name).exists())
+
+        branches = subprocess.check_output(["git", "branch"], cwd=self.root).decode()
+        self.assertNotIn(branch_name, branches)
+
 
 if __name__ == "__main__":
     unittest.main()

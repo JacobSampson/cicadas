@@ -1,6 +1,6 @@
 ---
 name: cicadas
-description: Use when the user says "kickoff", "start feature", "complete initiative", "check status", "signal", "prune", "bootstrap", "reflect", or any other Cicadas lifecycle command. Orchestrates the Cicadas spec-driven development methodology.
+description: Use when the user says "kickoff", "start feature", "complete initiative", "check status", "signal", "prune", "bootstrap", "reflect", "create a skill", "build a skill", "edit skill", "start a skill", or any other Cicadas lifecycle command. Orchestrates the Cicadas spec-driven development methodology.
 argument-hint: "[command] [name]"
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
@@ -59,7 +59,8 @@ project-root/
 │   │   ├── approach.md               # Active spec template
 │   │   ├── tasks.md                  # Active spec template
 │   │   ├── buglet.md                 # Lightweight bug spec template
-│   │   └── tweaklet.md               # Lightweight tweak spec template
+│   │   ├── tweaklet.md               # Lightweight tweak spec template
+│   │   └── skill-SKILL.md            # Agent Skill SKILL.md scaffold template
 │   └── emergence/                    # Instruction modules for spec authoring
 │       ├── EMERGENCE.md              # Emergence phase overview
 │       ├── bootstrap.md              # Reverse Engineering instruction module
@@ -70,7 +71,9 @@ project-root/
 │       ├── tasks.md                  # Task breakdown instruction module
 │       ├── bug-fix.md                # Bug clarification drafting instruction module
 │       ├── tweak.md                  # Minor tweak drafting instruction module
-│       └── code-review.md            # Code Review instruction module
+│       ├── code-review.md            # Code Review instruction module
+│       ├── skill-create.md           # Agent Skill creation instruction module
+│       └── skill-edit.md             # Agent Skill editing instruction module
 └── .cicadas/                         # Cicadas artifacts (managed by scripts)
     ├── config.json                   # Local configuration
     ├── registry.json                 # Global registry (initiatives + feature branches)
@@ -124,8 +127,9 @@ main
 │   │   └── task/.../task-b        ← ephemeral, unregistered
 │   ├── feat/{partition-2}         ← registered, forks from initiative
 │   └── feat/{partition-3}         ← registered, forks from initiative
-├── fix/{name}                     ← [NEW] lightweight, forks from main
-└── tweak/{name}                   ← [NEW] lightweight, forks from main
+├── fix/{name}                     ← lightweight bug fix, forks from main
+├── tweak/{name}                   ← lightweight enhancement, forks from main
+└── skill/{name}                   ← Agent Skill authoring, forks from main
 ```
 
 ---
@@ -283,6 +287,37 @@ If a lightweight path discovers new complexity (e.g., "this fix requires a datab
 2. Upgrade to a full initiative: Draft `tech-design.md`, `approach.md`, and `tasks.md`.
 3. Move the work to an `initiative/` and `feat/` branch hierarchy.
 
+### Skills (Agent Skill Authoring)
+
+Cicadas manages the full lifecycle of Agent Skills — portable instruction modules that teach agents new capabilities.
+
+**Triggers**: "create a skill", "start a skill", "build a skill for X", "I need a skill that…"
+
+**The Workflow**:
+1. **Emergence**: Run `skill-create.md` — dialogue-driven authoring of `SKILL.md` + optional bundled files + `eval_queries.json`. Includes the standard start flow (name, draft folder, Building on AI?, publish destination, PR preference).
+2. **Kickoff**: `python {cicadas-dir}/scripts/kickoff.py skill-{slug} --intent "..."`. Promotes `drafts/skill-{slug}/` to `active/skill-{slug}/`.
+3. **Branch**: `python {cicadas-dir}/scripts/branch.py skill/{slug} --intent "..." --initiative skill-{slug}`. Forks from `main`.
+4. **Validate**: `python {cicadas-dir}/scripts/validate_skill.py {slug}`. Check spec compliance before publishing.
+5. **Implement bundled files** (if any) on `skill/{slug}` branch.
+6. **Complete**: Merge `skill/{slug}` to `main`. Run `skill_publish.py` to copy the skill to its publish destination (includes pre-publish validation). Archive the initiative.
+
+**Edit an existing skill**:
+- **Triggers**: "edit skill X", "update skill X", "the skill isn't triggering", "the skill fires too much", "the skill output is wrong"
+- Run `skill-edit.md` — one diagnostic question, targeted minimum change, validate, done.
+
+**Validate a skill manually**:
+```
+python {cicadas-dir}/scripts/validate_skill.py {slug-or-path}
+```
+
+**Publish a skill**:
+```
+python {cicadas-dir}/scripts/skill_publish.py {slug} [--publish-dir DIR] [--symlink] [--force]
+```
+Reads `publish_dir` from `active/skill-{slug}/emergence-config.json`. Runs validation before writing.
+
+> **Post-MVP**: `skill-evaluate.md` and `skill-tune.md` (trigger-rate evaluation and description tuning) are not yet implemented. `eval_queries.json` is drafted during creation for future use.
+
 ---
 
 ## Agent Operations (LLM)
@@ -376,6 +411,10 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 - **"Prune {name}"** → Runs `prune.py`. Rollback and restore to drafts.
 - **"Abort"** → Runs `abort.py`. Context-aware escape hatch: detects the current branch type, rolls back the branch(es), deregisters from registry, and prompts whether to move active specs to drafts or delete them.
 - **"Project history"** or **"Generate history"** → Runs `history.py`. Generates `.cicadas/canon/history.html` timeline from archive and index.
+- **"Create skill {name}"** or **"Build a skill for X"** → Reads `skill-create.md`. Runs start flow (name, draft folder, Building on AI?, publish destination, PR preference), then dialogue-driven SKILL.md authoring, kickoff, branch, validate.
+- **"Edit skill {name}"** → Reads `skill-edit.md`. One diagnostic question, targeted minimum change, validate.
+- **"Validate skill {name}"** → Runs `validate_skill.py {slug}`. Reports spec compliance errors or confirms valid.
+- **"Complete skill {name}"** or **"Publish skill {name}"** → Merges `skill/{slug}` to `main`, runs `skill_publish.py {slug}`, archives initiative.
 
 ---
 
@@ -398,6 +437,8 @@ The Builder interacts via natural-language commands. The Agent handles all scrip
 | **Prune** | `python {cicadas-dir}/scripts/prune.py {name} --type {branch\|initiative}` | Rollback & restore to drafts |
 | **Abort** | `python {cicadas-dir}/scripts/abort.py` | Context-aware escape hatch from current branch |
 | **History** | `python {cicadas-dir}/scripts/history.py [--output path]` | Generate HTML timeline to `.cicadas/canon/history.html` |
+| **Validate skill** | `python {cicadas-dir}/scripts/validate_skill.py {slug-or-path}` | Check Agent Skill spec compliance |
+| **Publish skill** | `python {cicadas-dir}/scripts/skill_publish.py {slug} [--publish-dir DIR] [--symlink] [--force]` | Copy/symlink active skill to publish destination (pre-validates) |
 
 ### Agent Operations (LLM)
 

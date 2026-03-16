@@ -95,9 +95,10 @@ def show_status() -> None:
                 print(f"      [{s['timestamp']}] ({s.get('from_branch', '?')}): {s['message']}")
 
     branches: dict = registry.get("branches", {})
-    features: dict = {n: i for n, i in branches.items() if not (n.startswith("fix/") or n.startswith("tweak/"))}
+    features: dict = {n: i for n, i in branches.items() if not (n.startswith("fix/") or n.startswith("tweak/") or n.startswith("skill/"))}
     fixes: dict = {n: i for n, i in branches.items() if n.startswith("fix/")}
     tweaks: dict = {n: i for n, i in branches.items() if n.startswith("tweak/")}
+    skills: dict = {n: i for n, i in branches.items() if n.startswith("skill/")}
 
     if features:
         print(f"\nActive Feature Branches ({len(features)}):")
@@ -114,6 +115,11 @@ def show_status() -> None:
         print(f"\nActive Tweaks ({len(tweaks)}):")
         for name, info in tweaks.items():
             print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
+
+    if skills:
+        print(f"\nActive Skills ({len(skills)}):")
+        for name, info in skills.items():
+            print(f"  - {name}: {info['intent']}")
 
     # Worktrees section — only shown if any branches have worktree_path recorded
     worktree_branches = [(n, i) for n, i in branches.items() if i.get("worktree_path")]
