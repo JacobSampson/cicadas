@@ -244,7 +244,6 @@ class TestArchiveWorktree(CicadasTest):
         self.assertNotIn("feat/wt-branch", reg["branches"])
 
     def test_archive_dirty_worktree_exits_without_force(self):
-        import sys
         (self.wt_dir / "dirty.txt").write_text("uncommitted")
         with self.assertRaises(SystemExit) as cm:
             archive.archive("feat/wt-branch", type_="branch", force=False)
@@ -259,7 +258,9 @@ class TestArchiveWorktree(CicadasTest):
 
     def test_archive_missing_worktree_dir_warns_and_continues(self):
         """If worktree dir was already deleted, archive should still proceed and clear registry."""
-        import shutil, utils
+        import shutil
+
+        import utils
         shutil.rmtree(self.wt_dir)
         # Prune the worktree from git's list
         import subprocess
@@ -303,6 +304,7 @@ class TestStatusWorktrees(CicadasTest):
         """A branch with a real clean worktree shows [clean] and HEAD."""
         self.init_git()
         import subprocess
+
         import utils
         subprocess.run(["git", "checkout", "-b", "feat/wt-clean"], cwd=self.root, check=True, capture_output=True)
         subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)

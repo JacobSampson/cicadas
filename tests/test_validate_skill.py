@@ -1,7 +1,6 @@
 # Copyright 2026 Cicadas Contributors
 # SPDX-License-Identifier: Apache-2.0
 
-import re
 import unittest
 from pathlib import Path
 

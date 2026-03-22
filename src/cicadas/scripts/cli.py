@@ -125,6 +125,7 @@ def _run_status(args):
 def _run_check(args):
     """Run the check command."""
     import argparse
+
     from check import check_conflicts
 
     parser = argparse.ArgumentParser(prog="cicadas check")
@@ -138,6 +139,7 @@ def _run_check(args):
 def _run_kickoff(args):
     """Run the kickoff command."""
     import argparse
+
     from kickoff import kickoff
 
     parser = argparse.ArgumentParser(prog="cicadas kickoff")
@@ -152,6 +154,7 @@ def _run_kickoff(args):
 def _run_branch(args):
     """Run the branch command."""
     import argparse
+
     from branch import create_branch
 
     parser = argparse.ArgumentParser(prog="cicadas branch")
@@ -179,6 +182,7 @@ def _run_branch(args):
 def _run_signal(args):
     """Run the signal command."""
     import argparse
+
     from signalboard import send_signal
 
     parser = argparse.ArgumentParser(prog="cicadas signal")
@@ -193,6 +197,7 @@ def _run_signal(args):
 def _run_archive(args):
     """Run the archive command."""
     import argparse
+
     from archive import archive
 
     parser = argparse.ArgumentParser(prog="cicadas archive")
@@ -207,6 +212,7 @@ def _run_archive(args):
 def _run_prune(args):
     """Run the prune command."""
     import argparse
+
     from prune import prune
 
     parser = argparse.ArgumentParser(prog="cicadas prune")
@@ -229,6 +235,7 @@ def _run_history(args):
     """Run the history command."""
     import argparse
     from pathlib import Path
+
     from history import generate
 
     parser = argparse.ArgumentParser(prog="cicadas history")
@@ -244,6 +251,7 @@ def _run_history(args):
 def _run_open_pr(args):
     """Run the open-pr command."""
     import argparse
+
     from open_pr import open_pr
 
     parser = argparse.ArgumentParser(prog="cicadas open-pr")
@@ -257,6 +265,7 @@ def _run_open_pr(args):
 def _run_review(args):
     """Run the review command."""
     import argparse
+
     from review import check_review
 
     parser = argparse.ArgumentParser(prog="cicadas review")
@@ -269,11 +278,10 @@ def _run_review(args):
 
 def _run_validate_skill(args):
     """Run the validate-skill command."""
-    import argparse
-    from validate_skill import main as validate_main
-
     # Reconstruct sys.argv for the script's argparse
     import sys
+
+    from validate_skill import main as validate_main
     old_argv = sys.argv
     sys.argv = ["cicadas validate-skill"] + args
     try:
@@ -287,11 +295,10 @@ def _run_validate_skill(args):
 
 def _run_publish_skill(args):
     """Run the publish-skill command."""
-    import argparse
-    from skill_publish import main as publish_main
-
     # Reconstruct sys.argv for the script's argparse
     import sys
+
+    from skill_publish import main as publish_main
     old_argv = sys.argv
     sys.argv = ["cicadas publish-skill"] + args
     try:
@@ -306,6 +313,7 @@ def _run_publish_skill(args):
 def _run_lifecycle(args):
     """Run the lifecycle command."""
     import argparse
+
     from create_lifecycle import create_lifecycle
 
     parser = argparse.ArgumentParser(prog="cicadas lifecycle")
@@ -337,6 +345,7 @@ def _run_lifecycle(args):
 def _run_update_index(args):
     """Run the update-index command."""
     import argparse
+
     from update_index import update_index
 
     parser = argparse.ArgumentParser(prog="cicadas update-index")

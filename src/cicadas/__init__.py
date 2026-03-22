@@ -10,7 +10,7 @@ treated as disposable inputs that drive implementation and then expire.
 Authoritative documentation is reverse-engineered from the code itself.
 """
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 try:
     __version__ = version("aprovan-cicadas")

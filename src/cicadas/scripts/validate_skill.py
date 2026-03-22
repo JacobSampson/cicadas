@@ -19,8 +19,7 @@ import re
 import sys
 from pathlib import Path
 
-from utils import get_project_root, load_json
-
+from utils import get_project_root
 
 _FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 _FIELD_RE = re.compile(r"^(\w[\w-]*):\s*(.*)", re.MULTILINE)

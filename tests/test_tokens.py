@@ -173,7 +173,7 @@ class TestBranchTokenIntegration(CicadasTest):
 
         kickoff.kickoff(name, "test intent")
 
-        branch_name = f"feat/partition-a"
+        branch_name = "feat/partition-a"
         branch.create_branch(branch_name, "partition a", "scripts/utils.py", initiative=name, no_worktree=True)
 
         log_path = self.cicadas_dir / "active" / name / "tokens.json"

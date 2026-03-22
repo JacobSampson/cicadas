@@ -9,7 +9,6 @@ from pathlib import Path
 
 from tokens import append_entry
 from utils import (
-    WorktreeDirtyError,
     create_worktree,
     get_default_branch,
     get_project_root,
@@ -120,7 +119,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
             wt_path_str = str(created)
             print(f"[OK]   Worktree created: {created}")
             _write_context_md(created, cicadas, list(my_mods), initiative)
-            print(f"[INFO] context.md written to worktree root (canon summary + module snapshots + tasks)")
+            print("[INFO] context.md written to worktree root (canon summary + module snapshots + tasks)")
             print(f"[INFO] Point your agent at: {created}")
         except subprocess.CalledProcessError as e:
             print(f"[ERR]  git worktree add failed: {e}")
@@ -134,7 +133,7 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
         except subprocess.CalledProcessError:
             print(f"[WARN] Could not push {name} to remote. Push manually: git push -u origin {name}")
         _write_context_md(root, cicadas, list(my_mods), initiative)
-        print(f"[INFO] context.md written to project root (canon summary + module snapshots + tasks)")
+        print("[INFO] context.md written to project root (canon summary + module snapshots + tasks)")
 
     # Register
     branch_info = {
@@ -164,7 +163,13 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     (cicadas / "active" / active_name).mkdir(parents=True, exist_ok=True)
 
     # Write implementation/branch-start token boundary entry
-    append_entry(cicadas / "active" / active_name / "tokens.json", initiative=active_name, phase="implementation", subphase=name, source="unavailable")
+    append_entry(
+        cicadas / "active" / active_name / "tokens.json",
+        initiative=active_name,
+        phase="implementation",
+        subphase=name,
+        source="unavailable",
+    )
 
     print(f"[OK]   Branch registered: {name}")
     if conflicts:
@@ -181,4 +186,12 @@ if __name__ == "__main__":
     parser.add_argument("--worktree-dir", dest="worktree_dir", help="Override default worktree directory path")
     parser.add_argument("--no-worktree", action="store_true", help="Force plain branch even if depends_on is empty")
     args = parser.parse_args()
-    create_branch(args.name, args.intent, args.modules, initiative=args.initiative, from_branch=args.from_branch, worktree_dir_override=args.worktree_dir, no_worktree=args.no_worktree)
+    create_branch(
+        args.name,
+        args.intent,
+        args.modules,
+        initiative=args.initiative,
+        from_branch=args.from_branch,
+        worktree_dir_override=args.worktree_dir,
+        no_worktree=args.no_worktree,
+    )

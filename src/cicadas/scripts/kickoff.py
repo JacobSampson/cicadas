@@ -50,13 +50,13 @@ def kickoff(name, intent, owner="unknown"):
     parallel = [p["name"] for p in partitions if p.get("depends_on") == []]
     if parallel:
         print(f"[INFO] Parallel partitions detected: {', '.join(parallel)}")
-        print(f"[INFO] Running conflict check before parallel execution...")
+        print("[INFO] Running conflict check before parallel execution...")
         from check import check_conflicts
         has_conflicts = check_conflicts(initiative_name=name)
         if has_conflicts:
-            print(f"[WARN] Resolve module conflicts in approach.md before starting parallel branches.")
+            print("[WARN] Resolve module conflicts in approach.md before starting parallel branches.")
         else:
-            print(f"[OK]   No module conflicts detected.")
+            print("[OK]   No module conflicts detected.")
 
     # Create initiative branch and push to remote
     branch_name = f"initiative/{name}"

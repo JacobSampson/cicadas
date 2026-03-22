@@ -25,8 +25,8 @@ class TestOrchestration(CicadasTest):
 
     def test_end_to_end_kickoff_branch_archive_index(self):
         """Full lifecycle: kickoff → register branch → archive branch → log to index."""
-        import kickoff as kickoff_mod
         import archive as archive_mod
+        import kickoff as kickoff_mod
 
         init_name = "e2e-init"
         feat_name = "feat/e2e-part1"

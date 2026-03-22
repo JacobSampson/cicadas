@@ -37,7 +37,7 @@ class TestClassify(unittest.TestCase):
 
 class TestExtractSummary(unittest.TestCase):
     def setUp(self):
-        import tempfile, os
+        import tempfile
         self.test_dir = tempfile.mkdtemp()
         self.folder = Path(self.test_dir)
 
@@ -221,7 +221,7 @@ class TestGenerate(CicadasTest):
         self.assertTrue(out.exists())
 
     def test_generate_uses_index_for_ledger_summary(self):
-        folder = _make_archive_folder(self.cicadas_dir / "archive", "indexed-init")
+        _make_archive_folder(self.cicadas_dir / "archive", "indexed-init")
         (self.cicadas_dir / "index.json").write_text(json.dumps({
             "entries": [{"branch": "indexed-init", "summary": "Ledger entry text"}]
         }))
