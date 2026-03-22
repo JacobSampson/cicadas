@@ -14,9 +14,13 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 from wiki_nav import (  # noqa: E402
     annotate_all_markdown,
+    detect_wiki_raw_base,
     detect_wiki_web_base,
     discover_markdown_docs,
+    doc_nav_href,
     ensure_wiki_metadata_comment,
+    github_wiki_web_slug,
+    infer_doc_record,
     refresh_wiki_navigation,
     wiki_link_target,
 )
@@ -34,6 +38,10 @@ class TestWikiNav(unittest.TestCase):
 
     def test_wiki_link_target_strips_md(self):
         self.assertEqual(wiki_link_target("canon/summary.md"), "canon/summary")
+
+    def test_github_wiki_web_slug_is_basename(self):
+        self.assertEqual(github_wiki_web_slug("canon/product-overview.md"), "product-overview")
+        self.assertEqual(github_wiki_web_slug("archive/20260322-x/prd.md"), "prd")
 
     def test_discover_and_refresh_writes_nav_files(self):
         (self.cicadas / "canon" / "summary.md").write_text("# Canon Summary\n\nBody.\n", encoding="utf-8")
@@ -55,7 +63,7 @@ class TestWikiNav(unittest.TestCase):
 
         side = (self.cicadas / "_Sidebar.md").read_text(encoding="utf-8")
         self.assertIn("[Home](Home)", side)
-        self.assertIn("Canon", side)
+        self.assertIn("Canon (wiki)", side)
 
     def test_annotate_idempotent(self):
         p = self.cicadas / "canon" / "summary.md"
@@ -101,18 +109,51 @@ class TestWikiNav(unittest.TestCase):
         )
         self.assertEqual(detect_wiki_web_base(self.cicadas), "https://github.com/OwNnEr/My-Repo/wiki")
 
+    def test_detect_wiki_raw_base_derived_from_wiki_web_base(self):
+        (self.cicadas / "config.json").write_text(
+            json.dumps({"wiki_web_base": "https://github.com/acme/foo/wiki"}),
+            encoding="utf-8",
+        )
+        self.assertEqual(
+            detect_wiki_raw_base(self.cicadas),
+            "https://raw.githubusercontent.com/wiki/acme/foo",
+        )
+
+    def test_doc_nav_href_core_vs_raw(self):
+        (self.cicadas / "canon" / "summary.md").write_text("# S\n", encoding="utf-8")
+        (self.cicadas / "archive").mkdir(exist_ok=True)
+        arch = self.cicadas / "archive" / "20260228-040748-bugs" / "prd.md"
+        arch.parent.mkdir(parents=True)
+        arch.write_text("# P\n", encoding="utf-8")
+        canon_rec = infer_doc_record(self.cicadas, self.cicadas / "canon" / "summary.md")
+        arch_rec = infer_doc_record(self.cicadas, arch)
+        web, raw = "https://github.com/o/r/wiki", "https://raw.githubusercontent.com/wiki/o/r"
+        self.assertEqual(doc_nav_href(canon_rec, web, raw), "https://github.com/o/r/wiki/summary")
+        self.assertEqual(
+            doc_nav_href(arch_rec, web, raw),
+            "https://raw.githubusercontent.com/wiki/o/r/archive/20260228-040748-bugs/prd.md",
+        )
+
     def test_absolute_links_when_wiki_base_configured(self):
         (self.cicadas / "config.json").write_text(
             json.dumps({"wiki_web_base": "https://github.com/o/r/wiki"}),
             encoding="utf-8",
         )
         (self.cicadas / "canon" / "summary.md").write_text("# S\n", encoding="utf-8")
+        (self.cicadas / "archive").mkdir(exist_ok=True)
+        ap = self.cicadas / "archive" / "20260228-040748-bugs-and-tweaks" / "prd.md"
+        ap.parent.mkdir(parents=True)
+        ap.write_text("# P\n", encoding="utf-8")
         refresh_wiki_navigation(self.cicadas)
         home = (self.cicadas / "Home.md").read_text(encoding="utf-8")
-        self.assertIn("[S](https://github.com/o/r/wiki/canon/summary)", home)
+        self.assertIn("[S](https://github.com/o/r/wiki/summary)", home)
+        self.assertIn(
+            "[P](https://raw.githubusercontent.com/wiki/o/r/archive/20260228-040748-bugs-and-tweaks/prd.md)",
+            home,
+        )
         side = (self.cicadas / "_Sidebar.md").read_text(encoding="utf-8")
         self.assertIn("[Home](https://github.com/o/r/wiki)", side)
-        self.assertIn("](https://github.com/o/r/wiki/Home#archive)", side)
+        self.assertIn("](https://github.com/o/r/wiki#archive)", side)
 
 
 if __name__ == "__main__":
