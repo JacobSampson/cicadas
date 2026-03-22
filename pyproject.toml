@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aprovan-cicadas"
-version = "0.3.2"
+version = "0.3.3"
 description = "Sustainable, Spec-Driven Development (SDD) for human-AI teams"
 readme = "README.md"
 license = "Apache-2.0"
