@@ -220,7 +220,7 @@ class TestArchiveWorktree(CicadasTest):
         import utils
         from utils import worktree_path
         self.wt_dir = worktree_path(self.root, "feat/wt-branch")
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         # Create the worktree
         utils.create_worktree(self.root, "feat/wt-branch", self.wt_dir)
         # Register in registry
@@ -307,7 +307,7 @@ class TestStatusWorktrees(CicadasTest):
 
         import utils
         subprocess.run(["git", "checkout", "-b", "feat/wt-clean"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         wt = utils.worktree_path(self.root, "feat/wt-clean")
         utils.create_worktree(self.root, "feat/wt-clean", wt)
         reg = utils.load_json(self.cicadas_dir / "registry.json")
@@ -349,7 +349,7 @@ class TestStatusLifecycleMerge(CicadasTest):
     def test_ref_exists_for_real_branch(self):
         import subprocess
         subprocess.run(["git", "checkout", "-b", "feat/real"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         self.assertTrue(status._ref_exists(self.root, "feat/real"))
 
     def test_ref_exists_false_for_nonexistent(self):
@@ -358,9 +358,9 @@ class TestStatusLifecycleMerge(CicadasTest):
     def test_is_merged_into_true_after_merge(self):
         import subprocess
         subprocess.run(["git", "checkout", "-b", "feat/merged"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         subprocess.run(["git", "merge", "feat/merged", "--no-ff", "-m", "merge"], cwd=self.root, check=True, capture_output=True)
-        self.assertTrue(status._is_merged_into(self.root, "feat/merged", "master"))
+        self.assertTrue(status._is_merged_into(self.root, "feat/merged", "main"))
 
     def test_is_merged_into_false_before_merge(self):
         import subprocess
@@ -368,8 +368,8 @@ class TestStatusLifecycleMerge(CicadasTest):
         (self.root / "new.txt").write_text("new")
         subprocess.run(["git", "add", "."], cwd=self.root, check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", "new commit"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
-        self.assertFalse(status._is_merged_into(self.root, "feat/unmerged", "master"))
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
+        self.assertFalse(status._is_merged_into(self.root, "feat/unmerged", "main"))
 
     def _make_commit(self, filename: str):
         """Write and commit a file so branches have diverging histories."""
@@ -387,7 +387,7 @@ class TestStatusLifecycleMerge(CicadasTest):
         subprocess.run(["git", "checkout", "-b", "feat/part1"], cwd=self.root, check=True, capture_output=True)
         # Add a commit on feat/part1 so it's ahead of initiative/my-init and not trivially merged
         self._make_commit("feat1.txt")
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         self._register_initiative_with_lifecycle("my-init", ["feat/part1"])
 
         f = io.StringIO()
@@ -405,7 +405,7 @@ class TestStatusLifecycleMerge(CicadasTest):
         subprocess.run(["git", "checkout", "initiative/my-init2"], cwd=self.root, capture_output=True)
         subprocess.run(["git", "merge", "feat/part1", "--no-ff", "-m", "merge feat"], cwd=self.root, check=True, capture_output=True)
         # Do NOT merge initiative into master — initiative still open
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         self._register_initiative_with_lifecycle("my-init2", ["feat/part1"])
 
         f = io.StringIO()
@@ -419,7 +419,7 @@ class TestStatusLifecycleMerge(CicadasTest):
         import subprocess
         subprocess.run(["git", "checkout", "-b", "initiative/my-init3"], cwd=self.root, check=True, capture_output=True)
         self._make_commit("init3.txt")
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         subprocess.run(["git", "merge", "initiative/my-init3", "--no-ff", "-m", "merge init"], cwd=self.root, check=True, capture_output=True)
         self._register_initiative_with_lifecycle("my-init3", [])
 
@@ -437,7 +437,7 @@ class TestStatusLifecycleMerge(CicadasTest):
         self._make_commit("feat4.txt")
         subprocess.run(["git", "checkout", "initiative/my-init4"], cwd=self.root, capture_output=True)
         subprocess.run(["git", "merge", "feat/part1", "--no-ff", "-m", "merge"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, capture_output=True)
         self._register_initiative_with_lifecycle("my-init4", ["feat/part1"])
 
         f = io.StringIO()
