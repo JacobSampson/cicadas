@@ -7,10 +7,10 @@ import subprocess
 from datetime import UTC, datetime
 
 from tokens import append_entry
-from utils import get_project_root, load_json, parse_partitions_dag, record_nested_cicadas_changes, save_json
+from utils import get_project_root, load_json, parse_partitions_dag, record_nested_cicadas_changes, resolve_repo, save_json
 
 
-def kickoff(name, intent, owner="unknown"):
+def kickoff(name, intent, owner="unknown", repo=None):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
@@ -18,6 +18,10 @@ def kickoff(name, intent, owner="unknown"):
     if name in registry.get("initiatives", {}):
         print(f"[ERR]  Initiative {name} already exists.")
         return
+
+    resolved = resolve_repo(repo)
+    if resolved:
+        print(f"[INFO] Repo: {resolved}")
 
     active_dir = cicadas / "active" / name
     active_dir.mkdir(parents=True, exist_ok=True)
@@ -39,7 +43,10 @@ def kickoff(name, intent, owner="unknown"):
         print(f"[WARN] No drafts found for {name}. Creating empty initiative.")
 
     # Register
-    registry.setdefault("initiatives", {})[name] = {"intent": intent, "owner": owner, "signals": [], "created_at": datetime.now(UTC).isoformat()}
+    entry = {"intent": intent, "owner": owner, "signals": [], "created_at": datetime.now(UTC).isoformat()}
+    if resolved:
+        entry["repo"] = resolved
+    registry.setdefault("initiatives", {})[name] = entry
     save_json(cicadas / "registry.json", registry)
 
     # Write lifecycle/kickoff token boundary entry
@@ -88,5 +95,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Kickoff an initiative: promote drafts to active, register, create branch")
     parser.add_argument("name")
     parser.add_argument("--intent", required=True)
+    parser.add_argument("--repo", help="Target repo (short name or org/repo)")
     args = parser.parse_args()
-    kickoff(args.name, args.intent)
+    kickoff(args.name, args.intent, repo=args.repo)

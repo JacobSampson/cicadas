@@ -228,6 +228,18 @@ def skip_nested_cicadas_git_commit() -> bool:
     return os.environ.get("CICADAS_SKIP_NESTED_GIT_COMMIT", "").strip().lower() in ("1", "true", "yes")
 
 
+def resolve_repo(repo: str | None) -> str | None:
+    """Resolve short repo name to full org/repo path using CICADAS_DEFAULT_ORG env var."""
+    if not repo:
+        return None
+    if "/" in repo:
+        return repo
+    default_org = os.environ.get("CICADAS_DEFAULT_ORG")
+    if default_org:
+        return f"{default_org}/{repo}"
+    return repo
+
+
 def record_nested_cicadas_changes(
     project_root: Path,
     cicadas: Path,

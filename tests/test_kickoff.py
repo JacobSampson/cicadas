@@ -120,5 +120,59 @@ class TestKickoff(CicadasTest):
         self.assertEqual(registry["initiatives"][name]["intent"], "old")
 
 
+    def test_kickoff_with_repo(self):
+        """kickoff stores repo in registry when --repo is provided."""
+        name = "repo-test"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# Test PRD")
+
+        self.init_git()
+        kickoff.kickoff(name, "test intent", repo="cicadas")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        self.assertIn(name, registry["initiatives"])
+        self.assertEqual(registry["initiatives"][name]["repo"], "cicadas")
+
+    def test_kickoff_with_repo_resolves_with_env(self):
+        """kickoff resolves short repo names using CICADAS_DEFAULT_ORG."""
+        import os
+        original = os.environ.get("CICADAS_DEFAULT_ORG")
+        try:
+            os.environ["CICADAS_DEFAULT_ORG"] = "JacobSampson"
+            name = "repo-env-test"
+            draft_dir = self.cicadas_dir / "drafts" / name
+            draft_dir.mkdir(parents=True)
+            (draft_dir / "prd.md").write_text("# Test PRD")
+
+            self.init_git()
+            kickoff.kickoff(name, "test intent", repo="cicadas")
+
+            with open(self.cicadas_dir / "registry.json") as f:
+                registry = json.load(f)
+            self.assertEqual(registry["initiatives"][name]["repo"], "JacobSampson/cicadas")
+        finally:
+            if original is not None:
+                os.environ["CICADAS_DEFAULT_ORG"] = original
+            elif "CICADAS_DEFAULT_ORG" in os.environ:
+                del os.environ["CICADAS_DEFAULT_ORG"]
+
+    def test_kickoff_without_repo(self):
+        """kickoff without --repo does not add repo key to registry."""
+        name = "no-repo-test"
+        draft_dir = self.cicadas_dir / "drafts" / name
+        draft_dir.mkdir(parents=True)
+        (draft_dir / "prd.md").write_text("# Test PRD")
+
+        self.init_git()
+        kickoff.kickoff(name, "test intent")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            registry = json.load(f)
+        self.assertIn(name, registry["initiatives"])
+        self.assertNotIn("repo", registry["initiatives"][name])
+
+
 if __name__ == "__main__":
     unittest.main()

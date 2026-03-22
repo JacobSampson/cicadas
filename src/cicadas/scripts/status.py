@@ -88,7 +88,9 @@ def show_status() -> None:
     print(f"Active Initiatives ({len(initiatives)}):")
     for name, info in initiatives.items():
         signals: list = info.get("signals", [])
-        print(f"  - {name}: {info['intent']}")
+        repo: str = info.get("repo", "")
+        repo_suffix: str = f" @{repo}" if repo else ""
+        print(f"  - {name}: {info['intent']}{repo_suffix}")
         if signals:
             print(f"    Signals ({len(signals)}):")
             for s in signals[-3:]:  # Show last 3
@@ -104,22 +106,30 @@ def show_status() -> None:
         print(f"\nActive Feature Branches ({len(features)}):")
         for name, info in features.items():
             initiative = info.get("initiative", "standalone")
-            print(f"  - {name}: {info['intent']} (Initiative: {initiative}, Modules: {', '.join(info.get('modules', []))})")
+            repo = info.get("repo", "")
+            repo_suffix = f", Repo: {repo}" if repo else ""
+            print(f"  - {name}: {info['intent']} (Initiative: {initiative}, Modules: {', '.join(info.get('modules', []))}{repo_suffix})")
 
     if fixes:
         print(f"\nActive Bugs ({len(fixes)}):")
         for name, info in fixes.items():
-            print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
+            repo = info.get("repo", "")
+            repo_suffix = f", Repo: {repo}" if repo else ""
+            print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))}{repo_suffix})")
 
     if tweaks:
         print(f"\nActive Tweaks ({len(tweaks)}):")
         for name, info in tweaks.items():
-            print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))})")
+            repo = info.get("repo", "")
+            repo_suffix = f", Repo: {repo}" if repo else ""
+            print(f"  - {name}: {info['intent']} (Modules: {', '.join(info.get('modules', []))}{repo_suffix})")
 
     if skills:
         print(f"\nActive Skills ({len(skills)}):")
         for name, info in skills.items():
-            print(f"  - {name}: {info['intent']}")
+            repo = info.get("repo", "")
+            repo_suffix = f" @{repo}" if repo else ""
+            print(f"  - {name}: {info['intent']}{repo_suffix}")
 
     # Worktrees section — only shown if any branches have worktree_path recorded
     worktree_branches = [(n, i) for n, i in branches.items() if i.get("worktree_path")]

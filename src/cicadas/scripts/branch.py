@@ -15,6 +15,7 @@ from utils import (
     load_json,
     parse_partitions_dag,
     record_nested_cicadas_changes,
+    resolve_repo,
     save_json,
     worktree_path,
 )
@@ -55,7 +56,7 @@ def _write_context_md(worktree_dir: Path, cicadas: Path, modules: list[str], ini
     context_path.write_text("".join(lines))
 
 
-def create_branch(name, intent, modules, initiative=None, from_branch=None, owner="unknown", worktree_dir_override=None, no_worktree=False):
+def create_branch(name, intent, modules, initiative=None, from_branch=None, owner="unknown", worktree_dir_override=None, no_worktree=False, repo=None):
     root = get_project_root()
     cicadas = root / ".cicadas"
     registry = load_json(cicadas / "registry.json")
@@ -64,6 +65,14 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
     if name in registry.get("branches", {}):
         print(f"[ERR]  Branch {name} already registered.")
         return
+
+    # Resolve repo: explicit > inherit from initiative > None
+    if not repo and initiative:
+        init_info = registry.get("initiatives", {}).get(initiative, {})
+        repo = init_info.get("repo")
+    resolved_repo = resolve_repo(repo)
+    if resolved_repo:
+        print(f"[INFO] Repo: {resolved_repo}")
 
     # Check for module overlaps
     my_mods = {m.strip() for m in modules.split(",") if m.strip()}
@@ -143,6 +152,8 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
         "owner": owner,
         "created_at": datetime.now(UTC).isoformat(),
     }
+    if resolved_repo:
+        branch_info["repo"] = resolved_repo
     if wt_path_str:
         branch_info["worktree_path"] = wt_path_str
     if initiative:
@@ -193,6 +204,7 @@ if __name__ == "__main__":
     parser.add_argument("--from", dest="from_branch", help="Parent branch to fork from (defaults to initiative branch)")
     parser.add_argument("--worktree-dir", dest="worktree_dir", help="Override default worktree directory path")
     parser.add_argument("--no-worktree", action="store_true", help="Force plain branch even if depends_on is empty")
+    parser.add_argument("--repo", help="Target repo (short name or org/repo); inherits from initiative if not specified")
     args = parser.parse_args()
     create_branch(
         args.name,
@@ -202,4 +214,5 @@ if __name__ == "__main__":
         from_branch=args.from_branch,
         worktree_dir_override=args.worktree_dir,
         no_worktree=args.no_worktree,
+        repo=args.repo,
     )

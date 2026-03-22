@@ -125,6 +125,59 @@ class TestBranch(CicadasTest):
         self.assertTrue((self.cicadas_dir / "active" / init_name).exists())
         self.assertFalse((self.cicadas_dir / "active" / "fix").exists())
 
+    def test_create_branch_with_repo(self):
+        """branch stores repo in registry when --repo is provided."""
+        branch_name = "fix/repo-test"
+        branch.create_branch(branch_name, "bug intent", "src/bar.py", repo="cicadas")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertIn(branch_name, reg["branches"])
+        self.assertEqual(reg["branches"][branch_name]["repo"], "cicadas")
+
+    def test_branch_inherits_repo_from_initiative(self):
+        """branch inherits repo from initiative when not explicitly specified."""
+        import os
+        original = os.environ.get("CICADAS_DEFAULT_ORG")
+        try:
+            os.environ["CICADAS_DEFAULT_ORG"] = "JacobSampson"
+            init_name = "repo-init"
+            with open(self.cicadas_dir / "registry.json", "r+") as f:
+                reg = json.load(f)
+                reg["initiatives"][init_name] = {"intent": "test", "repo": "JacobSampson/cicadas"}
+                f.seek(0)
+                json.dump(reg, f)
+                f.truncate()
+
+            branch_name = "feat/inherits-repo"
+            branch.create_branch(branch_name, "feat intent", "src/foo.py", initiative=init_name)
+
+            with open(self.cicadas_dir / "registry.json") as f:
+                reg = json.load(f)
+            self.assertEqual(reg["branches"][branch_name]["repo"], "JacobSampson/cicadas")
+        finally:
+            if original is not None:
+                os.environ["CICADAS_DEFAULT_ORG"] = original
+            elif "CICADAS_DEFAULT_ORG" in os.environ:
+                del os.environ["CICADAS_DEFAULT_ORG"]
+
+    def test_branch_repo_overrides_initiative(self):
+        """explicit --repo on branch overrides initiative repo."""
+        init_name = "override-init"
+        with open(self.cicadas_dir / "registry.json", "r+") as f:
+            reg = json.load(f)
+            reg["initiatives"][init_name] = {"intent": "test", "repo": "OrgA/repo1"}
+            f.seek(0)
+            json.dump(reg, f)
+            f.truncate()
+
+        branch_name = "feat/override-repo"
+        branch.create_branch(branch_name, "feat intent", "src/foo.py", initiative=init_name, repo="OrgB/repo2")
+
+        with open(self.cicadas_dir / "registry.json") as f:
+            reg = json.load(f)
+        self.assertEqual(reg["branches"][branch_name]["repo"], "OrgB/repo2")
+
     def test_conflict_detection(self):
         # Register existing branch with same module
         with open(self.cicadas_dir / "registry.json", "r+") as f:

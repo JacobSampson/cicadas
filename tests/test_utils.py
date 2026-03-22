@@ -147,6 +147,38 @@ class TestCreateWorktree(CicadasTest):
             utils.create_worktree(self.root, "feat/nonexistent", self.wt_dir)
 
 
+class TestResolveRepo(unittest.TestCase):
+    def setUp(self):
+        self.original_env = os.environ.get("CICADAS_DEFAULT_ORG")
+
+    def tearDown(self):
+        if self.original_env is not None:
+            os.environ["CICADAS_DEFAULT_ORG"] = self.original_env
+        elif "CICADAS_DEFAULT_ORG" in os.environ:
+            del os.environ["CICADAS_DEFAULT_ORG"]
+
+    def test_none_returns_none(self):
+        self.assertIsNone(utils.resolve_repo(None))
+
+    def test_full_path_unchanged(self):
+        self.assertEqual(utils.resolve_repo("OtherOrg/other-repo"), "OtherOrg/other-repo")
+        os.environ["CICADAS_DEFAULT_ORG"] = "JacobSampson"
+        self.assertEqual(utils.resolve_repo("OtherOrg/other-repo"), "OtherOrg/other-repo")
+
+    def test_short_name_without_env(self):
+        if "CICADAS_DEFAULT_ORG" in os.environ:
+            del os.environ["CICADAS_DEFAULT_ORG"]
+        self.assertEqual(utils.resolve_repo("cicadas"), "cicadas")
+
+    def test_short_name_with_env(self):
+        os.environ["CICADAS_DEFAULT_ORG"] = "JacobSampson"
+        self.assertEqual(utils.resolve_repo("cicadas"), "JacobSampson/cicadas")
+        self.assertEqual(utils.resolve_repo("other-repo"), "JacobSampson/other-repo")
+
+    def test_empty_string_returns_none(self):
+        self.assertIsNone(utils.resolve_repo(""))
+
+
 class TestRemoveWorktree(CicadasTest):
     def setUp(self):
         super().setUp()
