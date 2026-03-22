@@ -122,7 +122,7 @@ class TestCreateWorktree(CicadasTest):
         self.init_git()
         # Create a test branch to attach the worktree to
         subprocess.run(["git", "checkout", "-b", "feat/test-branch"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, check=True, capture_output=True)
         self.wt_dir = self.root.parent / f"{self.root.name}-feat-test-branch"
 
     def tearDown(self):
@@ -152,7 +152,7 @@ class TestRemoveWorktree(CicadasTest):
         super().setUp()
         self.init_git()
         subprocess.run(["git", "checkout", "-b", "feat/rm-branch"], cwd=self.root, check=True, capture_output=True)
-        subprocess.run(["git", "checkout", "master"], cwd=self.root, check=True, capture_output=True)
+        subprocess.run(["git", "checkout", "main"], cwd=self.root, check=True, capture_output=True)
         self.wt_dir = self.root.parent / f"{self.root.name}-feat-rm-branch"
         utils.create_worktree(self.root, "feat/rm-branch", self.wt_dir)
 
