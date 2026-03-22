@@ -7,7 +7,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-from utils import WorktreeDirtyError, get_default_branch, get_project_root, load_json, remove_worktree, save_json
+from utils import (
+    WorktreeDirtyError,
+    get_default_branch,
+    get_project_root,
+    load_json,
+    record_nested_cicadas_changes,
+    remove_worktree,
+    save_json,
+)
 
 
 def prune(name, type_, force=False):
@@ -36,8 +44,10 @@ def prune(name, type_, force=False):
         # Restore active specs to drafts
         active = cicadas / "active" / name
         drafts = cicadas / "drafts" / name
+        restored_specs = False
         if active.exists():
             shutil.move(str(active), str(drafts))
+            restored_specs = True
             print(f"[OK]   Restored specs to drafts/{name}")
 
         # Delete git branch
@@ -49,6 +59,18 @@ def prune(name, type_, force=False):
 
         del registry["branches"][name]
         save_json(cicadas / "registry.json", registry)
+        nested_paths = ["registry.json"]
+        nested_updates = None
+        if restored_specs:
+            nested_paths.append(f"drafts/{name}")
+            nested_updates = [f"active/{name}"]
+        record_nested_cicadas_changes(
+            root,
+            cicadas,
+            nested_paths,
+            f"cicadas: prune branch {name}",
+            update_paths=nested_updates,
+        )
         print(f"[OK]   Pruned branch: {name}")
 
     elif type_ == "initiative":
@@ -71,8 +93,10 @@ def prune(name, type_, force=False):
         # Restore specs
         active = cicadas / "active" / name
         drafts = cicadas / "drafts" / name
+        restored_specs = False
         if active.exists():
             shutil.move(str(active), str(drafts))
+            restored_specs = True
             print(f"[OK]   Restored specs to drafts/{name}")
 
         # Delete initiative branch
@@ -85,6 +109,18 @@ def prune(name, type_, force=False):
 
         del registry["initiatives"][name]
         save_json(cicadas / "registry.json", registry)
+        nested_paths = ["registry.json"]
+        nested_updates = None
+        if restored_specs:
+            nested_paths.append(f"drafts/{name}")
+            nested_updates = [f"active/{name}"]
+        record_nested_cicadas_changes(
+            root,
+            cicadas,
+            nested_paths,
+            f"cicadas: prune initiative {name}",
+            update_paths=nested_updates,
+        )
         print(f"[OK]   Pruned initiative: {name}")
 
 

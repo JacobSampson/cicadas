@@ -4,12 +4,13 @@
 import argparse
 from datetime import UTC, datetime
 
-from utils import get_project_root, load_json, save_json
+from utils import get_project_root, load_json, record_nested_cicadas_changes, save_json
 
 
 def update_index(branch, summary, decisions="", modules=""):
     root = get_project_root()
-    index_path = root / ".cicadas" / "index.json"
+    cicadas = root / ".cicadas"
+    index_path = cicadas / "index.json"
     index = load_json(index_path)
 
     if isinstance(modules, str):
@@ -21,6 +22,7 @@ def update_index(branch, summary, decisions="", modules=""):
 
     index.setdefault("entries", []).append(entry)
     save_json(index_path, index)
+    record_nested_cicadas_changes(root, cicadas, ["index.json"], f"cicadas: update index ({branch})")
     print(f"Added entry {len(index['entries'])} to artifact index.")
 
 

@@ -14,6 +14,7 @@ from utils import (
     get_project_root,
     load_json,
     parse_partitions_dag,
+    record_nested_cicadas_changes,
     save_json,
     worktree_path,
 )
@@ -169,6 +170,13 @@ def create_branch(name, intent, modules, initiative=None, from_branch=None, owne
         phase="implementation",
         subphase=name,
         source="unavailable",
+    )
+
+    record_nested_cicadas_changes(
+        root,
+        cicadas,
+        ["registry.json", f"active/{active_name}/"],
+        f"cicadas: register branch {name}",
     )
 
     print(f"[OK]   Branch registered: {name}")

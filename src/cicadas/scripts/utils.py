@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -216,3 +217,102 @@ def remove_worktree(repo_root: Path, worktree_dir: Path, force: bool = False) ->
     cmd.append(str(worktree_dir))
 
     subprocess.run(cmd, cwd=repo_root, check=True)
+
+
+def is_cicadas_nested_git_repo(cicadas: Path) -> bool:
+    """True when .cicadas is its own Git work tree (submodule or standalone nested repo)."""
+    return (Path(cicadas) / ".git").exists()
+
+
+def skip_nested_cicadas_git_commit() -> bool:
+    return os.environ.get("CICADAS_SKIP_NESTED_GIT_COMMIT", "").strip().lower() in ("1", "true", "yes")
+
+
+def record_nested_cicadas_changes(
+    project_root: Path,
+    cicadas: Path,
+    paths_relative: list[str],
+    message: str,
+    *,
+    update_paths: list[str] | None = None,
+) -> bool:
+    """
+    When .cicadas is a nested Git repository (e.g. submodule), stage the given paths,
+    commit if there are changes, then run ``git add .cicadas`` at project_root so the
+    parent repo records the new revision.
+
+    Set CICADAS_SKIP_NESTED_GIT_COMMIT=1 to disable (writes still land on disk only).
+
+    ``update_paths`` are passed to ``git add -u`` first so moves/deletes (e.g. promoted
+    drafts) are recorded.
+
+    Returns True if a new commit was created inside .cicadas.
+    """
+    cicadas = cicadas.resolve()
+    project_root = project_root.resolve()
+    if not is_cicadas_nested_git_repo(cicadas):
+        return False
+    if skip_nested_cicadas_git_commit():
+        return False
+
+    try:
+        from wiki_nav import refresh_wiki_navigation
+
+        refresh_wiki_navigation(cicadas)
+    except Exception as e:
+        print(f"[WARN] wiki navigation refresh failed: {e}")
+
+    rel = [p.replace("\\", "/") for p in paths_relative]
+    for extra in ("Home.md", "_Sidebar.md"):
+        if extra not in rel:
+            rel.append(extra)
+    for u in update_paths or []:
+        u_norm = u.replace("\\", "/")
+        up = subprocess.run(
+            ["git", "-C", str(cicadas), "add", "-u", "--", u_norm],
+            capture_output=True,
+            text=True,
+        )
+        if up.returncode != 0:
+            err = (up.stderr or up.stdout).strip()
+            print(f"[WARN] git add -u in .cicadas ({u_norm}) failed: {err}")
+
+    add = subprocess.run(
+        ["git", "-C", str(cicadas), "add", "--"] + rel,
+        capture_output=True,
+        text=True,
+    )
+    if add.returncode != 0:
+        print(f"[WARN] git add in .cicadas failed: {(add.stderr or add.stdout).strip()}")
+        return False
+
+    diff = subprocess.run(["git", "-C", str(cicadas), "diff", "--cached", "--quiet"], capture_output=True)
+    if diff.returncode == 0:
+        return False
+
+    commit = subprocess.run(
+        ["git", "-C", str(cicadas), "commit", "-m", message],
+        capture_output=True,
+        text=True,
+    )
+    if commit.returncode != 0:
+        err = (commit.stderr or commit.stdout).strip()
+        print(f"[WARN] git commit in .cicadas failed: {err}")
+        print(
+            "[INFO] Commit inside .cicadas, then record the pointer in this repo: "
+            "git -C .cicadas add -A && git -C .cicadas commit -m \"…\" && git add .cicadas"
+        )
+        return False
+
+    stage = subprocess.run(
+        ["git", "add", ".cicadas"],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+    )
+    if stage.returncode != 0:
+        print(f"[WARN] Could not stage .cicadas in project root: {(stage.stderr or stage.stdout).strip()}")
+        return True
+
+    print("[OK]   Committed .cicadas state in nested repo and staged .cicadas for the project commit.")
+    return True

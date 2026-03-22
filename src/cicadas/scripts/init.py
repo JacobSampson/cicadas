@@ -6,6 +6,7 @@ import stat
 from pathlib import Path
 
 from utils import get_project_root, save_json
+from wiki_nav import refresh_wiki_navigation
 
 _HOOKS_SRC = Path(__file__).parent / "hooks"
 
@@ -21,6 +22,8 @@ def init_cicadas(root: Path) -> None:
     save_json(cicadas / "registry.json", {"schema_version": "2.0", "initiatives": {}, "branches": {}})
     save_json(cicadas / "index.json", {"schema_version": "2.0", "entries": []})
     save_json(cicadas / "config.json", {"project_name": root.name})
+
+    refresh_wiki_navigation(cicadas)
 
     print(f"Initialized Cicadas in {cicadas}")
 

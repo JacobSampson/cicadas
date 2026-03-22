@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from utils import get_project_root, load_json
+from wiki_nav import refresh_wiki_navigation
 
 
 def gather_context(name, is_initiative=False):
@@ -103,6 +104,8 @@ def apply_response(response_text):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content.strip() + "\n")
         print(f"✅ Updated {file_path}")
+
+    refresh_wiki_navigation(cicadas)
 
 
 if __name__ == "__main__":

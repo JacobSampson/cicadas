@@ -41,6 +41,9 @@ Commands:
   review            Check review.md verdict
   validate-skill    Validate an Agent Skill against the spec
   publish-skill     Publish a skill to its destination
+  lifecycle         Create lifecycle.json for an initiative
+  update-index      Append completed-work entry to index.json
+  refresh-wiki      Regenerate GitHub wiki Home.md and _Sidebar.md under .cicadas
 
 Examples:
   cicadas init
@@ -88,6 +91,7 @@ Examples:
         "publish-skill": _run_publish_skill,
         "lifecycle": _run_lifecycle,
         "update-index": _run_update_index,
+        "refresh-wiki": _run_refresh_wiki,
     }
 
     if args.command not in command_map:
@@ -354,6 +358,38 @@ def _run_update_index(args):
     parsed = parser.parse_args(args)
 
     update_index(parsed.branch, parsed.summary)
+    return 0
+
+
+def _run_refresh_wiki(args):
+    """Regenerate wiki navigation files."""
+    import argparse
+
+    from utils import get_project_root
+    from wiki_nav import annotate_all_markdown, refresh_wiki_navigation
+
+    parser = argparse.ArgumentParser(prog="cicadas refresh-wiki")
+    parser.add_argument(
+        "--annotate-docs",
+        action="store_true",
+        help="Prepend cicadas-wiki HTML metadata comments to spec markdown files",
+    )
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="With --annotate-docs, rewrite existing metadata comments (re-infer titles)",
+    )
+    parsed = parser.parse_args(args)
+
+    cicadas = get_project_root() / ".cicadas"
+    if not cicadas.is_dir():
+        print(f"[ERR]  No .cicadas directory at {cicadas}", file=sys.stderr)
+        return 1
+    h, s = refresh_wiki_navigation(cicadas)
+    print(f"[OK]   Home.md {'updated' if h else 'unchanged'}, _Sidebar.md {'updated' if s else 'unchanged'}")
+    if parsed.annotate_docs:
+        n = annotate_all_markdown(cicadas, refresh=parsed.refresh)
+        print(f"[OK]   Annotated {n} markdown file(s)")
     return 0
 
 

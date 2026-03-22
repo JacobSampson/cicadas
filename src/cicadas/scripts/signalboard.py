@@ -5,7 +5,7 @@ import argparse
 import subprocess
 from datetime import UTC, datetime
 
-from utils import get_project_root, load_json, save_json
+from utils import get_project_root, load_json, record_nested_cicadas_changes, save_json
 
 
 def send_signal(message, initiative=None):
@@ -33,6 +33,7 @@ def send_signal(message, initiative=None):
     }
     registry["initiatives"][initiative].setdefault("signals", []).append(signal)
     save_json(cicadas / "registry.json", registry)
+    record_nested_cicadas_changes(root, cicadas, ["registry.json"], f"cicadas: signal ({initiative})")
     print(f"Signal sent to initiative '{initiative}': {message}")
 
 

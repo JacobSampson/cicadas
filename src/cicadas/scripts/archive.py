@@ -7,7 +7,7 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from utils import WorktreeDirtyError, get_project_root, load_json, remove_worktree, save_json
+from utils import WorktreeDirtyError, get_project_root, load_json, record_nested_cicadas_changes, remove_worktree, save_json
 
 
 def archive(name, type_="branch", force=False):
@@ -39,6 +39,7 @@ def archive(name, type_="branch", force=False):
     active = cicadas / "active" / name
     ts = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     husk = cicadas / "archive" / f"{ts}-{name}"
+    archived_rel: str | None = None
 
     if active.exists():
         if name.startswith("fix/") or name.startswith("tweak/") or name.startswith("skill/"):
@@ -48,6 +49,7 @@ def archive(name, type_="branch", force=False):
             print("-" * 40)
 
         shutil.move(str(active), str(husk))
+        archived_rel = husk.relative_to(cicadas).as_posix()
         print(f"[OK]   Archived active specs to {husk.name}")
 
     # Remove from registry
@@ -69,6 +71,18 @@ def archive(name, type_="branch", force=False):
 
     save_json(cicadas / "registry.json", registry)
     print(f"[OK]   Deregistered {type_}: {name}")
+
+    active_rel = f"active/{name}"
+    if archived_rel:
+        record_nested_cicadas_changes(
+            root,
+            cicadas,
+            ["registry.json", archived_rel],
+            f"cicadas: archive {type_} {name}",
+            update_paths=[active_rel],
+        )
+    else:
+        record_nested_cicadas_changes(root, cicadas, ["registry.json"], f"cicadas: archive {type_} {name}")
 
 
 if __name__ == "__main__":

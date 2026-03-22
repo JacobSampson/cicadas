@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent))
-from utils import load_json, save_json
+from utils import load_json, record_nested_cicadas_changes, save_json
 
 
 def register_existing(root_path, branch_name, intent, initiative=None, modules=""):
@@ -43,6 +43,7 @@ def register_existing(root_path, branch_name, intent, initiative=None, modules="
             branch_info["initiative"] = initiative
     registry.setdefault("branches", {})[branch_name] = branch_info
     save_json(registry_path, registry)
+    record_nested_cicadas_changes(root, cicadas, ["registry.json"], f"cicadas: register existing {branch_name}")
     print(f"Successfully registered branch '{branch_name}'.")
 
 

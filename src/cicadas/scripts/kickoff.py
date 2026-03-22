@@ -7,7 +7,7 @@ import subprocess
 from datetime import UTC, datetime
 
 from tokens import append_entry
-from utils import get_project_root, load_json, parse_partitions_dag, save_json
+from utils import get_project_root, load_json, parse_partitions_dag, record_nested_cicadas_changes, save_json
 
 
 def kickoff(name, intent, owner="unknown"):
@@ -24,7 +24,8 @@ def kickoff(name, intent, owner="unknown"):
 
     # Promote drafts
     drafts_dir = cicadas / "drafts" / name
-    if drafts_dir.exists():
+    had_drafts = drafts_dir.exists()
+    if had_drafts:
         print(f"[INFO] Promoting drafts for initiative: {name}...")
         for item in drafts_dir.iterdir():
             if item.name.startswith("."):
@@ -71,6 +72,14 @@ def kickoff(name, intent, owner="unknown"):
         print(f"[INFO] Pushed {branch_name} to remote.")
     except subprocess.CalledProcessError:
         print(f"[WARN] Could not push {branch_name} to remote. Push manually: git push -u origin {branch_name}")
+
+    record_nested_cicadas_changes(
+        root,
+        cicadas,
+        ["registry.json", f"active/{name}/"],
+        f"cicadas: kickoff {name}",
+        update_paths=[f"drafts/{name}"] if had_drafts else None,
+    )
 
     print(f"[OK]   Initiative kicked off: {name}")
 
