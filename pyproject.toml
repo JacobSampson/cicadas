@@ -1,13 +1,68 @@
 # Copyright 2026 Cicadas Contributors
 # SPDX-License-Identifier: Apache-2.0
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "cicadas"
+name = "aprovan-cicadas"
 version = "0.3.1"
-description = "Add your description here"
+description = "Sustainable, Spec-Driven Development (SDD) for human-AI teams"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.11"
+authors = [
+    { name = "Cicadas Contributors" }
+]
+maintainers = [
+    { name = "Cicadas Contributors" }
+]
+keywords = [
+    "spec-driven-development",
+    "sdd",
+    "ai-development",
+    "documentation",
+    "methodology",
+    "cli",
+    "development-workflow",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Typing :: Typed",
+]
 dependencies = ["pyyaml>=6.0"]
+
+[project.urls]
+Homepage = "https://github.com/ecodan/cicadas"
+Documentation = "https://github.com/ecodan/cicadas#readme"
+Repository = "https://github.com/ecodan/cicadas.git"
+Issues = "https://github.com/ecodan/cicadas/issues"
+Changelog = "https://github.com/ecodan/cicadas/releases"
+
+[project.scripts]
+cicadas = "cicadas.scripts.cli:main"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/LICENSE",
+    "/README.md",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cicadas"]
 
 [tool.ruff]
 line-length = 150
@@ -32,4 +87,7 @@ indent-style = "space"
 dev = [
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
+    "hatchling>=1.21.0",
+    "build>=1.0.0",
+    "twine>=5.0.0",
 ]
