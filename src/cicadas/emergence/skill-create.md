@@ -15,7 +15,7 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
     0a. **Process Preview**: Before starting, show the Builder the steps:
         ```
         Skill phase:  Dialogue → Draft SKILL.md → [Your review] → Kickoff → Branch
-        Then:         Implement any bundled scripts/refs → validate_skill.py → Publish
+        Then:         Implement any bundled scripts/refs → cicadas validate-skill → Publish
         ```
     0b. **Name**: Get or confirm the skill slug. Must be lowercase letters, digits, and hyphens only; no leading/trailing/consecutive hyphens; max 64 characters. If the user gave a name, still ask:
         *"What is the slug for this skill? 1. {their-name}, 2. Other (enter the name)"*
@@ -29,9 +29,9 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
         *  3. Enter a custom path*
         *  4. Don't publish (I'll install manually)"*
         Write the chosen base path to `emergence-config.json` as `publish_dir` (null if option 4). Example: `"publish_dir": ".agents/skills"`.
-    0f. **PR preference**: Ask *"Do you want to open a PR when publishing this skill to master? (yes / no)"*, then run `create_lifecycle.py`:
-        - **Yes** (default): `python {cicadas-dir}/scripts/create_lifecycle.py skill-{slug} --no-pr-features`
-        - **No**: `python {cicadas-dir}/scripts/create_lifecycle.py skill-{slug} --no-pr-initiatives --no-pr-features`
+    0f. **PR preference**: Ask *"Do you want to open a PR when publishing this skill to master? (yes / no)"*, then run `cicadas lifecycle`:
+        - **Yes** (default): `cicadas lifecycle skill-{slug} --no-pr-features`
+        - **No**: `cicadas lifecycle skill-{slug} --no-pr-initiatives --no-pr-features`
 
 1.  **Clarifying Dialogue**
 
@@ -89,19 +89,19 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
     b. Run kickoff:
        ```
-       python {cicadas-dir}/scripts/kickoff.py skill-{slug} --intent "{one-line description}"
+       cicadas kickoff skill-{slug} --intent "{one-line description}"
        ```
 
     c. Create the skill branch:
        ```
-       python {cicadas-dir}/scripts/branch.py skill/{slug} --intent "{one-line description}" --initiative skill-{slug}
+       cicadas branch skill/{slug} --intent "{one-line description}" --initiative skill-{slug}
        ```
 
     d. Validate:
        ```
-       python {cicadas-dir}/scripts/validate_skill.py {slug}
+       cicadas validate-skill {slug}
        ```
-       If `validate_skill.py` exits 1, fix the reported violations automatically if unambiguous (e.g., slug casing, description length), re-run, and report the outcome. If the violation requires a content decision, surface it to the Builder.
+       If validation exits 1, fix the reported violations automatically if unambiguous (e.g., slug casing, description length), re-run, and report the outcome. If the violation requires a content decision, surface it to the Builder.
 
     e. Report completion:
        ```

@@ -74,7 +74,7 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
 
     b. Run validation:
        ```
-       python {cicadas-dir}/scripts/validate_skill.py {slug}
+       cicadas validate-skill {slug}
        ```
        If validation fails, fix autonomously if unambiguous (e.g., description now too long after expansion — trim to 1024 chars), re-validate, and report. If the violation requires a content decision, surface it before writing.
 

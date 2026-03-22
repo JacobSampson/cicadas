@@ -244,10 +244,10 @@ main() {
   download_and_extract "$INSTALL_DIR"
 
   log "Initializing .cicadas/ workspace..."
-  if "$PYTHON_BIN" "$INSTALL_DIR/scripts/init.py"; then
+  if "$PYTHON_BIN" "$INSTALL_DIR/scripts/cli.py" init; then
     ok "Workspace initialized"
   else
-    err "init.py failed — check output above"
+    err "cicadas init failed — check output above"
     exit 1
   fi
 
@@ -264,7 +264,8 @@ main() {
   ok "Installation complete!"
   blank
   log "Next steps:"
-  log "  python $INSTALL_DIR/scripts/status.py"
+  log "  pip install cicadas && cicadas status   # optional: CLI on your PATH"
+  log "  python $INSTALL_DIR/scripts/cli.py status   # bundled CLI (same commands as cicadas)"
   blank
 }
 

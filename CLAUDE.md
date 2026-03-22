@@ -39,37 +39,40 @@ source .venv/bin/activate && ruff check src/ tests/
 source .venv/bin/activate && ruff format src/ tests/
 ```
 
-**CLI scripts** (activate venv first; scripts use `sys.path` to find `utils.py`):
+**Cicadas CLI** (unified entry point; activate venv if using editable install):
 ```bash
-source .venv/bin/activate
-python src/cicadas/scripts/init.py
-python src/cicadas/scripts/status.py
-python src/cicadas/scripts/check.py
-python src/cicadas/scripts/kickoff.py {name} --intent "..."
-python src/cicadas/scripts/branch.py {name} --intent "..." --modules "mod1,mod2" --initiative {name}
-python src/cicadas/scripts/signal.py "message"
-python src/cicadas/scripts/archive.py {name} --type {branch|initiative}
-python src/cicadas/scripts/update_index.py --branch {name} --summary "..."
-python src/cicadas/scripts/create_lifecycle.py {name}  # optional: --pr-specs, --no-pr-initiatives, etc.
-python src/cicadas/scripts/open_pr.py [--base branch]   # open PR from current branch (gh/glab/URL/fallback); blocks on BLOCK verdict
-python src/cicadas/scripts/review.py [--initiative name]  # check review.md verdict (exit 0=PASS, 1=BLOCK, 2=not found)
-python src/cicadas/scripts/prune.py {name} --type {branch|initiative}
-python src/cicadas/scripts/abort.py
-python src/cicadas/scripts/history.py [--output path]
-python src/cicadas/scripts/validate_skill.py {slug-or-path}
-python src/cicadas/scripts/skill_publish.py {slug} [--publish-dir DIR] [--symlink] [--force]
+source .venv/bin/activate   # optional
+cicadas init
+cicadas status
+cicadas check
+cicadas kickoff {name} --intent "..."
+cicadas branch {name} --intent "..." --modules "mod1,mod2" --initiative {name}
+cicadas signal "message"
+cicadas archive {name} --type branch   # or initiative
+cicadas update-index --branch {name} --summary "..."
+cicadas lifecycle {name}   # optional: --pr-specs, --no-pr-initiatives, etc.
+cicadas open-pr [--base branch]   # gh/glab/URL/fallback; blocks on BLOCK verdict
+cicadas review [--initiative name]   # review.md verdict: 0=PASS, 1=BLOCK, 2=not found
+cicadas prune {name} --type branch   # or initiative
+cicadas abort
+cicadas history [--output path]
+cicadas validate-skill {slug-or-path}
+cicadas publish-skill {slug} [--publish-dir DIR] [--symlink] [--force]
+cicadas refresh-wiki
 ```
+
+From a repo checkout **without** installing the package: `PYTHONPATH=src python -m cicadas.scripts.cli <subcommand> [...]` (same flags as `cicadas`). Individual `scripts/*.py` files remain for tests and backward compatibility but are not the documented interface.
 
 ## Architecture
 
 Cicadas is a **spec-driven development methodology toolset** for human-AI teams. It consists of two parts:
 
-1. **The Skill** (`src/cicadas/`) — portable CLI scripts and agent instructions that can be dropped into any project.
-2. **The State** (`.cicadas/`) — filesystem-based state managed by the scripts, living in the project root.
+1. **The Skill** (`src/cicadas/`) — portable **`cicadas` CLI** (`scripts/cli.py` + modules) and agent instructions that can be dropped into any project.
+2. **The State** (`.cicadas/`) — filesystem-based state managed by the CLI, living in the project root.
 
 ### `src/cicadas/` Structure
 
-- `scripts/` — CLI tools for the full initiative lifecycle. All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by `kickoff.py` and `branch.py`. `review.py` reads `review.md` verdict and returns exit codes; imported by `open_pr.py` for the merge gate check. `validate_skill.py` checks an Agent Skill directory against the spec (name charset/length/dir-match, description ≤1024 chars, frontmatter delimiters) using stdlib regex. `skill_publish.py` copies or symlinks an active skill to its `publish_dir` with a pre-publish validation gate.
+- `scripts/` — Implementation of the **`cicadas`** CLI (`cli.py` dispatches to the same modules). All share `utils.py` for root detection (`get_project_root()`), branch detection (`get_default_branch()`), and JSON I/O (`load_json`/`save_json`). `tokens.py` provides the append-only token usage log API (`init_log`, `append_entry`, `load_log`) used by kickoff and branch. `review.py` reads `review.md` verdict and returns exit codes; used by `open_pr` for the merge gate check. `validate_skill.py` checks an Agent Skill directory against the spec (name charset/length/dir-match, description ≤1024 chars, frontmatter delimiters) using stdlib regex. `skill_publish.py` copies or symlinks an active skill to its `publish_dir` with a pre-publish validation gate.
 - `emergence/` — Markdown instruction modules (Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Eval Spec, Code Review, Skill Create, Skill Edit) — inline role files read in the current context window; no separate agent process is spawned. **start-flow.md** defines the standard start flow (name → draft folder → **Building on AI?** → requirements source/pace → publish destination for skills → PR preference) run first for initiative, tweak, bug, or skill. Building on AI and eval status are stored in `emergence-config.json` (skills skip the eval-status follow-up — Post-MVP). **skill-create.md** drives dialogue-driven Agent Skill authoring: clarifying dialogue, SKILL.md + bundled files generation, `eval_queries.json` draft, kickoff + validate. **skill-edit.md** handles targeted edits: one diagnostic question, minimum-change before/after proposal, validate. For initiatives building on AI with "will do" evals, **eval-spec.md** guides creation of `eval-spec.md` in drafts/active after PRD/UX/Tech; Approach asks eval placement (before build / in parallel). For tweaks/bugs, a light-touch reminder can be added to the tweaklet/buglet. Cicadas does not run evals. Clarify supports intake via Q&A, a requirements doc (`drafts/{initiative}/requirements.md`), or a Loom transcript (`drafts/{initiative}/loom.md`). These are **agent prompts**, not code.
 - `templates/` — Markdown templates for specs (`prd.md`, `ux.md`, `tech-design.md`, `approach.md`, `tasks.md`, `buglet.md`, `tweaklet.md`, `eval-spec.md`, `review.md`, `skill-SKILL.md`) and Canon docs (`product-overview.md`, `ux-overview.md`, `tech-overview.md`, `module-snapshot.md`, `canon-summary.md`).
 - `SKILL.md` — The master agent skill definition (read this for full operational detail).
@@ -101,15 +104,15 @@ Cicadas is a **spec-driven development methodology toolset** for human-AI teams.
 ### Initiative Lifecycle
 
 1. **Emergence** — Draft specs in `.cicadas/drafts/{name}/` using instruction modules in `emergence/`.
-2. **Kickoff** — `kickoff.py` promotes drafts → `active/`, registers in `registry.json`, creates `initiative/{name}` branch.
-3. **Feature Branches** — `branch.py` creates `feat/{name}`, declares module scope to detect overlaps.
+2. **Kickoff** — `cicadas kickoff` promotes drafts → `active/`, registers in `registry.json`, creates `initiative/{name}` branch.
+3. **Feature Branches** — `cicadas branch` creates `feat/{name}`, declares module scope to detect overlaps.
 4. **Inner Loop** — Task branches → Reflect (update active specs to match code) → PR to feature branch (if lifecycle has PR at tasks).
 5. **Complete Initiative** — Merge initiative → `master` (open PR if lifecycle has PR at initiatives), Synthesize Canon on `master`, Archive specs.
-6. **Lifecycle** — Per-initiative `lifecycle.json` (drafts/active) sets PR boundaries and steps; `status.py` reports Merged/Next (git-based).
+6. **Lifecycle** — Per-initiative `lifecycle.json` (drafts/active) sets PR boundaries and steps; `cicadas status` reports Merged/Next (git-based).
 
 ### Key Invariants (Guardrails)
 
-- **Never manually edit `registry.json`** — always use the scripts.
+- **Never manually edit `registry.json`** — always use the `cicadas` CLI.
 - **Never write to `.cicadas/canon/` on any branch** — Canon is only synthesized on `master` at initiative completion.
 - **No code without a reviewed `tasks.md`** — agents must stop after Emergence and wait for Builder approval.
 - **Reflect before every PR** — active specs must match code before merging any task branch.

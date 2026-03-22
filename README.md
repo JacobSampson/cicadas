@@ -45,7 +45,7 @@ cicadas init
 curl -fsSL https://raw.githubusercontent.com/ecodan/cicadas/master/install.sh | bash
 ```
 
-This downloads Cicadas into `.cicadas-skill/cicadas/`, initializes the `.cicadas/` workspace, and optionally sets up agent integrations.
+This downloads Cicadas into `.cicadas-skill/cicadas/`, initializes the `.cicadas/` workspace, and optionally sets up agent integrations. Lifecycle commands use the bundled CLI entry point `python .cicadas-skill/cicadas/scripts/cli.py` (same subcommands as the `cicadas` command from pip); optionally `pip install cicadas` to put `cicadas` on your PATH.
 
 **With agent integration:**
 
@@ -101,17 +101,17 @@ When you start an initiative, tweak, bug, or skill, the agent runs a **standard 
 
 We promote drafts to **Active Specs** and register the initiative.
 
-- **Command**: `python src/cicadas/scripts/kickoff.py {name} --intent "..."`
+- **Command**: `cicadas kickoff {name} --intent "..."` (or `python {cicadas-dir}/scripts/cli.py kickoff …` when using a copied skill tree)
 - **Result**: Creates `initiative/{name}` branch and `.cicadas/active/{name}/`.
 
 ### Phase 3: Execution (The Dual Loop)
 
 Work happens in **Feature Branches** (registered) and **Task Branches** (ephemeral).
 
-- **Start Feature**: `python src/cicadas/scripts/branch.py {feature} --intent "..."`
+- **Start Feature**: `cicadas branch {feature} --intent "..." --modules "…" --initiative {name}`
 - **Reflect**: When code implementation diverges from the plan, we update the active specs _immediately_ (and before every commit on feat/task branches).
-- **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing a structured `review.md` artifact with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `open_pr.py` checks this verdict and blocks on `BLOCK`.
-- **Signal**: If a change affects other branches, we broadcast it: `python src/cicadas/scripts/signal.py "..."`
+- **Code Review** (optional): After Reflect; before committing on feature branches; before opening a PR or merging. The agent evaluates the diff against specs, security, correctness, and quality — producing a structured `review.md` artifact with a `PASS` / `PASS WITH NOTES` / `BLOCK` verdict. `cicadas open-pr` checks this verdict and blocks on `BLOCK`.
+- **Signal**: If a change affects other branches, we broadcast it: `cicadas signal "..."`
 
 ### Phase 4: Completion (Synthesis)
 
@@ -120,26 +120,29 @@ When all features are merged into the initiative branch, we merge to `main` and 
 1.  **Synthesize Canon**: An AI agent reads the code on `main` + the active specs and generates fresh documentation in `.cicadas/canon/` (including `canon/summary.md` — a 300–500 token snapshot used to inject context at branch start).
 2.  **Archive**: Active specs are moved to `.cicadas/archive/`.
 
-### Quick Command Reference
+### Quick command reference
 
-All scripts are in `src/cicadas/scripts/`.
+Use the **`cicadas`** CLI (`pip install cicadas`) or, for a tree copied by `install.sh`, `python {cicadas-dir}/scripts/cli.py` with the same subcommands — one entry point instead of per-script paths.
 
 | Action                 | Command                                                                                                       |
 | :--------------------- | :------------------------------------------------------------------------------------------------------------ |
-| **Kickoff Initiative** | `python src/cicadas/scripts/kickoff.py {name} --intent "..."`                                                 |
-| **Start Feature**      | `python src/cicadas/scripts/branch.py {name} --intent "..."`                                                  |
-| **Check Status**       | `python src/cicadas/scripts/status.py` (shows Merged/Next when lifecycle exists)                              |
-| **Check Conflicts**    | `python src/cicadas/scripts/check.py`                                                                         |
-| **Send Signal**        | `python src/cicadas/scripts/signal.py "Message..."`                                                           |
-| **Log Work**           | `python src/cicadas/scripts/update_index.py --branch {name} ...`                                              |
-| **Lifecycle**          | `python src/cicadas/scripts/create_lifecycle.py {name}` (PR boundaries + steps in drafts/active)              |
-| **Open PR**            | `python src/cicadas/scripts/open_pr.py [--base branch]` (gh/glab/Bitbucket/fallback; blocks on BLOCK verdict) |
-| **Check Review**       | `python src/cicadas/scripts/review.py [--initiative name]` (read verdict from review.md)                      |
-| **Archive**            | `python src/cicadas/scripts/archive.py {name}`                                                                |
-| **Abort**              | `python src/cicadas/scripts/abort.py`                                                                         |
-| **Project History**    | `python src/cicadas/scripts/history.py`                                                                       |
-| **Validate Skill**     | `python src/cicadas/scripts/validate_skill.py {slug}`                                                         |
-| **Publish Skill**      | `python src/cicadas/scripts/skill_publish.py {slug} [--publish-dir DIR] [--symlink] [--force]`                |
+| **Init**               | `cicadas init`                                                                                                |
+| **Kickoff Initiative** | `cicadas kickoff {name} --intent "..."`                                                                       |
+| **Start Feature**      | `cicadas branch {name} --intent "..." --modules "…" --initiative {name}`                                      |
+| **Check Status**       | `cicadas status` (shows Merged/Next when lifecycle exists)                                                    |
+| **Check Conflicts**    | `cicadas check`                                                                                               |
+| **Send Signal**        | `cicadas signal "Message..."`                                                                                 |
+| **Log Work**           | `cicadas update-index --branch {name} --summary "..."`                                                         |
+| **Lifecycle**          | `cicadas lifecycle {name}` (PR boundaries + steps in drafts/active; use `--no-pr-*` / `--pr-*` as needed)     |
+| **Open PR**            | `cicadas open-pr [--base branch]` (gh/glab/Bitbucket/fallback; blocks on BLOCK verdict)                         |
+| **Check Review**       | `cicadas review [--initiative name]` (read verdict from review.md)                                            |
+| **Archive**            | `cicadas archive {name} [--type branch\|initiative]`                                                          |
+| **Prune**              | `cicadas prune {name} --type branch\|initiative`                                                              |
+| **Abort**              | `cicadas abort`                                                                                               |
+| **Project History**    | `cicadas history [--output path]`                                                                             |
+| **Validate Skill**     | `cicadas validate-skill {slug}`                                                                               |
+| **Publish Skill**      | `cicadas publish-skill {slug} [--publish-dir DIR] [--symlink] [--force]`                                    |
+| **Refresh wiki nav**   | `cicadas refresh-wiki`                                                                                        |
 
 ---
 

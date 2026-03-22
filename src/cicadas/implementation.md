@@ -29,7 +29,7 @@ Before opening a PR for a task branch, in addition to the above:
 ## 4b. Pause at `Open PR` Tasks (Hard Stop)
 When executing a `tasks.md` checklist and the next unchecked task matches the pattern `- [ ] Open PR: ...`:
 - **Rule**: STOP. Do NOT mark it complete. Do NOT merge. Do NOT proceed to the next task.
-- **Rule**: Run `open_pr.py` to open the PR, then surface the PR URL to the Builder and explicitly state: *"Waiting for merge approval before continuing."*
+- **Rule**: Run `cicadas open-pr` to open the PR, then surface the PR URL to the Builder and explicitly state: *"Waiting for merge approval before continuing."*
 - **Rule**: Only after the Builder explicitly confirms the PR has been merged should the agent mark the task `- [x]` and continue with subsequent tasks.
 - **Why**: `Open PR` tasks are human-gated checkpoints, not automatic steps. The implementation agent has no authority to merge — that is always a Builder decision.
 
@@ -44,12 +44,12 @@ When an initiative is complete:
 
 ## 7. Registry Integrity
 - **Rule**: NEVER manually edit `registry.json`.
-- **Constraint**: ALWAYS use the provided CLI scripts (e.g., `branch.py`, `kickoff.py`, `status.py`) to manage system state.
+- **Constraint**: ALWAYS use the `cicadas` CLI (e.g., `cicadas branch`, `cicadas kickoff`, `cicadas status`) to manage system state.
 
 ## 8. Always Push to Remote
 - **Rule**: Every branch creation and every merge to a long-lived branch MUST be followed by a `git push`.
-  - New initiative branch (via `kickoff.py`): script handles `git push -u origin initiative/{name}`.
-  - New feature branch (via `branch.py`): script handles `git push -u origin {name}`.
+  - New initiative branch (via `cicadas kickoff`): script handles `git push -u origin initiative/{name}`.
+  - New feature branch (via `cicadas branch`): script handles `git push -u origin {name}`.
   - After merging a feature branch into the initiative branch: `git push origin initiative/{name}`.
   - After merging the initiative branch into `main` and after the final canon commit: `git push origin main`.
 - **Why**: Collaborators and CI/CD systems depend on the remote. Local-only branches and merges are invisible to the team.

@@ -10,7 +10,7 @@
 4. **Requirements source** (initiatives only) — How will requirements be provided? **[Q]** Q&A, **[D]** Doc, **[L]** Loom.
 5. **Pace** (initiatives only) — How often to pause for review? **[S]** Section, **[D]** Doc, **[A]** All.
 6. **Publish destination** (skills only) — Where should the finished skill be published? Detect common directories in the project root in this order: `config.json skill_publish_dir` key → `.agents/skills/` → `.claude/skills/` → `src/` → `skills/`. Offer the first detected path as the default, plus `.claude/skills/`, "Enter custom path", and "Don't publish". Write the chosen base path to `emergence-config.json` as `publish_dir` (null if "Don't publish").
-7. **PR preference** — When merging to master (or initiative): **[F]** Feature PRs, **[I]** Initiative PR only, **[N]** None. Then run `create_lifecycle.py` with the matching flags (see each instruction module for exact args).
+7. **PR preference** — When merging to master (or initiative): **[F]** Feature PRs, **[I]** Initiative PR only, **[N]** None. Then run `cicadas lifecycle` with the matching flags (see each instruction module for exact args).
 
 Then **start collecting requirements** via Q&A, doc, or Loom as chosen.
 

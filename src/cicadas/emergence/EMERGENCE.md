@@ -16,11 +16,11 @@ All work in this phase happens in `.cicadas/drafts/{initiative-name}/`. This is 
 1. Create folder: `.cicadas/drafts/{initiative-name}/`
 2. Draft docs using instruction modules (below) or manually.
 3. Builder reviews each artifact before proceeding to the next.
-4. Run `python {cicadas-dir}/scripts/kickoff.py {initiative-name} --intent "description"`:
+4. Run `cicadas kickoff {initiative-name} --intent "description"` (or `python {cicadas-dir}/scripts/cli.py kickoff …` if `cicadas` is not on PATH):
    - Moves docs to `.cicadas/active/{initiative-name}/`.
    - Registers the initiative in `registry.json`.
    - Creates the initiative branch: `initiative/{name}`.
-5. Create feature branches for each partition: `python {cicadas-dir}/scripts/branch.py {name} --initiative {initiative-name} ...`
+5. Create feature branches for each partition: `cicadas branch {name} --intent "…" --modules "…" --initiative {initiative-name}` (same `cli.py` fallback as needed)
 
 ## The Workflow
 

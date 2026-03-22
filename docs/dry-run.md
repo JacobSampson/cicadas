@@ -7,9 +7,9 @@ Original pressure test run on an early version of Cicadas. Directionally relevan
 
 Pressure-testing the v0.2 methodology by walking through a fictional project end-to-end.
 
-**Format**: The dry-run is written as a **dialog** between the Builder (human) and the Agent (AI with the Chorus skill). The Builder gives natural-language commands. The Agent handles all ceremony — script execution, agentic operations, git commands — behind the scenes.
+**Format**: The dry-run is written as a **dialog** between the Builder (human) and the Agent (AI with the Chorus skill). The Builder gives natural-language commands. The Agent handles all ceremony — CLI commands, agentic operations, git commands — behind the scenes.
 
-> **Open Question — Chorus Installation**: How does the Chorus orchestrator get into a new project? The v2 doc assumes `scripts/chorus/` exists but doesn't prescribe an install mechanism. For now, assume copy-and-paste (`cp -r /path/to/chorus scripts/chorus`). TBD.
+> **CLI note:** The narrative below uses illustrative paths such as `python scripts/chorus/scripts/...`. In current Cicadas, use the unified **`cicadas`** command (`pip install cicadas`) or `python {cicadas-dir}/scripts/cli.py` with the same subcommands (`kickoff`, `branch`, `status`, `signal`, `archive`, etc.) — see root `README.md` and `src/cicadas/SKILL.md`.
 
 ---
 

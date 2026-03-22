@@ -19,9 +19,9 @@ FOLLOW THIS PROCESS EXACTLY. DO NOT SKIP STEPS UNLESS INSTRUCTED.
     0b. **Name**: Get or confirm the tweak name. If the user already gave a name (e.g. "Start a tweak called XYZ"), still ask: *"What is the name of this tweak? 1. XYZ, 2. Other (enter the name)"*.
     0c. **Create draft folder**: Ensure `.cicadas/drafts/{name}/` exists (create it if needed).
     0d. **Building on AI?**: Ask *"Is this project building on AI? (yes / no)"*. If **yes**, ask *"This project involves Building on AI. Experimentation and evals may be required. Does this project already have completed evals, or will you be doing evals? (already have / will do)"*. Write `building_on_ai` and `eval_status` to `.cicadas/drafts/{name}/emergence-config.json` (merge with existing keys). If **no**, write `building_on_ai: false` and continue.
-    0e. **PR preference**: Ask *"Do you want to open a PR when merging this tweak to master? (yes / no)"*, then run `create_lifecycle.py`:
-        - **Yes** (default): `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-features`
-        - **No**: `python {cicadas-dir}/scripts/create_lifecycle.py {name} --no-pr-initiatives --no-pr-features`
+    0e. **PR preference**: Ask *"Do you want to open a PR when merging this tweak to master? (yes / no)"*, then run `cicadas lifecycle`:
+        - **Yes** (default): `cicadas lifecycle {name} --no-pr-features`
+        - **No**: `cicadas lifecycle {name} --no-pr-initiatives --no-pr-features`
 
 1.  **Define Intent**: Clarify the specific improvement the Builder wants to make.
 2.  **Scope Check**: Verify the tweak is small (< 100 lines, no new dependencies).

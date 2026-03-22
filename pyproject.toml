@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "aprovan-cicadas"
-version = "0.3.1"
+version = "0.3.2"
 description = "Sustainable, Spec-Driven Development (SDD) for human-AI teams"
 readme = "README.md"
 license = "Apache-2.0"
@@ -55,11 +55,16 @@ Changelog = "https://github.com/ecodan/cicadas/releases"
 cicadas = "cicadas.scripts.cli:main"
 
 [tool.hatch.build.targets.sdist]
+# `safe_walk` skips directories that share an inode with an already-visited path. This repo
+# hard-links `.claude/skills/cicadas` to `src/cicadas`, so a normal walk never enters `src/cicadas`
+# after visiting `.claude/...`. Force-include walks from `src/cicadas` alone so the sdist (and
+# wheels built from it) always contain the package.
 include = [
-    "/src",
     "/LICENSE",
     "/README.md",
+    "/pyproject.toml",
 ]
+force-include = { "src/cicadas" = "src/cicadas" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cicadas"]
