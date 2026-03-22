@@ -44,6 +44,7 @@ Standard development processes often lead to "documentation rot" or "unplanned w
 | **Code Review** | Optional agent operation for spec-anchored evaluation of code diffs. Covers task completeness, architectural conformance, security (OWASP), correctness bugs, and code quality. Produces an ephemeral advisory report with tiered findings and a merge verdict. Supports feature, fix, and tweak branches. | Shipped |
 | **Clarify Intake** | At Clarify start, the Builder can choose Q&A (interactive), Doc (`drafts/{initiative}/requirements.md`), or Loom (`drafts/{initiative}/loom.md`); the agent fills the PRD from the doc or transcript. | Shipped |
 | **Building on AI** | Start flow asks "Is this project building on AI? (yes/no)" and, if yes, eval status (already have / will do). Persisted in `emergence-config.json`. Initiatives: optional eval spec (template + LLMOps playbook) after PRD/UX/Tech; Approach asks eval placement (before build / in parallel) with parallel warning. Tweaks/bugs: optional eval/benchmark reminder in tweaklet/buglet. Cicadas does not run or host evals. | Shipped |
+| **Parallel feature worktrees** | Partitions in `approach.md` with `depends_on: []` can be implemented in a separate **git worktree** automatically: `branch.py` creates the branch, adds the worktree, writes `context.md` there, and `status.py` shows paths and clean/dirty state. | Shipped |
 
 ## Out of Scope (Intentional)
 

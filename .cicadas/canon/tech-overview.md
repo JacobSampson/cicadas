@@ -20,6 +20,7 @@ Cicadas is a filesystem-based state machine that orchestrates development via Gi
 - **Building on AI** — Start flow (all entry points) includes a **Building on AI?** step after draft folder: ask yes/no; if yes, ask eval status (already have / will do). Both stored in `emergence-config.json` (merge with existing keys e.g. `pace`). Initiatives with "will do" evals: after PRD/UX/Tech the agent may offer eval-spec authoring (`emergence/eval-spec.md`, template `templates/eval-spec.md`, six-step LLMOps playbook); during Approach, agent asks eval placement (before build / in parallel) and writes `eval_placement`; adds explicit Eval step to approach.md. Tweaks/bugs with "will do": agent offers to add one eval/benchmark reminder task or section to tweaklet/buglet. Cicadas does not execute or host evals. `parse_partitions_dag()` in `utils.py` uses PyYAML when available and a regex fallback when not, so partition parsing works in environments without PyYAML.
 - **Code Review Merge Gate** — Code review produces a persistent `review.md` artifact (not an ephemeral console report) with a three-way verdict: `PASS`, `PASS WITH NOTES`, or `BLOCK`. `open_pr.py` reads this file and refuses to open a PR on `BLOCK`. The verdict is always advisory; the Builder retains merge authority.
 - **Context Injection at Branch Start** — `branch.py` writes a `context.md` bundle to the branch's working directory on creation (worktree root for parallel branches; project root for sequential branches). Bundle contains: `canon/summary.md` (if present), full module snapshots for the branch's declared scope, and the initiative's `approach.md` + `tasks.md`. Provides agents with the right context immediately without requiring manual file reads. `context.md` is gitignored.
+- **Git Worktrees for Parallel Partitions** — Initiative `approach.md` can declare a machine-readable partitions DAG (fenced block tagged `yaml partitions`). For a feature branch whose partition has `depends_on: []`, `branch.py` creates the branch from the initiative parent, pushes it, runs `git worktree add` to a default sibling directory (`worktree_path`), writes `context.md` into that worktree, and stores `worktree_path` on the registry entry. Partitions that depend on another branch use a plain local checkout (`--no-worktree` behavior). Requires git ≥ 2.5 (`git_version_check`). `archive.py` / initiative archive tear down registered worktrees via `remove_worktree` (missing directories are pruned safely).
 
 ---
 
@@ -75,13 +76,13 @@ bash install.sh --update
 The system uses a set of Python scripts in `src/cicadas/scripts/`:
 - `init.py`: Initializes `.cicadas/` directory on fresh install (idempotent; called by `install.sh`).
 - `kickoff.py`: Promotes drafts (including `lifecycle.json` when present) and registers initiatives.
-- `branch.py`: Creates and registers feature/fix/tweak branches. Writes `context.md` (canon summary + scoped module snapshots + approach.md + tasks.md) to the branch's working directory on creation for all branch types.
-- `status.py`: Reports global project state; when `lifecycle.json` exists for an initiative, reports Merged (branch pairs) and Next (suggested step) via git-based merge detection.
+- `branch.py`: Creates and registers feature/fix/tweak branches. Reads optional partitions DAG from `active/{initiative}/approach.md`; parallel partitions get a linked git worktree and `context.md` at the worktree root. Sequential partitions get `context.md` at the project root after `checkout -b`.
+- `status.py`: Reports global project state; lists registry worktrees with clean/dirty/MISSING; when `lifecycle.json` exists for an initiative, reports Merged (branch pairs) and Next (suggested step) via git-based merge detection.
 - `create_lifecycle.py`: Creates `lifecycle.json` in drafts or active with PR boundaries and default steps.
 - `open_pr.py`: Opens a PR from current branch (tries `gh` → `glab` → Bitbucket URL → fallback); host-agnostic. Pre-flight checks `review.md` verdict: blocks on `BLOCK`, warns on `PASS WITH NOTES`.
 - `review.py`: Reads `.cicadas/active/{initiative}/review.md`, parses the verdict (`PASS`, `PASS WITH NOTES`, `BLOCK`), and exits with 0 (safe to merge), 1 (BLOCK), or 2 (no review.md found). Imported by `open_pr.py`.
 - `update_index.py`: Logs changes to the ledger.
-- `archive.py`: Concludes work, deregisters branches, and expires specs (includes `lifecycle.json` when present).
+- `archive.py`: Concludes work, deregisters branches, and expires specs (includes `lifecycle.json` when present). Removes linked git worktrees for archived branches (or when archiving an initiative, for all branches tied to that initiative).
 - `abort.py`: Context-aware rollback for any branch type.
 - `signal.py`: Broadcasts breaking changes across peer branches.
 - `tokens.py`: Append-only token usage log API (`init_log`, `append_entry`, `load_log`); called by `kickoff.py` and `branch.py` at phase boundaries.

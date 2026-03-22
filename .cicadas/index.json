@@ -287,6 +287,13 @@
       "summary": "Completed initiative/git-worktree (worktrees-parallel-execution): full git worktree support for parallel execution. All 4 partitions implemented and tested. 223 tests pass.",
       "decisions": "",
       "modules": []
+    },
+    {
+      "timestamp": "2026-03-22T21:32:31.113679+00:00",
+      "branch": "git-worktree",
+      "summary": "Canon synthesis (worktree/partitions DAG, branch.py, status, archive) and archive of active specs; initiative and feature branches deregistered from registry.",
+      "decisions": "",
+      "modules": []
     }
   ]
 }

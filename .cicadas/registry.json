@@ -1,24 +1,5 @@
 {
   "schema_version": "2.0",
-  "initiatives": {
-    "git-worktree": {
-      "intent": "Enable Cicadas to operate across Git worktrees and shared/remote .cicadas storage",
-      "owner": "unknown",
-      "signals": [],
-      "created_at": "2026-03-22T21:19:33.807389+00:00"
-    }
-  },
-  "branches": {
-    "feat/worktree-utils": {
-      "intent": "Core path resolution and worktree detection in utils.py; tests for worktree and symlinked .cicadas",
-      "modules": [
-        "scripts/utils.py",
-        "tests/"
-      ],
-      "owner": "unknown",
-      "created_at": "2026-03-22T21:20:41.653947+00:00",
-      "worktree_path": "/Users/jsampson/Documents/JacobSampson/cicadas-feat-worktree-utils",
-      "initiative": "git-worktree"
-    }
-  }
+  "initiatives": {},
+  "branches": {}
 }

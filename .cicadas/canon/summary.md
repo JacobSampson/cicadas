@@ -14,13 +14,14 @@ Cicadas is a spec-driven development orchestrator for human-AI teams that treats
 - Scripts are pure Python stdlib — no external dependencies at runtime; only `git` and Python 3.11+ required.
 - Agent operations (Reflect, Code Review, Synthesis) are LLM tasks defined in `emergence/` markdown prompts, not scripts. Clarify supports intake via Q&A, doc, or Loom. Start flow includes Building on AI? (yes/no) and eval status; stored in emergence-config.json. Initiatives: optional eval spec (eval-spec.md + template); Approach asks eval placement. Tweaks/bugs: optional eval/benchmark reminder. Cicadas does not run evals.
 - Context injection: `branch.py` writes `context.md` at branch creation time (canon summary + scoped module snapshots + specs); gitignored.
+- Parallel partitions: `approach.md` may include a fenced block tagged `yaml partitions` (`name`, `modules`, `depends_on`). Partitions with `depends_on: []` are treated as parallel: `branch.py` creates the feature branch and a **git worktree** at a sibling path (see `worktree_path()`), writes `context.md` there, and records `worktree_path` in the registry. Sequential partitions use a normal `git checkout -b` on the current repo. `parse_partitions_dag()` reads the block (PyYAML when installed, regex fallback otherwise).
 
 ## Modules
 
 scripts/init.py: bootstrap `.cicadas/` directory structure (idempotent)
 scripts/kickoff.py: promote drafts → active, register initiative, create initiative branch
-scripts/branch.py: create and register feature/fix/tweak branches; write context.md bundle
-scripts/status.py: report active initiatives/branches; Merged/Next when lifecycle.json present
+scripts/branch.py: create and register feature/fix/tweak branches; partition-aware git worktrees for parallel slices; write context.md bundle (worktree root vs project root)
+scripts/status.py: report active initiatives/branches; list registered worktrees with clean/dirty/MISSING; Merged/Next when lifecycle.json present
 scripts/check.py: detect module overlap conflicts across active branches
 scripts/create_lifecycle.py: create lifecycle.json with PR boundaries and step list
 scripts/open_pr.py: open PR via gh/glab/Bitbucket/fallback; blocks on BLOCK verdict
@@ -31,7 +32,7 @@ scripts/archive.py: deregister and expire active specs on initiative completion
 scripts/abort.py: context-aware rollback for any branch type
 scripts/history.py: generate HTML timeline from archive + index; includes token summaries
 scripts/tokens.py: append-only token usage log API (init_log, append_entry, load_log)
-scripts/utils.py: shared utilities (root detection, git helpers, JSON I/O, worktree ops)
+scripts/utils.py: shared utilities (root detection, git helpers, JSON I/O); worktree helpers (`git_version_check`, `worktree_path`, `create_worktree`, `remove_worktree`, `parse_partitions_dag`)
 emergence/: markdown prompts for Clarify, UX, Tech, Approach, Tasks, Bootstrap, Bug-fix, Tweak, Eval Spec (Building on AI), Code Review; start-flow includes Building on AI? and eval status
 templates/: spec templates (prd, ux, tech-design, approach, tasks, buglet, tweaklet, eval-spec, review), canon templates, synthesis prompt
 
