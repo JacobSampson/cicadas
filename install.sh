@@ -8,7 +8,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Defaults
 # ---------------------------------------------------------------------------
-INSTALL_DIR=".cicadas-skill/cicadas"
+INSTALL_DIR=${INSTALL_DIR:-".cicadas-skill/cicadas"}
 AGENTS=""
 UPDATE_ONLY=false
 ARCHIVE_URL="https://github.com/ecodan/cicadas/archive/refs/heads/master.zip"
